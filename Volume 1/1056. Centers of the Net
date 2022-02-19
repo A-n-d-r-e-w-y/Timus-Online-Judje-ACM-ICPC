@@ -1,0 +1,136 @@
+Const Nmax=10001;
+ type pnt=^elem;
+      elem=record
+       info:longint;
+       next:pnt;
+      end; 
+var
+ Rasst,List:array[0..Nmax] of longint;
+ Nnew:array[0..Nmax] of boolean;
+ Adr,Koh:array[0..Nmax] of pnt;
+ N,i,j,r,Ro,up,down:longint;
+ k:pnt;
+ 
+procedure Ans(v:longint);
+ var u,t:longint;
+     k:pnt;
+begin
+ inc(r);
+ dec(Ro);
+ List[r]:=v;
+ if(Ro>=0) then begin
+  k:=Adr[v];
+  while(k<>nil) do begin
+   u:=k^.info;
+   if(Rasst[u]=Ro)  then t:=u;
+   k:=k^.next;
+  end;
+  Ans(t);
+ end;
+end;   
+ 
+procedure Solve(up,down:longint);
+ var k:pnt;
+     v,u:longint;
+begin
+ inc(down);
+ v:=List[down];
+ if(down<=up) then begin
+  k:=Adr[v];
+  while(k<>nil) do begin
+   u:=k^.info;
+   if(Nnew[u]) then begin 
+    Nnew[u]:=false;
+    Rasst[u]:=Rasst[v]+1;
+    inc(up);
+    List[up]:=u;
+   end;
+   k:=k^.next;
+  end;
+  Solve(up,down);
+ end;
+end; 
+
+BEGIN
+ readln(N);
+ for i:=0 to N+1 do begin
+  Nnew[i]:=true;
+  Adr[i]:=nil;
+  Rasst[i]:=N+5;
+ end;
+ 
+ for i:=2 to N do begin
+  readln(j);
+  if(Adr[i]=nil) then begin 
+   new(k);
+   k^.next:=nil;
+   k^.info:=j;
+   Adr[i]:=k;
+   Koh[i]:=Adr[i];
+  end
+  else begin
+   new(k);
+   k^.next:=nil;
+   k^.info:=j;
+   Koh[i]^.next:=k;
+   Koh[i]:=k;
+  end;  
+  if(Adr[j]=nil) then begin 
+   new(k);
+   k^.next:=nil;
+   k^.info:=i;
+   Adr[j]:=k;
+   Koh[j]:=Adr[j];
+  end
+  else begin
+   new(k);
+   k^.next:=nil;
+   k^.info:=i;
+   Koh[j]^.next:=k;
+   Koh[j]:=k;
+  end;     
+ end;
+ 
+ List[N+1]:=0;
+ up:=1;
+ down:=0;
+ List[up]:=1;
+ Rasst[1]:=0;
+ Nnew[1]:=false;
+ Solve(up,down);
+ 
+ j:=1;
+ for i:=1 to N do 
+  if(Rasst[i]>Rasst[j]) then j:=i;
+  
+ for i:=1 to N do begin
+  Nnew[i]:=true;
+  Rasst[i]:=N+5;
+ end;   
+  
+ up:=1; 
+ down:=0;
+ List[up]:=j;
+ Rasst[j]:=0; 
+ Nnew[j]:=false;
+ Solve(up,down);
+  
+ j:=1;
+ for i:=1 to N do 
+  if(Rasst[i]>Rasst[j]) then j:=i;
+  
+ r:=0; 
+ Ro:=Rasst[j];
+ Ans(j);
+ 
+ 
+ if(r mod 2=0) then begin
+  up:=List[r div 2];
+  down:=List[(r div 2)+1];
+  if(up<down) then write(up,' ',down)
+  else write(down,' ',up);
+ end
+ else begin
+  write(List[(r+1) div 2]);   
+ end; 
+END.  

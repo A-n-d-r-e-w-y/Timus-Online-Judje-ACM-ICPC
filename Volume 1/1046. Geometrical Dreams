@@ -1,0 +1,29 @@
+import math
+
+n = int(input())
+M = []
+M.append(complex)
+
+for i in range(1, n + 1):
+    data = list(map(float, input().split()))
+    M.append(complex(data[0], data[1]))
+
+P = []
+P.append(complex(0))
+
+k = []
+k.append(complex(1))
+
+for i in range(1, n + 1):
+    a = float(input())
+    a = a * math.pi / 180
+    w = complex(math.cos(a), math.sin(a))
+    P.append(M[i] * (complex(1) - w) + P[i - 1] * w)
+    k.append(k[i - 1] * w)
+
+z1 = P[n] / (complex(1) - k[n])
+print(z1.real, z1.imag)
+
+for i in range(2, n + 1):
+    zi = P[i - 1] + k[i - 1] * z1
+    print(zi.real, zi.imag)

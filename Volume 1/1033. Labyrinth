@@ -1,0 +1,39 @@
+const Nmax=50;
+var
+ a:array[0..Nmax,0..Nmax] of char;
+ N,i,j:byte;
+ ans:int64;
+
+procedure G(x,y:byte);
+begin
+ a[x,y]:='!';
+ if(a[x-1,y]='#') then inc(ans);
+ if(a[x+1,y]='#') then inc(ans);
+ if(a[x,y-1]='#') then inc(ans);
+ if(a[x,y+1]='#') then inc(ans);
+ if(a[x-1,y]='.') then G(x-1,y);
+ if(a[x+1,y]='.') then G(x+1,y);
+ if(a[x,y-1]='.') then G(x,y-1);
+ if(a[x,y+1]='.') then G(x,y+1);
+end;
+ 
+begin
+ for i:=0 to Nmax do begin
+ for j:=0 to Nmax do begin
+  a[i,j]:='#';
+ end;
+ end;
+ 
+ readln(N); 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  read(a[i,j]);
+  if(j=N) then readln;
+ end;
+ end; 
+ 
+ ans:=0;
+ G(1,1);
+ if(a[N,N]<>'!') then G(N,N);
+ write(9*(ans-4));
+end. 

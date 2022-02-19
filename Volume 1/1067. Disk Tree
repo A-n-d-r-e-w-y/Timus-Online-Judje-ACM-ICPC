@@ -1,0 +1,79 @@
+#include <map>
+#include <string>
+#include <iostream>
+using namespace std;
+
+const int nmax = 505;
+const int smax = nmax * 80;
+
+struct state
+{
+   string str;
+   map<string, int> to;
+};
+
+map<string,int> m;
+state State[smax];
+int n, r;
+string s;
+
+void Add(int q, string s);
+void Print(int q, string space);
+
+int main()
+{	
+	cin>>n;
+	r=0;
+	for(int i=1;i<=n;i++)
+	{
+	   cin>>s;
+	   int j=s.find('\\');
+	   string t;
+	   if(j!=s.npos) t=s.substr(0,j), s.erase(0,j+1);
+	   else t=s, s="";
+	   
+	   map<string,int>::iterator it=m.find(t);
+	   if(it==m.end())
+	   {
+	      r++;
+	      State[r].str=t;
+	      m.insert(make_pair(t,r));
+	      Add(r, s);
+	   }
+	   else Add(it->second, s);
+	}
+	
+	for(map<string,int>::iterator it=m.begin();it!=m.end();it++) Print(it->second, "");
+	
+   
+	return 0;
+}
+
+
+
+void Print(int q, string space)
+{
+   cout<<space<<State[q].str<<endl;
+   for(map<string,int>::iterator it=State[q].to.begin();it!=State[q].to.end();it++)
+      Print(it->second, space+" ");
+   
+}
+
+void Add(int q, string s)
+{
+   if(s=="") return;
+   int j=s.find('\\');
+	string t;
+	if(j!=s.npos) t=s.substr(0,j), s.erase(0,j+1);
+	else t=s, s="";
+	
+   map<string, int>::iterator it=State[q].to.find(t);
+   if(it!=State[q].to.end()) Add(it->second, s);
+   else
+   {
+      r++;
+	   State[r].str=t;
+	   State[q].to.insert(make_pair(t, r));
+	   Add(r, s);
+   }
+}

@@ -1,0 +1,62 @@
+const NMAX=55;
+      LMAX=10000;
+var
+ f:array[1..NMAX,1..NMAX,1..NMAX] of int64;
+ nods:array[1..NMAX,1..NMAX] of int64;
+ s,k,d,d1,s0,k0:longint;
+ ans:int64;
+ 
+function HOD(a,b:int64):int64;
+ var c:int64;
+begin
+ if(a<b) then begin 
+  c:=a;
+  a:=b;
+  b:=c;
+ end; 
+ if(a=b)or(b=0) then HOD:=a
+ else begin 
+  if(a mod b<>0) then HOD:=HOD(a mod b,b)
+  else HOD:=b;
+ end; 
+end;
+ 
+BEGIN
+ for s:=1 to NMAX do begin
+ for k:=1 to NMAX do begin
+  nods[s,k]:=HOD(s,k);
+ end;
+ end;
+
+ read(k0,s0);
+ 
+ for k:=1 to k0 do begin
+ for d:=1 to S0 do begin
+  if(k=1)and(d=s0) then f[s0,k,d]:=1
+  else f[s0,k,d]:=0;
+ end;
+ end;
+
+ for s:=s0-1 downto 1 do begin
+ for k:=1 to k0 do begin
+ for d:=1 to s0 do begin
+  if(k=1) then begin
+   if(d>=s) then f[s,k,d]:=1
+   else f[s,k,d]:=0;
+  end
+  else begin
+   f[s,k,d]:=f[s+1,k,d];
+   for d1:=1 to S0 do if(nods[s,d1]=d) then inc(f[s,k,d],f[s+1,k-1,d1]);
+  end;
+ end;
+ end;
+ end;
+ 
+ ans:=0;
+ for d:=2 to s0 do begin 
+  if(ans<=LMAX) then inc(ans,f[1,k0,d]);
+ end; 
+ 
+ if(ans>LMAX) then ans:=LMAX;
+ write(ans);
+END.

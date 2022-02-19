@@ -1,0 +1,79 @@
+#include <set>
+#include <iostream>
+using namespace std;
+
+const short nmax = 55;
+
+set<pair<short,short>> field[nmax][nmax];
+short x[nmax], y[nmax];
+short n;
+int ans;
+
+bool att(short x1, short y1, short x2, short y2)
+{
+   return x1==x2 || y1==y2 || abs(x1-x2)==abs(y1-y2);
+}
+
+int main()
+{
+    cin>>n;
+    if(n<=3)
+    {
+       cout<<"0";
+       return 0;
+    }
+    for(int i=1;i<=n;i++) cin>>x[i]>>y[i];
+    
+    for(short i=1;i<=n;i++)
+      for(short j=1;j<=n;j++)
+         for(short k=1;k<=n;k++)
+            if(field[i][j].size()<4 && att(i,j,x[k],y[k]))
+               field[i][j].insert(make_pair(x[k],y[k]));
+    ans=0;
+
+    for(int i1=1;i1<=n-2;i1++)
+    {
+       for(int i2=i1+1;i2<=n-1;i2++)
+       {
+          for(int i3=i2+1;i3<=n;i3++)
+          {
+            short cnt=0;
+            pair<short,short> p[5];
+            p[0].first=x[i1], p[0].second=y[i2];
+            p[1].first=x[i1], p[1].second=y[i3];
+            p[2].first=x[i2], p[2].second=y[i1];
+            p[3].first=x[i2], p[3].second=y[i3];
+            p[4].first=x[i3], p[4].second=y[i1];
+            p[5].first=x[i3], p[5].second=y[i2];
+            for(short j1=0;j1<=3;j1++)
+            {
+               for(short j2=j1+1;j2<=4;j2++)
+               {
+                  for(short j3=j2+1;j3<=5;j3++)
+                  {
+                     if(att(p[j1].first, p[j1].second, p[j2].first, p[j2].second) || att(p[j1].first, p[j1].second, p[j3].first, p[j3].second) || att(p[j2].first, p[j2].second, p[j3].first, p[j3].second)) continue;
+                     set<pair<short,short>> f1=field[p[j1].first][p[j1].second];
+                     f1.erase(make_pair(x[i1], y[i1]));
+                     f1.erase(make_pair(x[i2], y[i2]));
+                     f1.erase(make_pair(x[i3], y[i3]));
+                     set<pair<short,short>> f2=field[p[j2].first][p[j2].second];
+                     f2.erase(make_pair(x[i1], y[i1]));
+                     f2.erase(make_pair(x[i2], y[i2]));
+                     f2.erase(make_pair(x[i3], y[i3]));
+                     set<pair<short,short>> f3=field[p[j3].first][p[j3].second];
+                     f3.erase(make_pair(x[i1], y[i1]));
+                     f3.erase(make_pair(x[i2], y[i2]));
+                     f3.erase(make_pair(x[i3], y[i3]));
+                     if(f1.size()==0 && f2.size()==0 && f3.size()==0) cnt++;
+                  }
+               }
+            }
+            ans+=cnt;
+          }
+       }
+    }
+    
+    cout<<ans;
+     
+    return 0;
+}

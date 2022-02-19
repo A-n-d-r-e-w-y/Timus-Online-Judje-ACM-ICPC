@@ -1,0 +1,99 @@
+const d=6875;
+const r=d/2;
+const min=100;
+const PII=3.1415926535897932384626433832795;
+var
+ i,p,x:longint;
+ s:ansistring;
+ x1,y1,z1,x2,y2,z2,phi,teta,alfa,ans:extended;
+
+procedure Input(s:ansistring);
+ var a,b,c:extended;
+begin
+ p:=pos('^',s);
+ a:=0;
+ x:=1;
+ for i:=p-1 downto 1 do begin
+  a:=a+x*(ord(s[i])-ord('0'));
+  x:=x*10;
+ end;
+ delete(s,1,p);
+ p:=pos('''',s);
+ b:=0;
+ x:=1;
+ for i:=p-1 downto 1 do begin
+  b:=b+x*(ord(s[i])-ord('0'));
+  x:=x*10;
+ end;
+ delete(s,1,p);
+ p:=pos('"',s);
+ c:=0;
+ x:=1;
+ for i:=p-1 downto 1 do begin
+  c:=c+x*(ord(s[i])-ord('0'));
+  x:=x*10;
+ end;
+ delete(s,1,p);
+ delete(s,1,1);
+ 
+ if(s[1]='N') then phi:=(a*3600+b*60+c)*PII/(180*3600);
+ if(s[1]='S') then phi:=-(a*3600+b*60+c)*PII/(180*3600);
+ if(s[1]='W') then teta:=(a*3600+b*60+c)*PII/(180*3600);
+ if(s[1]='E') then teta:=-(a*3600+b*60+c)*PII/(180*3600);
+end;
+
+
+function scalar(x1,y1,z1,x2,y2,z2:extended):extended;
+begin
+ scalar:=(x1*x2+y1*y2+z1*z2);
+end;
+
+function arccos(x:extended):extended;
+begin
+ if(x=0) then arccos:=Pi/2
+ else begin
+  if(x>0) then arccos:=Arctan(Sqrt(1-sqr(x))/x)
+  else arccos:=Pi-Arctan(Sqrt(1-sqr(x))/(-x));
+ end; 
+end; 
+
+function MyRound(x:extended):extended;
+begin
+ MyRound:=round(x*100)/100;
+end;
+ 
+begin
+ readln;
+ readln;
+ readln;
+ 
+ readln(s);
+ Input(s);
+ readln(s);
+ p:=pos(' ',s);
+ delete(s,1,p);
+ Input(s);
+ x1:=r*cos(phi)*sin(teta);
+ y1:=r*cos(phi)*cos(teta);
+ z1:=r*sin(phi);
+ 
+ readln;
+ 
+ readln(s);
+ Input(s);
+ readln(s);
+ p:=pos(' ',s);
+ delete(s,1,p);
+ Input(s);
+ x2:=r*cos(phi)*sin(teta);
+ y2:=r*cos(phi)*cos(teta);
+ z2:=r*sin(phi);
+ 
+ alfa:=arccos(scalar(x1,y1,z1,x2,y2,z2)/(r*r));
+ if(alfa>PII) then alfa:=2*PII-alfa;
+ 
+ ans:=r*alfa;
+ writeln('The distance to the iceberg: ',ans:0:2,' miles.');
+ ans:=MyRound(ans);
+ if(ans<min) then writeln('DANGER!');
+end.

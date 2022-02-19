@@ -1,0 +1,30 @@
+var
+ a,b,d:int64;
+ N,i:longint;
+
+function HOD(a,b:int64):int64;
+ var c:int64;
+begin
+ if(a<b) then begin 
+  c:=a;
+  a:=b;
+  b:=c;
+ end; 
+ if(a=b)or(b=0) then HOD:=a
+ else begin 
+  if(a mod b<>0) then HOD:=HOD(a mod b,b)
+  else HOD:=b;
+ end; 
+end;
+ 
+begin
+ readln(N);
+ a:=0;
+ for i:=1 to N do begin
+  readln(b);
+  d:=HOD(a,b);
+  a:=d;
+ end; 
+ 
+ write(d);
+end.

@@ -1,0 +1,17 @@
+var
+ M,N,k:longint;
+
+begin
+ read(M,N);
+ if(M>N) then begin
+  k:=M;
+  M:=N;
+  N:=k;
+ end;
+ 
+ if(M=1) then write((N+1) div 2)
+ else begin
+  if(N mod 3=0)or(M mod 3=0) then write('2')
+  else write('1');
+ end;
+end.

@@ -1,0 +1,135 @@
+const nmax=100000;
+      clmax=7*7*7*7*7*7*7;
+type cube=record
+      g1,g2,g3,g4,g5,g6:longint;
+     end;
+     
+     pnt=^elem;
+      elem=record
+       numb:longint;
+       next:pnt;
+      end;               
+var
+ v,maincl,z:array[1..clmax] of longint;
+ nnew:array[1..clmax] of boolean;
+ cl:array[1..clmax] of pnt;
+ c:array[1..nmax] of cube;
+ n,i,j,k,q:longint;
+ p:pnt;
+ 
+function NumbCl(c:cube):longint;
+begin
+ NumbCl:=c.g1+c.g2*7+c.g3*49+c.g4*343+c.g5*2401+c.g6*16807;
+end;
+ 
+procedure Rotate1(var c:cube);
+ var ch:longint;
+begin
+ ch:=c.g1;
+ c.g1:=c.g5;
+ c.g5:=c.g4;
+ c.g4:=c.g6;
+ c.g6:=ch;
+end;
+ 
+procedure Rotate2(var c:cube);
+ var ch:longint;
+begin
+ ch:=c.g2;
+ c.g2:=c.g5;
+ c.g5:=c.g3;
+ c.g3:=c.g6;
+ c.g6:=ch;
+end; 
+ 
+procedure DFS(c:cube);
+ var i,x:longint;
+begin
+ x:=NumbCl(c);
+ i:=1;
+ while(i<=k)and(x<>v[i]) do inc(i);
+ if(i>k) then begin
+  inc(k);
+  v[k]:=x;
+  Rotate1(c);
+  DFS(c);
+  Rotate1(c);
+  Rotate1(c);
+  Rotate1(c);
+  Rotate2(c);
+  DFS(c);
+  Rotate2(c);
+  Rotate2(c);
+  Rotate2(c);
+ end;
+end;
+
+procedure DFS2(c:cube;main:longint);
+ var i,x:longint;
+begin
+ x:=NumbCl(c);
+ i:=1;
+ while(i<=k)and(x<>v[i]) do inc(i);
+ if(i>k) then begin
+  inc(k);
+  v[k]:=x;
+  nnew[x]:=false;
+  maincl[x]:=main; 
+  Rotate1(c);
+  DFS2(c,main);
+  Rotate1(c);
+  Rotate1(c);
+  Rotate1(c);
+  Rotate2(c);
+  DFS2(c,main);
+  Rotate2(c);
+  Rotate2(c);
+  Rotate2(c);
+ end;
+end;
+ 
+begin
+ readln(n);
+ for i:=1 to n do readln(c[i].g3,c[i].g2,c[i].g5,c[i].g1,c[i].g6,c[i].g4);
+
+ for i:=1 to clmax do nnew[i]:=true;
+ q:=0;
+ 
+ for i:=1 to n do begin
+  k:=0;
+  DFS(c[i]);
+  while(k>0)and(nnew[v[k]]) do dec(k);
+  if(k=0) then begin
+   inc(q);
+   z[q]:=NumbCl(c[i]);
+   new(p);
+   p^.next:=nil;
+   p^.numb:=i;
+   cl[NumbCl(c[i])]:=p;
+   k:=0;
+   DFS2(c[i],NumbCl(c[i]));
+  end
+  else begin
+   new(p);
+   p^.next:=cl[maincl[v[k]]];
+   p^.numb:=i;
+   cl[maincl[v[k]]]:=p;
+  end;
+ end;
+ 
+ writeln(q);
+ for i:=1 to q do begin
+   k:=0;
+   p:=cl[z[i]];
+   while(p<>nil) do begin
+    inc(k);
+    v[k]:=p^.numb;
+    p:=p^.next;
+   end;
+   while(k>0) do begin
+    write(v[k],' ');
+    dec(k);
+   end;
+   writeln;
+ end;
+end.

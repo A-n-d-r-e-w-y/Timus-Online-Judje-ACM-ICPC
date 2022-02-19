@@ -1,0 +1,54 @@
+#include <iostream>
+using namespace std;
+
+long long D,E,F,Dp,Ep,H;
+
+void N(long long &n, long long r)
+{
+   while(r>0)
+   {
+      if(n % 2==1) n++;
+      n/=2;
+      r--;
+   }
+}
+
+void U(long long &x)
+{
+   x=(x+(long long)1)/2;
+}
+
+
+int main()
+{
+   cin>>D>>E>>F>>Dp>>Ep>>H;
+   
+   long long & numb1 = Dp;
+   long long & numb2 = Ep;
+   
+   N(numb1, D);
+   N(numb2, E);
+   
+   long long ans=0;
+   
+   while(numb1!=numb2 || D!=E)
+   {
+      if(D!=E)
+      {
+         ans++;
+         if(D<E) D++, U(numb1);
+         else E++, U(numb2);
+      }
+      else
+      {
+         ans+=2;
+         D++, U(numb1);
+         E++, U(numb2);
+      }
+   }
+   
+   if(ans<=H) cout<<"YES";
+   else cout<<"NO";
+   
+   return 0;
+}

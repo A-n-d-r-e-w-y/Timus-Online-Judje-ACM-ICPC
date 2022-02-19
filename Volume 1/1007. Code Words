@@ -1,0 +1,87 @@
+const nmax=1111;
+var
+ a:array[1..nmax] of char;
+ n,i,j,len:longint;
+ ch:char;
+
+procedure WriteWord;
+ var i:longint;
+begin
+ for i:=1 to len do write(a[i]);
+ writeln;
+end; 
+
+procedure Solve(len:longint);
+var 
+ sum,s:array[0..nmax] of longint;
+ i,j,r:longint;
+begin
+ sum[0]:=0;
+ s[0]:=0;
+ for i:=1 to len do begin
+  sum[i]:=sum[i-1]+(ord(a[i])-ord('0'))*i;
+  s[i]:=s[i-1]+(ord(a[i])-ord('0'));
+ end;
+ 
+ if(len=n) then begin
+  r:=sum[n] mod (n+1);
+  if(r>0) then a[r]:='0';
+  WriteWord;
+ end
+ else begin
+  if(len=n-1) then begin
+   i:=0;
+   while(i<=n-1) do begin
+    if((sum[n-1]+s[n-1]-s[i]) mod (n+1)=0) then begin
+     for j:=1 to i do write(a[j]);
+     write('0');
+     for j:=i+1 to n-1 do write(a[j]);
+     writeln;
+     i:=n;
+    end;
+    if(i<=n-1)and((i+1+sum[n-1]+s[n-1]-s[i]) mod (n+1)=0) then begin
+     for j:=1 to i do write(a[j]);
+     write('1');
+     for j:=i+1 to n-1 do write(a[j]);
+     writeln;
+     i:=n;
+    end;
+    inc(i);
+   end;
+  end
+  else begin
+   i:=1;
+   while(i<=n+1) do begin
+    if((sum[i-1]+sum[n+1]-sum[i]-s[n+1]+s[i]) mod (n+1)=0) then begin
+     for j:=1 to i-1 do write(a[j]);
+     for j:=i+1 to n+1 do write(a[j]);
+     writeln;
+     i:=n+2;
+    end;
+    inc(i);
+   end;
+  end;
+ end;
+end;
+     
+begin
+ readln(n);
+ while not eof do begin
+  len:=0;
+  read(ch);
+  if(ch='0')or(ch='1') then begin
+   len:=1;
+   a[len]:=ch;
+   read(ch);
+   while(ch=' ')or(ch='1')or(ch='0') do begin
+    if(ch='1')or(ch='0') then begin
+     inc(len);
+     a[len]:=ch;
+    end;
+    read(ch);
+   end;
+   Solve(len);
+   readln;
+  end;
+ end;
+end.

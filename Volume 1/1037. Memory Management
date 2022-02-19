@@ -1,0 +1,103 @@
+#include <string>
+#include <iostream>
+using namespace std;
+
+const int T=600;
+const int nmax=30000;
+const int sqrtnmax=174; //sqrt(nmax)+1
+
+int minimum[sqrtnmax+1], delta[sqrtnmax+1];   
+int l[sqrtnmax+1], r[sqrtnmax+1];
+int value[nmax+1];
+int cnt, time_old, time_now;
+
+void Init();
+int FindMin();
+void Update(int x);
+void Change(int p);
+
+int main()
+{
+   Init();
+   time_old=0;
+   while (scanf("%d", &time_now) != EOF)
+   {
+      Update(-(time_now-time_old));
+      time_old=time_now;
+      char ch;
+      scanf(" %c",&ch);
+      if(ch=='+')
+      {
+         int p=FindMin();
+         printf("%d\n",p);
+         Change(p);
+      }
+      else
+      {
+         int ind;
+         scanf("%d",&ind);
+         int i;
+         for(i=1;r[i]<ind;i++);
+         if(value[ind]+delta[i]>0)
+         {
+            printf("+\n");
+            Change(ind);
+         }
+         else printf("-\n");
+      }
+   }
+   
+   return 0;
+}
+
+
+void Init()
+{
+   cnt=0;
+   for(int i=1;i<=nmax;)
+   {
+      l[++cnt]=i;
+      r[cnt]=l[cnt];
+      while(r[cnt]+1<=nmax && r[cnt]-l[cnt]+1<sqrtnmax) r[cnt]++;
+      i=r[cnt]+1;
+   }
+
+   for(int i=1;i<=cnt;i++)
+   {
+      minimum[i]=delta[i]=0;
+      for(int j=l[i];j<=r[i];j++) value[j]=0;
+   }
+}
+
+
+int FindMin()
+{
+   int i,j;
+   for(i=1;minimum[i]>0;i++);
+   for(j=l[i];value[j]+delta[i]>0;j++);
+   return j;
+}
+
+
+void Update(int x)
+{
+   for(int i=1;i<=cnt;i++)
+   {
+      delta[i]+=x;
+      minimum[i]+=x;
+   }
+}
+
+void Change(int p)
+{
+   int i;
+   for(i=1;r[i]<p;i++);
+   minimum[i]=T+1;
+   for(int j=l[i];j<=r[i];j++)
+   {
+      value[j]+=delta[i];
+      if(j==p) value[j]=T;
+      if(minimum[i]>value[j]) minimum[i]=value[j];
+   }
+   delta[i]=0;
+}

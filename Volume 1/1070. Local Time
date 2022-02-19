@@ -1,0 +1,50 @@
+#include <string>
+#include <iostream>
+using namespace std;
+
+int Time(string s);
+int t1,t2,t3,t4;
+string s;
+int ans;
+
+int main()
+{	
+   cin>>s;
+   t1=Time(s);
+   cin>>s;
+   t2=Time(s);
+   cin>>s;
+   t3=Time(s);
+   cin>>s;
+   t4=Time(s);
+   
+   for(int ans=-5;ans<=5;ans++)
+   {
+      int t2_real=t1+ans*60, time_fl1, time_fl2;
+      t2_real=t2_real % (24*60);
+      if(t2_real<0) t2_real+=(24*60);
+      if(t2_real<=t2) time_fl1=t2-t2_real;
+      else  time_fl1=(24*60)-t2_real+t2;
+      if(time_fl1>(6*60)) continue;
+      
+      int t1_real=t3-ans*60;
+      t1_real=t1_real % (24*60);
+      if(t1_real<0) t1_real+=(24*60);
+      if(t1_real<=t4) time_fl2=t4-t1_real;
+      else time_fl2=(24*60)-t1_real+t4;
+      if(time_fl2>(6*60)) continue;
+      
+      if(abs(time_fl1-time_fl2)<=10)
+      {
+         cout<<abs(ans)<<endl;
+         return 0;
+      }
+   }
+   
+	return 0;
+}
+
+int Time(string s)
+{
+   return ((s[0]-'0')*10+s[1]-'0')*60+(s[3]-'0')*10+s[4]-'0';
+}

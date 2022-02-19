@@ -1,0 +1,70 @@
+const Nmax=250;
+type ind=0..Nmax;
+var
+ A:array[1..Nmax,1..Nmax] of 0..1;
+ Nnew:array[1..Nmax] of boolean;
+ Colour:array[1..Nmax] of -1..1;
+ List:array[1..Nmax] of ind;
+ i,j,N,ch,up,down:ind;
+ f:boolean;
+
+procedure Pw(up,down:ind;var f:boolean);
+ var j,v:ind;
+begin
+ inc(down);
+ v:=List[down];
+ Nnew[v]:=false; 
+ 
+ if(down<=up) then 
+ begin
+  for j:=1 to N do begin
+   if(A[v,j]=1) then begin
+    if(Colour[v]=Colour[j]) then f:=false;
+    if(Colour[j]=-1) then Colour[j]:=1-Colour[v];
+    if(Nnew[j]) then begin
+     inc(up);
+     List[up]:=j;
+    end;
+   end;   
+  end;
+  Pw(up,down,f);  
+ end;
+end;
+    
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  A[i,j]:=0;
+ end;
+ end; 
+ 
+ for i:=1 to N do 
+ begin
+  Colour[i]:=-1;
+  Nnew[i]:=True;
+  ch:=1;
+  while(ch<>0) do begin
+   read(ch);
+   if(ch<>0) then begin
+    A[i,ch]:=1;
+    A[ch,i]:=1;
+   end;
+  end;
+  readln;
+ end;
+         
+ Colour[1]:=0;
+ down:=0;
+ up:=1;
+ List[up]:=1;
+ f:=N>0;
+ Pw(up,down,f);
+ 
+ if(f) then begin
+  for i:=1 to N do write(Colour[i]);
+ end
+ else begin
+  write('-1');
+ end;
+END.   

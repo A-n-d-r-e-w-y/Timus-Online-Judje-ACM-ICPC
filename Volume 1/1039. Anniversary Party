@@ -1,0 +1,98 @@
+const Nmax=6500;
+type pnt=^elem;
+     elem=record
+      info:integer;
+      next:pnt;
+     end; 
+var 
+ adr,koh:array[1..Nmax] of pnt;
+ dp,sum:array[1..Nmax] of longint;
+ count,s:array[1..Nmax] of integer;
+ Nnew:array[1..Nmax] of boolean;
+ N,i,j,x,y:integer;
+ k:pnt;
+ 
+function max(x,y:longint):longint;
+begin
+ if(x>y) then max:=x
+ else max:=y;
+end;  
+ 
+procedure Solve(v:integer);
+ var j:integer;
+     find:boolean;
+     s1:longint;
+     k:pnt;
+begin
+ Nnew[v]:=false;
+ find:=false;
+ s1:=0;
+ k:=adr[v];
+ 
+ while(k<>nil) do begin
+  j:=k^.info;
+  if(Nnew[j]) then begin
+   find:=true;
+   Solve(j);
+   sum[v]:=sum[v]+dp[j]; 
+   s1:=s1+sum[j];
+  end;
+  k:=k^.next;
+ end;
+ 
+ if(find) then begin  
+  dp[v]:=max(dp[v],sum[v]);
+  dp[v]:=max(dp[v],s1+s[v]);
+ end
+ else begin
+  dp[v]:=max(dp[v],s[v]);
+ end;
+end;  
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+  readln(s[i]);
+  Nnew[i]:=true;
+  dp[i]:=0;
+  sum[i]:=0;
+  count[i]:=0;
+ end;
+ 
+ for i:=1 to N-1 do begin
+  readln(x,y);
+  inc(count[x]);
+  inc(count[y]);
+  if(count[x]=1) then begin
+   new(k);
+   k^.info:=y;
+   k^.next:=nil;
+   adr[x]:=k;
+   koh[x]:=k;
+  end
+  else begin
+   new(k);
+   k^.info:=y;
+   k^.next:=nil;
+   koh[x]^.next:=k;
+   koh[x]:=k;
+  end; 
+  if(count[y]=1) then begin
+   new(k);
+   k^.info:=x;
+   k^.next:=nil;
+   adr[y]:=k;
+   koh[y]:=k;
+  end
+  else begin
+   new(k);
+   k^.info:=x;
+   k^.next:=nil;
+   koh[y]^.next:=k;
+   koh[y]:=k;
+  end; 
+ end; 
+ 
+ Solve(1);
+ write(dp[1]);
+END. 

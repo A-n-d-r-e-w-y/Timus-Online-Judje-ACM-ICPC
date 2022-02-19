@@ -1,0 +1,71 @@
+const Nmax=100;
+      p=4;
+      inf=9999999999;
+var
+ A:array[1..Nmax,1..Nmax] of int64;
+ Numb,Marsh:array[1..Nmax] of byte;
+ Money:array[1..Nmax] of integer;
+ Free:array[1..Nmax] of 0..1;
+ N,M,K,L,i,j,k0,u:byte;
+ min,Sum:int64;
+ 
+BEGIN
+ readln(N,M);
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  A[i,j]:=inf;
+  if(i=j) then A[i,j]:=0;
+ end;
+ end;
+ 
+ for i:=1 to M do begin
+  read(L);
+  for j:=1 to L do read(Marsh[j]);
+  readln;
+  
+  for j:=1 to L do begin
+   for k:=1 to j-1 do A[marsh[j],marsh[k]]:=1;
+   for k:=j+1 to L do A[marsh[j],marsh[k]]:=1;
+  end;
+ end;
+ 
+ readln(K);
+ for i:=1 to K do begin
+  readln(Money[i],Numb[i],Free[i]);
+ end;
+ 
+ k0:=k;
+ min:=inf;
+ u:=0;
+ 
+ for k:=1 to N do begin
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(A[i,j]>A[i,k]+A[k,j]) then A[i,j]:=A[i,k]+A[k,j];
+ end;
+ end;
+ end;
+ 
+ 
+ for j:=1 to N do begin
+  Sum:=0;
+  for i:=1 to k0 do begin
+   if(A[numb[i],j]<inf) then begin 
+    if(free[i]=0)and(p*A[numb[i],j]<=Money[i])or(free[i]=1) then inc(Sum,(1-free[i])*p*A[numb[i],j])
+    else Sum:=inf;
+   end 
+   else begin
+    Sum:=inf;
+   end;
+  end;
+  
+  if(Sum<min) then begin
+   min:=Sum;
+   u:=j;
+  end;
+ end;    
+  
+ if(min<>inf) then write(u,' ',min)
+ else write(u); 
+END.  

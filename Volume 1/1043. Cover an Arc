@@ -1,0 +1,107 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct point{double x,y;};
+
+const double eps = 0.00000001;
+const double pi = 3.141592653589793238462643383279;
+
+point A,B,C,O;
+double a, b, r, xmin, xmax, ymin, ymax;
+
+double triangle_area_2 (point A, point B, point C);
+bool clockwise(point A, point B, point C);
+double dist(point P, point Q);
+point centre(point A, point B, point C);
+double min(double x, double y){return x<y?x:y;}
+double max(double x, double y){return x>y?x:y;}
+double angle(point A, point O);
+
+int main()
+{
+   cin>>A.x>>A.y>>C.x>>C.y>>B.x>>B.y;
+
+   if(clockwise(A, B, C))
+   {
+      point T;
+      T=A, A=C, C=T;
+   }
+
+   O=centre(A,B,C);
+   
+   a=angle(A, O);
+   b=angle(C, O); 
+   if(b<a) b+=2*pi;
+
+   //cout<<a*180/pi<<" "<<b*180/pi<<endl;
+   //cout<<dist(A,O)<<" "<<dist(B,O)<<" "<<dist(C,O)<<endl;
+   //cout<<O.x<<" "<<O.y<<endl<<endl;
+
+   r=dist(A,O);
+   
+   xmin=min(A.x, C.x);
+   if(a<=pi && pi<=b || a<=3*pi && 3*pi<=b) xmin=O.x-r;
+   
+   xmax=max(A.x, C.x);
+   if(a<=0 && 0<=b || a<=2*pi && 2*pi<=b) xmax=O.x+r;
+   
+   ymin=min(A.y, C.y);
+   if(a<=3*pi/2 && 3*pi/2<=b || a<=7*pi/2 && 7*pi/2<=b) ymin=O.y-r;
+   
+   ymax=max(A.y, C.y);
+   if(a<=pi/2 && pi/2<=b || a<=5*pi/2 && 5*pi/2<=b) ymax=O.y+r;
+  
+   //printf("%.5lf %.5lf %.5lf %.5lf\n",xmin,xmax,ymin,ymax);
+   //cout<<O.y-r<<" "<<O.y+r<<endl;
+   
+   if(ceil(xmin)-xmin<eps) xmin=ceil(xmin);
+   if(xmax-floor(xmax)<eps) xmax=floor(xmax);
+   if(ceil(ymin)-ymin<eps) ymin=ceil(ymin);
+   if(ymax-floor(ymax)<eps) ymax=floor(ymax);
+   
+   xmin=floor(xmin);
+   xmax=ceil(xmax);
+   ymin=floor(ymin);
+   ymax=ceil(ymax);
+   printf("%d",(int)((xmax-xmin)*(ymax-ymin)));
+
+   return 0;
+}
+
+
+
+double triangle_area_2 (point A, point B, point C) 
+{
+	return (B.x - A.x) * (C.y - A.y) - (B.y - A.y) * (C.x- A.x);
+}
+
+bool clockwise(point A, point B, point C) 
+{
+	return triangle_area_2 (A, B, C) < 0;
+}
+
+double dist(point P, point Q)
+{
+   double dx=P.x-Q.x, dy=P.y-Q.y;
+   return sqrt(dx*dx+dy*dy);
+}
+
+point centre(point A, point B, point C)
+{
+   double a1=B.y-A.y, b1=A.x-B.x;
+   double a2=B.y-C.y, b2=C.x-B.x;
+   double x1=(A.x+B.x)/2, y1=(A.y+B.y)/2;
+   double x2=(C.x+B.x)/2, y2=(C.y+B.y)/2;
+   double t=(a2*(y1-y2)-b2*(x1-x2))/(a1*b2-a2*b1);
+   point res;
+   res.x=a1*t+x1, res.y=b1*t+y1;
+   return res;
+}
+
+double angle(point A, point O)
+{
+   double res=acos((A.x-O.x)/dist(A,O));
+   if(A.y<O.y) return 2*pi-res;
+   else return res;
+}

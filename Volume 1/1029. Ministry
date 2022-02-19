@@ -1,0 +1,50 @@
+const nmax=505;
+      inf=123456789012345;
+var
+ a,dp,s:array[0..nmax,1..nmax] of int64;
+ m,n,i,j,l,r:longint;
+ ans:int64;
+ 
+function min(x,y:int64):int64;
+begin
+ if(x<y) then min:=x
+ else min:=y;
+end;
+ 
+begin
+ readln(m,n);
+ for i:=1 to m do begin
+  s[i,0]:=0;
+  for j:=1 to n do begin
+   read(a[i,j]);
+   s[i,j]:=s[i,j-1]+a[i,j];
+   if(j=n) then readln;
+  end;
+ end;
+ 
+ for j:=1 to n do dp[m,j]:=a[m,j];
+ 
+ for i:=m-1 downto 1 do begin
+  for j:=1 to n do begin
+   dp[i,j]:=inf;
+   for l:=j downto 1 do dp[i,j]:=min(dp[i,j],s[i,j]-s[i,l-1]+dp[i+1,l]);
+   for r:=j+1 to n do dp[i,j]:=min(dp[i,j],s[i,r]-s[i,j-1]+dp[i+1,r]);
+  end;
+ end;
+ 
+ r:=1;
+ for j:=2 to n do if(dp[1,j]<dp[1,r]) then r:=j;
+ 
+ ans:=dp[1,r];
+ i:=1;
+ j:=r;
+ 
+ while(i<=m) do begin
+  write(j,' ');
+  ans:=ans-a[i,j];
+  if(j-1>=1)and(dp[i,j-1]=ans) then dec(j)
+  else
+   if(j+1<=n)and(dp[i,j+1]=ans) then inc(j)
+   else inc(i);
+ end;
+end.

@@ -1,0 +1,39 @@
+const Nmax=500;
+var
+ A:array[1..Nmax,1..Nmax] of 0..1;
+ D:array[1..Nmax] of integer;
+ N,i,j,k:integer;
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  A[i,j]:=0;
+ end;
+ end;  
+ 
+ for i:=1 to N do D[i]:=0;
+ 
+ for i:=1 to N do
+ begin
+  j:=1;
+  while(j<>0) do begin
+   read(j);
+   if(j<>0) then begin
+    A[i,j]:=1;
+    inc(D[j]);
+   end;
+  end;
+ end;
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(D[j]=0) then begin
+   write(j,' ');
+   dec(D[j]);
+   for k:=1 to N do 
+    if(A[j,k]=1) then dec(D[k]);
+  end;  
+ end;
+ end;
+END. 

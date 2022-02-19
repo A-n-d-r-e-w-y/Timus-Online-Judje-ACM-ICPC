@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+const double eps=0.000000001;
+
+struct Point
+{
+  double x,y,z;
+  Point operator+(Point P){Point res; res.x=x+P.x, res.y=y+P.y; res.z=z+P.z; return res;}
+  Point operator-(Point P){Point res; res.x=x-P.x, res.y=y-P.y; res.z=z-P.z; return res;}
+  double Len2(){return x*x+y*y+z*z;}
+};
+
+Point C,N,S,V;
+double R,a,b,c;
+bool f;
+
+double Scalar(Point P, Point Q){return P.x*Q.x+P.y*Q.y+P.z*Q.z;}
+bool Check(double t);
+
+int main()
+{
+   cin>>C.x>>C.y>>C.z>>N.x>>N.y>>N.z>>R;
+   cin>>S.x>>S.y>>S.z>>V.x>>V.y>>V.z;
+   
+   a=-5.0*N.z;
+   b=Scalar(N,V);
+   c=Scalar(N,S-C);
+   
+   f=false;
+   if(abs(a)>eps)
+   {
+      double d=b*b-4.0*a*c;
+      if(d>=0)
+      {
+         double t1=(-b-sqrt(d))/(2.0*a);
+         double t2=(-b+sqrt(d))/(2.0*a);
+         f=t1>=0 && Check(t1) || t2>=0 && Check(t2);
+      }
+   }
+   else
+   {
+      if(abs(b)>0)
+      {
+         double t=-c/b;
+         f=t>=0 && Check(t);
+      }
+   }
+
+   if(f) cout<<"HIT";
+   else cout<<"MISSED";
+
+	return 0;
+}
+
+
+bool Check(double t)
+{
+   Point M;
+   M.x=S.x+V.x*t;
+   M.y=S.y+V.y*t;
+   M.z=S.z+V.z*t-5.0*t*t;
+   M=M-C;
+   return M.Len2()<R*R;
+}

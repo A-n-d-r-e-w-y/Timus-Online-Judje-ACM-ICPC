@@ -1,0 +1,53 @@
+const NMAX=25;
+      LMAX=1000000;
+var 
+ a,b:array[0..NMAX] of longint;
+ x,y,z,k,i,r,rb,last:longint;
+ find:boolean;
+
+procedure Cmp;
+ var i,last:longint;
+begin
+ last:=0;
+ i:=0;
+ 
+ while(last<=rb)and(i<=r) do begin
+  if(a[i]=b[last]) then begin
+   inc(last);
+   inc(i);
+  end
+  else begin
+   inc(i);
+  end; 
+ end;
+ 
+ if(last>rb) then find:=true;
+end;
+ 
+begin
+ read(x,y);
+ 
+ find:=false;
+ k:=2;
+ while(not find)and(k<=LMAX) do begin
+  r:=-1;
+  z:=x;
+  while(z>0) do begin
+   inc(r);
+   a[r]:=z mod k;
+   z:=z div k;
+  end;
+  rb:=-1;
+  z:=y;
+  while(z>0) do begin
+   inc(rb);
+   b[rb]:=z mod k;
+   z:=z div k;
+  end;
+  Cmp;
+  if(find) then write(k);
+  inc(k);
+ end;
+ 
+ if(not find) then write('No solution');
+end.

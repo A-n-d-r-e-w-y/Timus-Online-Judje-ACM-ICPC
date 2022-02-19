@@ -1,0 +1,22 @@
+var
+ max,ypred,ynow:int64;
+ N,i,i1,i2:longint;
+ 
+BEGIN
+ readln(N);
+ read(ypred);
+ max:=-1;
+ 
+ for i:=2 to N do begin
+  read(ynow);
+  if(abs(ynow-ypred)>max) then begin
+   max:=abs(ynow-ypred);
+   i1:=i-1;
+   i2:=i;
+  end;
+  ypred:=ynow;
+ end;
+ 
+ write(i1,' ',i2);
+END.   
+  

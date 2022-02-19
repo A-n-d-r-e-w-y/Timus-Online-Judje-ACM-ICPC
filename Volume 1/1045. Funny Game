@@ -1,0 +1,58 @@
+const Nmax=1000;
+      Mmax=20;
+var
+ T,W:array[1..Nmax] of integer;
+ Nnew:array[1..Nmax] of boolean;
+ A:array[1..Nmax,1..Mmax] of integer;
+ N,k,i,x,y:integer;
+
+function min(z1,z2:integer):integer;
+begin
+ if(z1>z2) then z1:=z2;
+ min:=z1;
+end;  
+
+function Dp(v:integer):integer;
+ var j,m:integer;
+begin
+ Nnew[v]:=false;
+ if(T[v]=1)and(v<>k) then begin 
+   Dp:=0;
+ end
+ else begin
+  m:=1;
+  W[v]:=N+5;
+  for j:=1 to T[v] do begin
+   if(Nnew[A[v,j]])and(Dp(A[v,j])=0) then begin
+     W[v]:=min(W[v],A[v,j]);
+   end;  
+  end; 
+  if(W[v]<>N+5) then m:=0;
+  Dp:=1-m;
+ end; 
+end;  
+ 
+ 
+BEGIN
+ readln(N,k);
+ for i:=1 to N do begin
+  T[i]:=0;
+  Nnew[i]:=true;
+ end;
+  
+ for i:=1 to N-1 do begin
+  readln(x,y);
+  inc(T[x]);
+  inc(T[y]);
+  A[x,t[x]]:=y;
+  A[y,t[y]]:=x;
+ end;
+ 
+ x:=Dp(k);
+ if(x=0) then begin 
+  write('First player loses');
+ end
+ else begin
+  write('First player wins flying to airport ',W[k]);
+ end; 
+END.

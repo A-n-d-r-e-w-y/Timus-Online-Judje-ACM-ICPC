@@ -1,0 +1,75 @@
+import java.math.*;
+import java.util.*;
+
+public class BigNumbers 
+{
+    static BigInteger a11,a12,a21,a22,x11,x12,x21,x22;
+    
+    public static void Pow(long s,long k,long m)
+    {
+      if(s<=1)
+      {
+          if(s==0)
+          {
+              a11=BigInteger.ONE;
+              a12=BigInteger.ZERO;
+              a21=BigInteger.ZERO;
+              a22=BigInteger.ONE;
+          }
+          else
+          {
+              a11=BigInteger.ZERO;
+              a12=BigInteger.ONE;
+              a21=(BigInteger.valueOf(k-1)).modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a22=(BigInteger.valueOf(k-1)).modPow(BigInteger.ONE,BigInteger.valueOf(m));
+          }
+      }
+      else
+      {
+          if(s % 2==0)
+          {
+              Pow(s/2,k,m);
+              x11=(a11.multiply(a11)).add(a12.multiply(a21));
+              x12=(a11.multiply(a12)).add(a12.multiply(a22));
+              x21=(a21.multiply(a11)).add(a22.multiply(a21));
+              x22=(a21.multiply(a12)).add(a22.multiply(a22));
+              a11=x11.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a12=x12.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a21=x21.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a22=x22.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+          }
+          else
+          {
+              Pow(s-1,k,m);
+              x11=(a11.multiply(BigInteger.ZERO)).add(a12.multiply(BigInteger.valueOf(k-1)));
+              x12=(a11.multiply(BigInteger.ONE)).add(a12.multiply(BigInteger.valueOf(k-1)));
+              x21=(a21.multiply(BigInteger.ZERO)).add(a22.multiply(BigInteger.valueOf(k-1)));
+              x22=(a21.multiply(BigInteger.ONE)).add(a22.multiply(BigInteger.valueOf(k-1)));
+              a11=x11.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a12=x12.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a21=x21.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+              a22=x22.modPow(BigInteger.ONE,BigInteger.valueOf(m));
+          }
+          
+      }
+    }
+    
+public static void main(String args[])
+{
+ Scanner sc=new Scanner(System.in); 
+ long n,k,m;
+ BigInteger v0,v1,w,ans;
+ 
+ n=sc.nextLong();
+ k=sc.nextLong();
+ m=sc.nextLong();
+ 
+ Pow(n-2,k,m);
+ 
+ w=BigInteger.valueOf(k-1);
+ v0=(a11.multiply(w)).add(a12.multiply(w.multiply(w)));
+ v1=(a21.multiply(w)).add(a22.multiply(w.multiply(w)));
+ ans=(v0.add(v1)).modPow(BigInteger.ONE,BigInteger.valueOf(m));
+ System.out.println(ans.toString());
+}
+}

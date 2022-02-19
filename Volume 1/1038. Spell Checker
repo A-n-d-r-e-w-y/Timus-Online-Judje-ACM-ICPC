@@ -1,0 +1,63 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+const int nmax=11111;
+int buf[nmax];
+int n;
+int errors;
+
+bool Letter(int x)
+{
+       return x>=(int)'A' && x<=(int)'Z' || x>=(int)'a' && x<=(int)'z';
+}
+
+bool BigLetter(int x)
+{
+        return x>=(int)'A' && x<=(int)'Z';
+}
+
+void AnalysWord(int word[],int len,bool first)
+{
+       if(first && !BigLetter(word[1])) errors++;
+       for(int i=2;i<=len;i++)
+              if(BigLetter(word[i])) errors++;
+}
+
+void AnalysSentence(int buf[],int n)
+{
+       int word[nmax];
+       int i=1,len;
+       bool first=true;
+       while(i<=n)
+       {
+              if(Letter(buf[i]))
+              {
+                     len=1;
+                     word[len]=buf[i++];
+                     while(i<=n && Letter(buf[i])) word[++len]=buf[i++];
+                     AnalysWord(word,len,first);
+                     first=false;
+              }
+              else i++;
+       }
+}
+
+int main()
+{
+       errors=n=0;
+       int c;
+       while ((c = getchar()) != EOF)
+       {
+              if(c==(int)'!' || c==(int)'?' || c==(int)'.') 
+              {
+                     AnalysSentence(buf,n);
+                     n=0;
+              }
+              else buf[++n]=c;
+       }
+       if(n>0) AnalysSentence(buf,n);
+       
+       printf("%d",errors);
+       
+       return 0;
+}

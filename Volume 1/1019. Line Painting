@@ -1,0 +1,144 @@
+const inf=1000000000;
+type pnt=^elem;
+      elem=record
+       next,prev:pnt;
+       a,b:int64;
+      end;
+var
+ s:pnt;
+ n,i:longint;
+ c,d,maxlen,x,y:int64;
+ ch:char;
+
+procedure Create(var s:pnt);
+ var p:pnt;
+begin
+ new(p);
+ new(s);
+ s^.a:=-1;
+ s^.b:=0;
+ s^.next:=p;
+ s^.prev:=nil;
+ p^.a:=inf;
+ p^.b:=inf+1;
+ p^.next:=nil;
+ p^.prev:=s;
+end;
+
+
+procedure Print(s:pnt);
+begin
+ while(s<>nil) do begin
+  write('[',s^.a,',',s^.b,'] ');
+  s:=s^.next;
+ end;
+ writeln;
+end;
+
+
+procedure DeleteW(s:pnt;c,d:int64);
+ var p,it:pnt;
+begin
+ it:=s;
+ while(it<>nil) do begin
+  if(c<=it^.a)and(it^.b<=d) then begin
+   it^.next^.prev:=it^.prev;
+   it^.prev^.next:=it^.next;
+  end;
+  it:=it^.next;
+ end;
+ it:=s;
+ while(it<>nil) do begin
+  if(c<=it^.a)and(it^.a<=d) then begin
+   it^.a:=d;
+   if(it^.a=it^.b) then begin
+    it^.next^.prev:=it^.prev;
+    it^.prev^.next:=it^.next;
+   end;
+  end;
+  if(it^.a<=c)and(c<=it^.b)and(it^.b<=d) then begin
+   it^.b:=c;
+   if(it^.a=it^.b) then begin
+    it^.next^.prev:=it^.prev;
+    it^.prev^.next:=it^.next;
+   end;
+  end;
+  if(it^.a<=c)and(d<=it^.b) then begin
+   new(p);
+   p^.a:=d;
+   p^.b:=it^.b;
+   p^.next:=it^.next;
+   p^.prev:=it;
+   it^.b:=c;
+   it^.next^.prev:=p;
+   it^.next:=p;
+   it:=it^.prev;
+  end;
+  it:=it^.next;
+ end;
+end;
+
+
+procedure AddB(s:pnt;c,d:int64);
+ var it,p:pnt;
+begin
+ it:=s;
+ while(it<>nil) do begin
+  if(c<=it^.a)and(it^.b<=d) then begin
+   it^.next^.prev:=it^.prev;
+   it^.prev^.next:=it^.next;
+  end;
+  if(it^.a<=c)and(d<=it^.b) then begin 
+   c:=it^.a;
+   d:=it^.b;
+   it^.next^.prev:=it^.prev;
+   it^.prev^.next:=it^.next;
+  end;
+  if(it^.a<=c)and(it^.b>=c)and(it^.b<=d) then begin 
+   c:=it^.a;
+   it^.next^.prev:=it^.prev;
+   it^.prev^.next:=it^.next;
+  end;
+  if(it^.a>=c)and(it^.a<=d)and(it^.b>=d) then begin 
+   d:=it^.b;
+   it^.next^.prev:=it^.prev;
+   it^.prev^.next:=it^.next;
+  end;
+  it:=it^.next;
+ end;
+ it:=s;
+ while(it^.b<c) do it:=it^.next;
+ new(p);
+ p^.a:=c;
+ p^.b:=d;
+ p^.next:=it;
+ p^.prev:=it^.prev;
+ it^.prev^.next:=p;
+ it^.prev:=p;
+end;
+
+
+BEGIN
+ Create(s);
+
+ readln(n);
+ for i:=1 to n do begin
+  read(c,d,ch);
+  while(ch<>'w')and(ch<>'b') do read(ch);
+  if(ch='w') then DeleteW(s,c,d)
+  else AddB(s,c,d);
+ end;
+ 
+ //Print(s);
+ maxlen:=-1;
+ s:=s^.next;
+ while(s<>nil) do begin
+  if(s^.a-s^.prev^.b>maxlen) then begin
+   maxlen:=s^.a-s^.prev^.b;
+   x:=s^.prev^.b;
+   y:=s^.a;
+  end;
+  s:=s^.next;
+ end;
+ write(x,' ',y);
+END.

@@ -1,0 +1,47 @@
+const Nmax=1000;
+var
+ Ans:int64;
+ T,P:array[1..Nmax] of longint;
+ N,i,j,p0,p1:longint;
+ 
+function HOD(a,b:int64):int64;
+ var c:int64;
+begin
+ if(a<b) then begin 
+  c:=a;
+  a:=b;
+  b:=c;
+ end; 
+ if(a=b)or(b=0) then HOD:=a
+ else begin 
+  if(a mod b<>0) then HOD:=HOD(a mod b,b)
+  else HOD:=b;
+ end; 
+end;  
+ 
+function HOK(a,b:int64):int64;
+begin
+ HOK:=a*b div HOD(a,b);
+end;  
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do read(p[i]);
+
+ for i:=1 to N do begin
+  p0:=p[i];
+  p1:=p[i];
+  T[p0]:=0;
+  j:=1;
+  while(P[p1]<>p0) do begin 
+   inc(j);
+   p1:=P[p1];
+  end; 
+   
+  T[p0]:=j;
+  if(i>=2) then Ans:=HOK(Ans,T[p0]);
+  if(i=1) then Ans:=T[p0];
+ end;
+ 
+ write(Ans); 
+END.  

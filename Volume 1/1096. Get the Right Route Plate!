@@ -1,0 +1,77 @@
+#include <iostream>
+using namespace std;
+
+const int inf=1234567890; 
+
+const int nmax = 1005;
+
+bool a[nmax][nmax];
+int c1[nmax],c2[nmax],list[nmax],dist[nmax],par[nmax];
+int n, m, ans, v;
+
+void BFS(int up, int down);
+
+int main()
+{
+   scanf("%d",&n);
+         
+   for(int i=1;i<=n;i++) scanf("%d%d",&c1[i],&c2[i]);
+   
+   for(int i=1;i<=n;i++)
+      for(int j=1;j<=n;j++)
+         a[i][j]=(c1[i]==c1[j] || c2[i]==c1[j]);
+
+   scanf("%d%d%d",&m,&c1[n+1],&c2[n+1]);
+   
+   for(int i=1;i<=n;i++)
+   {
+      a[i][n+1]=(c1[i]==c1[n+1] || c2[i]==c1[n+1]);
+      a[n+1][i]=(c1[n+1]==c1[i] || c2[n+1]==c1[i]);
+   }
+   
+   for(int i=1;i<=n;i++) dist[i]=inf;
+   
+   list[1]=n+1;
+   dist[n+1]=0;
+   BFS(1,0);
+   
+   ans=inf;
+   for(int i=1;i<=n+1;i++)
+      if((c1[i]==m || c2[i]==m) && ans>dist[i]) ans=dist[i], v=i;
+   
+   if(ans==inf) printf("IMPOSSIBLE");
+   else
+   {
+      printf("%d",ans);
+      m=1;
+      list[m]=v;
+      while(v!=n+1)
+      {
+         v=par[v];
+         m++;
+         list[m]=v;
+      }
+      for(int i=m-1;i>=1;i--) printf("\n%d",list[i]);
+   }
+   
+	return 0;
+}
+
+
+void BFS(int up, int down)
+{
+   down++;
+   if(down>up) return;
+   int v=list[down];
+   for(int i=1;i<=n+1;i++)
+   {
+      if(a[v][i] && dist[i]==inf)
+      {
+         dist[i]=dist[v]+1;
+         up++;
+         list[up]=i;
+         par[i]=v;
+      }
+   }
+   BFS(up,down);
+}

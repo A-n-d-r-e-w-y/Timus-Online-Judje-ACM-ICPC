@@ -1,0 +1,86 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+using namespace std;
+
+const int nmax = 100005;
+const int kmax = 10005;
+
+int t[nmax*4];
+int cnt[nmax];
+int n,k,m;
+int ch;
+int ans, pos;
+
+void Init(int v, int tl, int tr);
+void Change(int v, int tl, int tr,int i,int x);
+int Sum(int v,int tl,int tr,int l,int r);
+
+int main()
+{
+    scanf("%d%d",&n,&k);
+   
+    Init(1,1,n);
+	cnt[0]=0;
+	
+	m=0;
+	while((ch = getchar()) != EOF)
+	{
+   	   if(ch>='0' && ch<='9' || ch=='*')
+	   {
+	   		m++;
+	   		if(ch=='*') cnt[m]=cnt[m-1]+1;
+	   		else cnt[m]=cnt[m-1], Change(1,1,n,m,ch-'0');
+	   }
+	}
+	
+	pos=0;
+	for(int i=1;i<=n-k+1;i++)
+	{
+	   if(cnt[i+k-1]-cnt[i-1]==0)
+	   {
+	      int now=Sum(1,1,n,i,i+k-1);
+	      if(pos==0 || now<ans) ans=now, pos=i;
+	   }
+	}
+	
+	printf("%d",pos);
+	
+	return 0;
+}
+
+
+void Init(int v, int tl, int tr)
+{
+   if(tl==tr) t[v]=0;
+   else
+   {
+      int m=(tl+tr)/2;
+      Init(2*v,tl,m);
+      Init(2*v+1,m+1,tr);
+      t[v]=0;
+   }
+}
+
+void Change(int v, int tl, int tr,int i,int x)
+{
+   if(tl==tr) t[v]=x;
+   else
+   {
+      int m=(tl+tr)/2;
+      if(i<=m) Change(2*v,tl,m,i,x);
+      else Change(2*v+1,m+1,tr,i,x);
+      t[v]=t[2*v]+t[2*v+1];
+   }
+}
+
+int Sum(int v,int tl,int tr,int l,int r)
+{
+   if(tl==l && tr==r) return t[v];
+   else
+   {
+      int m=(tl+tr)/2;
+      if(r<=m) return Sum(2*v,tl,m,l,r);
+      if(l>m) return Sum(2*v+1,m+1,tr,l,r);
+      return Sum(2*v,tl,m,l,m)+Sum(2*v+1,m+1,tr,m+1,r);
+   }
+}

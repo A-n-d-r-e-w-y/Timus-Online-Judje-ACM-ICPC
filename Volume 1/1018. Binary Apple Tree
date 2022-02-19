@@ -1,0 +1,79 @@
+const Nmax=200;
+      inf=-999999999999999;
+var
+ dp:array[1..Nmax,0..Nmax-1] of int64;
+ e,a,count:array[1..Nmax,0..2] of integer;
+ d:array[1..Nmax] of -1..2;
+ Nnew:array[0..Nmax] of boolean;
+ N,Q,i,x,y,z:integer;
+ 
+function max(a,b:int64):int64;
+begin
+ if(a<b) then max:=b
+ else max:=a;
+end;  
+ 
+procedure Solve(v:integer);
+ var j,k,u1,u2,d1,d2:integer;
+begin
+ Nnew[v]:=false; 
+ if(d[v]=0) then begin
+  count[v,0]:=0;
+  count[v,1]:=0;
+  dp[v,0]:=0;
+  for j:=1 to N-1 do dp[v,j]:=inf; 
+ end
+ else begin
+  u1:=0;
+  u2:=0;
+  if(Nnew[a[v,0]]) then begin u1:=a[v,0];d1:=0;Solve(u1);end;
+  if(Nnew[a[v,1]]) then begin 
+   if(u1<>0) then begin u2:=a[v,1];d2:=1;end 
+   else begin u1:=a[v,1];d1:=1;end;
+   Solve(a[v,1]);
+  end;
+  if(Nnew[a[v,2]]) then begin u2:=a[v,2];d2:=2;Solve(u2);end;
+ 
+  count[v,0]:=count[u1,0]+count[u1,1]+1;
+  count[v,1]:=count[u2,0]+count[u2,1]+1;
+  
+  for j:=0 to N-1 do begin 
+   dp[v,j]:=inf;
+   for k:=0 to j do begin
+    if(count[u1,0]+count[u1,1]>=k)and(count[u2,0]+count[u2,1]>=j-k) then 
+    dp[v,j]:=max(dp[v,j],dp[u1,k]+dp[u2,j-k]+e[v,d1]+e[v,d2]);
+    if(count[u1,0]+count[u1,1]>=j-count[u2,0]-count[u2,1]-1)and(count[u2,0]+count[u2,1]+1<=j) then
+    dp[v,j]:=max(dp[v,j],dp[u1,j-count[u2,0]-count[u2,1]-1]+e[v,d1]);
+    if(count[u2,0]+count[u2,1]>=j-count[u1,0]-count[u1,1]-1)and(count[u1,0]+count[u1,1]+1<=j) then
+    dp[v,j]:=max(dp[v,j],dp[u2,j-count[u1,0]-count[u1,1]-1]+e[v,d2]);
+    if(count[v,0]+count[v,1]=j) then dp[v,j]:=0;
+   end; 
+  end;
+  
+ end;
+end; 
+ 
+BEGIN 
+ readln(N,Q);
+ for i:=1 to N do begin
+  Nnew[i]:=true;
+  d[i]:=-1;
+  a[i,0]:=0;
+  a[i,1]:=0;
+  a[i,2]:=0;
+ end;
+ Nnew[0]:=false;
+ 
+ for i:=1 to N-1 do begin
+  readln(x,y,z); 
+  inc(d[x]);
+  a[x,d[x]]:=y;
+  e[x,d[x]]:=z;
+  inc(d[y]);
+  a[y,d[y]]:=x;
+  e[y,d[y]]:=z;
+ end; 
+ 
+ Solve(1);
+ write(dp[1,N-1-q]);
+END.
