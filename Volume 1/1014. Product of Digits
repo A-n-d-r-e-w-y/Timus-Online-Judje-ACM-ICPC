@@ -1,0 +1,26 @@
+var
+a:array[2..9] of longint;
+N,i,q:longint;
+BEGIN
+readln(N);
+for i:=2 to 9 do begin a[i]:=0;end;
+if(N=1) then begin writeln('1');end
+
+else begin
+if(N=0) then begin writeln('10');end
+else begin
+
+for i:=9 downto 2 do begin
+while(N mod i=0) do begin N:=N div i;a[i]:=a[i]+1;end;
+end; 
+end;
+
+if(N>1) then begin writeln('-1');end
+else begin 
+
+for i:=2 to 9 do begin
+while(a[i]<>0) do begin write(i);a[i]:=a[i]-1;end;
+end;
+end;
+end;
+END.

@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <map> 
+using namespace std;
+
+
+map<int, bool> exist, odd;
+map<int, int> pred;
+int L, q, a, b;
+string s;
+int ans;
+
+
+int test()
+{
+      int x;
+      scanf("%d", &x);
+      return x;
+}
+
+
+bool add(int a, int b, bool c)
+{
+      if(!exist[b])
+      {
+      		exist[b] = true;
+      		odd[b] = c;
+      		pred[b] = a;
+      		return true;
+      }
+      else
+      {
+      		int i = pred[b];
+      		if(i == a)
+      			return odd[b] == c;
+      		if(i < a)
+      			return add(i, a-1, odd[b] != c);
+      		return add(a, i-1, odd[b] != c);
+      }
+}
+
+
+int main()
+{
+    while(L = test() != -1)
+    {
+          exist.clear();
+          pred.clear();
+          odd.clear();
+          ans = -1;
+          scanf("%d", &q);
+          for(int i=0;i<q;i++)
+          {
+                  cin>>a>>b>>s;
+                  bool c = s == "odd";
+                  //cout<<a<<" "<<b<<" "<<c<<endl;
+                  if(!add(a,b,c) && ans==-1)
+                        ans = i;
+          }
+          if(ans == -1)
+            ans = q;
+          printf("%d\n", ans);
+    }
+    
+    return 0;
+}

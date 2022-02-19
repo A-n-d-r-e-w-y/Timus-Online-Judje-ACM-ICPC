@@ -1,0 +1,47 @@
+#include <map>
+#include <iostream>
+using namespace std;
+ 
+const int nmax=55;
+ 
+multimap<int,int> edge[nmax];
+int col[nmax*nmax];
+int n, m, c;
+ 
+void dfs(int v);
+ 
+int main() 
+{
+	cin>>n>>m;
+	for(int i=1;i<=m;i++)
+	{
+	   int x,y;
+	   cin>>x>>y;
+	   edge[x].insert(make_pair(y,i));
+	   edge[y].insert(make_pair(x,i));
+	   col[i]=-1;
+	}
+ 
+	c=0;
+	dfs(1);
+ 
+	cout<<"YES"<<endl;
+	for(int i=1;i<m;i++) cout<<col[i]<<" ";
+	cout<<col[m];
+ 
+	return 0;
+}   
+ 
+void dfs(int v)
+{
+   while(edge[v].size()>0)
+   {
+      int u=edge[v].begin()->first, j=edge[v].begin()->second;
+      edge[v].erase(edge[v].begin());
+      if(col[j]==-1)
+      {
+         col[j]=++c;
+         dfs(u);
+      }
+   }
+}

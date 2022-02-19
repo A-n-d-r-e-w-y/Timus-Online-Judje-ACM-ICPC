@@ -1,0 +1,14 @@
+const nmax=256000;
+var
+ a:array[1..nmax] of int64;
+ n,i:longint;
+ 
+begin
+ n:=0;
+ while not seekeof do begin
+  inc(n);
+  read(a[n]);
+ end;
+ 
+ for i:=n downto 1 do writeln(sqrt(a[i]):0:10);
+end.

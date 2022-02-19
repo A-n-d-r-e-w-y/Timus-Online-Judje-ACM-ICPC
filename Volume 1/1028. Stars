@@ -1,0 +1,49 @@
+const Nmax=50000;
+      Mmax=trunc(sqrt(Nmax));
+var 
+ count,ans:array[0..Nmax] of longint;
+ L,R,E:array[1..Nmax] of longint;
+ N,i,x,m:longint;
+ 
+procedure Search;
+ var j,t:longint;  
+begin
+ t:=0;
+ j:=1;
+ while(R[j]<=x) do begin
+  inc(t,E[j]);
+  inc(j);
+ end;
+ 
+ for j:=L[j] to x do inc(t,count[j]); 
+ inc(ans[t]);
+ inc(count[x]);
+ 
+ for j:=1 to m do if(L[j]<=x)and(x<=R[j]) then inc(E[j]);
+end; 
+ 
+ 
+BEGIN
+ for i:=0 to Nmax do begin
+  count[i]:=0;
+  ans[i]:=0;
+ end;
+ 
+ m:=0;
+ i:=0;
+ while(i<=Nmax) do begin
+  inc(m);
+  L[m]:=i;
+  R[m]:=i+Mmax-1;
+  E[m]:=0;
+  inc(i,Mmax);
+ end; 
+ 
+ readln(N);
+ for i:=1 to N do begin 
+  readln(x);
+  Search;
+ end; 
+ 
+ for i:=0 to N-1 do writeln(ans[i]); 
+END. 

@@ -1,0 +1,19 @@
+var
+ k:array[1..100] of longint;
+ Los:array[1..15000] of boolean;
+ i,j,N,M:longint;
+ 
+BEGIN 
+ readln(N,M);
+ for i:=1 to M do read(k[i]);
+ 
+ Los[1]:=true;
+ for i:=1 to N do begin
+  Los[i]:=true;
+  for j:=1 to M do 
+   if(i-k[j]>0)and(Los[i-k[j]]) then Los[i]:=false;
+ end;
+ 
+ if(Los[N]) then write('2')
+ else write('1');
+END.   

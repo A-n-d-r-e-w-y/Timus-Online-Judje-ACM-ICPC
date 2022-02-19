@@ -1,0 +1,200 @@
+#include <set>
+#include <vector>
+#include <string>
+#include <iostream>
+using namespace std;
+
+const int inf=123456789;
+const int nmax=9*9*9*9+1;
+
+struct cube
+{
+  int ind[7];
+  cube(){}
+  void change(int x[7]){for(int i=1;i<=6;i++) ind[i]=x[i];}
+  void Left()
+  {
+       int x[7];
+       for(int i=1;i<=6;i++) x[i]=ind[i];
+       ind[1]=x[1];
+       ind[2]=x[5];
+       ind[3]=x[3];
+       ind[4]=x[6];
+       ind[5]=x[4];
+       ind[6]=x[2];
+  }
+  void Right(){for(int i=0;i<3;i++) Left();}
+  void Forward()
+  {
+       int x[7];
+       for(int i=1;i<=6;i++) x[i]=ind[i];
+       ind[1]=x[5];
+       ind[2]=x[2];
+       ind[3]=x[6];
+       ind[4]=x[4];
+       ind[5]=x[3];
+       ind[6]=x[1];
+  }
+  void Back(){for(int i=0;i<3;i++) Forward();}
+};
+
+struct vertex
+{
+  int dist, pred;
+  cube c;
+  vertex(){}
+};
+
+vertex vert[nmax];
+int xs, ys, xf, yf;
+int s[7];
+vector<string> vec;
+set<pair<int, int>> myset;
+
+void Input();
+int GetVert(int x, int y, int i1, int i2);
+void Solve(int vs);
+
+int main()
+{
+     Input();
+     
+     for(int i=1;i<nmax;i++) vert[i].dist=inf;
+     
+     int vs=GetVert(xs,ys,1,4);
+     int x[7];
+     x[1]=1;
+     x[2]=4;
+     x[3]=2;
+     x[4]=6;
+     x[5]=5;
+     x[6]=3;
+     vert[vs].c.change(x);
+     vert[vs].dist=s[vert[vs].c.ind[5]];
+     Solve(vs);
+     
+     int min=inf, w;
+     for(int i=1;i<=8;i++)
+          for(int j=1;j<=8;j++)
+          {
+               int u=GetVert(xf,yf,i,j);
+               if(vert[u].dist<min)
+               {
+                    min=vert[u].dist;
+                    w=u;
+               }
+          }
+ 
+     string s;
+     s=char(w/729-1+'a');
+     s=s+char((w % 729)/81+'0');
+     vec.push_back(s);
+     
+     while(true)
+     {
+          w=vert[w].pred;
+          int x=w/729;
+          int y=(w % 729)/81;
+          s=char(x-1+'a');
+          s=s+char(y+'0');
+          vec.push_back(s);
+          if(w==vs) break;
+     }
+     
+     cout<<min;
+     for(int i=vec.size()-1;i>=0;i--) cout<<" "<<vec[i];
+     
+     return 0;
+}
+
+void Solve(int vs)
+{
+	myset.insert(make_pair(vert[vs].dist, vs));
+	while (!myset.empty())
+	{
+		int v = myset.begin()->second;
+		myset.erase(make_pair(vert[v].dist, v));
+          int x=v/729;
+          int y=(v % 729)/81;
+          
+          if(x>1)
+          {
+               cube c=vert[v].c;
+               int cost=s[c.ind[4]];
+               c.Left();
+               int u=GetVert(x-1,y,c.ind[1],c.ind[2]);
+               vert[u].c=c;
+               if(vert[u].dist>vert[v].dist+cost)
+               {
+                    myset.erase(make_pair(vert[u].dist, u));
+                    vert[u].dist=vert[v].dist+cost;
+                    vert[u].pred=v;
+                    myset.insert(make_pair(vert[u].dist, u));
+               }
+          }
+          if(x<8)
+          {
+               cube c=vert[v].c;
+               int cost=s[c.ind[2]];
+               c.Right();
+               int u=GetVert(x+1,y,c.ind[1],c.ind[2]);
+               vert[u].c=c;
+               if(vert[u].dist>vert[v].dist+cost)
+               {
+                    myset.erase(make_pair(vert[u].dist, u));
+                    vert[u].dist=vert[v].dist+cost;
+                    vert[u].pred=v;
+                    myset.insert(make_pair(vert[u].dist, u));
+               }
+          }
+          if(y>1)
+          {
+               cube c=vert[v].c;
+               int cost=s[c.ind[1]];
+               c.Back();
+               int u=GetVert(x,y-1,c.ind[1],c.ind[2]);
+               vert[u].c=c;
+               if(vert[u].dist>vert[v].dist+cost)
+               {
+                    myset.erase(make_pair(vert[u].dist, u));
+                    vert[u].dist=vert[v].dist+cost;
+                    vert[u].pred=v;
+                    myset.insert(make_pair(vert[u].dist, u));
+               }
+          }
+          if(y<8)
+          {
+               cube c=vert[v].c;
+               int cost=s[c.ind[3]];
+               c.Forward();
+               int u=GetVert(x,y+1,c.ind[1],c.ind[2]);
+               vert[u].c=c;
+               if(vert[u].dist>vert[v].dist+cost)
+               {
+                    myset.erase(make_pair(vert[u].dist, u));
+                    vert[u].dist=vert[v].dist+cost;
+                    vert[u].pred=v;
+                    myset.insert(make_pair(vert[u].dist, u));
+               }
+          }
+	}
+}
+
+
+
+void Input()
+{
+     string str;
+     cin>>str;
+     xs=str[0]-'a'+1;
+     ys=str[1]-'0';
+     cin>>str;
+     xf=str[0]-'a'+1;
+     yf=str[1]-'0';
+     for(int i=1;i<=6;i++) cin>>s[i];
+}
+
+int GetVert(int x, int y, int i1, int i2)
+{
+     return x*729+y*81+i1*9+i2;
+}

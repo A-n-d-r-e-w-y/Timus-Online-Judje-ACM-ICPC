@@ -1,0 +1,28 @@
+const Nmax=10000000;
+      Mmax=100000;
+var
+ P,Q:real;
+ A,B,K:int64;
+ N,i:longint;
+ 
+BEGIN 
+ read(P,Q);
+ 
+ N:=Nmax;
+ i:=1;
+ 
+ while(N=Nmax)and(i<=Nmax) do begin
+  A:=round(P*1000*i);
+  B:=round(Q*1000*i);
+  
+  if(B mod Mmax=0) then K:=(B div Mmax)-1
+  else K:=(B div Mmax);
+  if(A<Mmax*K)and(Mmax*K<B) then N:=i;
+  
+  K:=(A div Mmax)+1;
+  if(A<Mmax*K)and(Mmax*K<B) then N:=i;
+  inc(i);
+ end;
+ 
+ write(N);
+END. 

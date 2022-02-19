@@ -1,0 +1,7 @@
+Var k,i:longint;
+Begin
+ readln(k);
+ i:=3;
+ while(k mod i>0)and(i<=100000000) do inc(i);
+ writeln(i-1);
+End.

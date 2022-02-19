@@ -1,0 +1,24 @@
+var 
+i,K,N:longint;
+f:Array[0..43] of longint;
+BEGIN
+readln(N,K);
+f[0]:=1;
+f[1]:=2;
+f[2]:=3;
+for i:=3 to 43 do begin
+f[i]:=f[i-1]+f[i-2];
+end;
+
+if K>f[N] then begin writeln('-1');end
+else begin
+
+while N>0 do begin
+
+if K>f[N-1] then begin K:=K-f[N-1];N:=N-1;write('1');end
+else begin N:=N-1;write('0');end;
+       
+end;
+end;
+
+END.

@@ -1,0 +1,81 @@
+const NMAX=25;
+var
+ c:array[0..9] of longint;
+ r:array[0..6] of longint;
+ z:array[0..NMAX] of longint;
+ N,len,i,j,k,ost:longint;
+ s,t:string;
+ ch:char;
+ f:boolean;
+
+procedure QSort(L,R:longint); 
+ var i,j:longint;
+     X,Y:char;
+begin 
+ X:=s[random(r+1-l)+l]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while s[i]<X do i:=i+1; 
+   while s[j]>X do j:=j-1; 
+     if i<=j then 
+       begin 
+         y:=s[i]; s[i]:=s[j]; s[j]:=y; 
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSort(L,j); 
+  if i<R then QSort(i,R); 
+end; 
+
+ 
+begin
+ randomize;
+ r[0]:=3241; 
+ r[1]:=1324; 
+ r[2]:=1234; 
+ r[3]:=2341; 
+ r[4]:=1243; 
+ r[5]:=1342; 
+ r[6]:=2134; 
+ 
+ z[0]:=1;
+ for i:=1 to NMAX do z[i]:=(z[i-1]*10) mod 7;
+ 
+ readln(N);
+ for j:=1 to N do begin
+  readln(s);
+  len:=length(s);
+  for i:=1 to 9 do if(i<5) then c[i]:=-1 else c[i]:=0;
+  c[0]:=0;
+  for i:=1 to len do inc(c[ord(s[i])-ord('0')]);
+  i:=1;
+  while(i<=9)and(c[i]=0) do inc(i);
+  if(i=10) then begin
+   write(r[0]);
+   for i:=5 to len do write('0');
+   writeln;
+  end 
+  else begin
+   t:=s;
+   k:=1;
+   t[k]:=chr(ord('0')+i);
+   dec(c[i]);
+   i:=0;
+   while(i<=9) do begin
+    while(c[i]>0) do begin inc(k);t[k]:=chr(ord('0')+i);dec(c[i]);end;
+    inc(i);
+   end;
+   t[len]:='0';
+   t[len-1]:='0';
+   t[len-2]:='0';
+   t[len-3]:='0';
+   s:=t;
+   ost:=0;
+   for i:=1 to len do ost:=(ost+(ord(s[i])-ord('0'))*z[len-i]) mod 7;
+   delete(s,len-3,4);
+   write(s);
+   writeln(r[(7-ost) mod 7]);
+  end;
+ end;
+end.

@@ -1,0 +1,37 @@
+#include <string>
+#include <iostream>
+using namespace std;
+
+const int nmax=30000;
+const int N=1999;
+
+string s, line;
+int pos;
+
+int Joseph(int n, int k)
+{
+   int res=0;
+   for(int i=1;i<=n;i++) res=(res+k)%i;
+   return res;
+}
+
+int main()
+{	
+   while(getline(cin, line))
+   {
+      for(int i=0;i<line.length();i++) 
+         if(line[i]=='\n') line.erase(i,1);
+      s=s+line;
+   }
+   
+   pos=Joseph(s.length(), N);
+
+   if(s[pos]=='?') cout<<"Yes";
+   else
+   {
+      if(s[pos]==' ') cout<<"No";
+      else cout<<"No comments";
+   }
+   
+	return 0;
+}

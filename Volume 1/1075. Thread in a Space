@@ -1,0 +1,35 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct Point{double x,y,z;};
+
+double sqr(double x){return x*x;}
+double dist(const Point& A, const Point& B){return sqrt(sqr(A.x-B.x)+sqr(A.y-B.y)+sqr(A.z-B.z));}
+
+Point A,B,C;
+double R;
+double AB, AC, BC, w;
+
+int main()
+{
+    cin>>A.x>>A.y>>A.z;
+    cin>>B.x>>B.y>>B.z;
+    cin>>C.x>>C.y>>C.z;
+    cin>>R;
+    
+    AB=dist(A,B);
+    AC=dist(A,C);
+    BC=dist(B,C);
+    
+    w=(AC*AC+BC*BC-AB*AB)/(2*AC*BC);
+    if(w>1) w=1;
+    if(w<-1) w=-1;
+    if (acos(w)-acos(R/AC)-acos(R/BC)<0) printf("%.2lf",AB);
+    else
+    {
+         printf("%.2lf",sqrt(AC*AC-R*R)+sqrt(BC*BC-R*R)+R*(acos(w)-acos(R/AC)-acos(R/BC)));
+   }
+   
+   return 0;
+}

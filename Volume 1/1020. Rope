@@ -1,0 +1,36 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <math.h>
+#define PI 3.1415926535
+
+double R(double x1, double y1, double x2, double y2);
+
+void main()
+{
+    double ans,r,x,y,xn,yn,x0,y0;
+    int N;
+    scanf("%d %lf\n", &N, &r);
+    ans = 2*PI*r;
+    
+    scanf("%lf%lf\n", &x, &y);
+    x0=x;
+    y0=y;
+    xn=x0;
+    yn=y0;
+    
+    for (int i = 1; i < N; i++)
+    {
+        scanf("%lf%lf\n", &xn, &yn);
+        ans += R(xn, yn, x, y);
+        x = xn;
+        y = yn;   
+    }
+    ans += R(xn, yn, x0, y0);
+     
+    printf("%.2lf", ans);
+}
+
+double R(double x1, double y1, double x2, double y2)
+{
+    return sqrt((x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2));
+}

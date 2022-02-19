@@ -1,0 +1,93 @@
+#include <iostream>
+using namespace std;
+
+const int nmax = 10005;
+
+int c, n;
+char a[nmax];
+int state;  //0=text, 1=t-comm, 2=a-comm, 3=arithmetic
+int sum;
+
+bool Set1(char c);
+bool Set2(char c);
+
+int main()
+{
+	n = 0;
+	while ((c = getchar()) != EOF) a[n++] = c;
+
+	state = 0;
+	sum = 0;
+	for(int i=0;i<n;)
+	{
+		switch (state)
+		{
+			case 0:
+				switch (a[i])
+				{
+					case '(':
+						if (i + 1 == n) { cout << "NO"; return 0; }
+						if (a[i + 1] == '*') state = 1, i += 2;
+						else state = 3, sum++, i++;
+						break;
+					case ')':
+						cout << "NO"; return 0;
+					default:
+						i++;
+				}
+				break;
+			case 1:
+				if (a[i] == '*')
+				{
+					if (i + 1 == n) { cout << "NO"; return 0; }
+					if (a[i + 1] == ')') state = 0, i += 2;
+					else i++;
+				}
+				else i++;
+				break;
+			case 2:
+				if (a[i] == '*')
+				{
+					if (i + 1 == n) { cout << "NO"; return 0; }
+					if (a[i + 1] == ')') state = 3, i += 2;
+					else i++;
+				}
+				else i++;
+				break;
+			case 3:
+				if(!Set1(a[i]) && !Set2(a[i])) { cout << "NO"; return 0; }
+				if (Set1(a[i])) { i++; continue; }
+				switch (a[i])
+				{
+					case '(':
+						if (i + 1 == n) { cout << "NO"; return 0; }
+						if (a[i + 1] == '*') state = 2, i += 2;
+						else sum++, i++;
+						break;
+					case ')':
+						sum--, i++;
+						if(sum<0) { cout << "NO"; return 0; }
+						if (sum == 0) state = 0;
+						break;
+				}
+				break;
+		}
+	}
+
+	if (state == 0) cout << "YES";
+	else cout << "NO";
+
+	return 0;
+}
+
+
+bool Set1(char c)
+{
+	return c == '=' || c == '+' || c == '-' || c == '*' || c == '/' ||
+	       c == '\n' || c=='\r' || c >= '0' && c <= '9';
+}
+
+bool Set2(char c)
+{
+	return c=='(' || c==')';
+}

@@ -1,0 +1,22 @@
+const Nmax=200;
+var
+ x,y:array[1..Nmax] of int64;
+ k,max:longint;
+ N,i,j,t:integer;
+
+BEGIN
+ readln(N);
+ for i:=1 to N do readln(x[i],y[i]);
+ 
+ max:=0;
+ for i:=1 to N-1 do begin
+ for j:=i+1 to N do begin
+  k:=2;
+  for t:=1 to N do 
+   if(t<>i)and(t<>j)and((y[j]-y[i])*x[t]+(y[i]*x[j]-x[i]*y[j])=y[t]*(x[j]-x[i])) then inc(k);
+  if(max<k) then max:=k;
+ end;
+ end;
+ 
+ write(max);
+END.  

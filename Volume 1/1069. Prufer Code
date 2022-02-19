@@ -1,0 +1,188 @@
+const Nmax=10000;
+type pnt=^elem;
+     elem=record
+      info:integer;
+      next:pnt;
+     end; 
+
+
+var
+ A,B,D:array[1..Nmax] of integer;
+ Adr,Koh:array[1..Nmax] of pnt;
+ N,i,j,k,r:integer;
+ y:pnt;
+ 
+procedure QSort(L,R:longint); 
+ var i,j:longint;
+     X,Y:int64;
+begin 
+ X:=A[random(r+1-l)+l]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while A[i]<X do i:=i+1; 
+   while A[j]>X do j:=j-1; 
+     if i<=j then 
+       begin 
+         y:=A[i]; A[i]:=A[j]; A[j]:=y; 
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSort(L,j); 
+  if i<R then QSort(i,R); 
+end; 
+ 
+procedure Swap(var x,y:integer);
+ var z:integer;
+begin
+ z:=x;
+ x:=y;
+ y:=z;
+end; 
+ 
+procedure Insert(i:integer);
+begin
+ if(i>1) then begin
+  if(a[i div 2]>a[i]) then begin
+   Swap(a[i div 2],a[i]);
+   Insert(i div 2);
+  end; 
+ end;
+end; 
+ 
+procedure ExtractMin(i:integer);
+ var z:integer;
+     f:boolean;
+begin
+ f:=true;
+ if(2*i<=r)and(f) then begin
+  if(2*i+1<=r)and(a[i]>a[2*i])and(a[i]>a[2*i+1]) then begin
+   if(a[2*i]>a[2*i+1]) then begin
+    z:=a[2*i+1];
+    a[2*i+1]:=a[i];
+    a[i]:=z;
+    ExtractMin(2*i+1);
+   end
+   else begin
+    z:=a[2*i];
+    a[2*i]:=a[i];
+    a[i]:=z;
+    ExtractMin(2*i);
+   end;
+   f:=false;
+  end;
+  
+  if(2*i+1<=r)and(a[i]>a[2*i])and(a[i]<=a[2*i+1])and(f) then begin
+   z:=a[2*i];
+   a[2*i]:=a[i];
+   a[i]:=z;
+   ExtractMin(2*i);
+   f:=false;
+  end;
+  
+  if(2*i+1<=r)and(a[i]<=a[2*i])and(a[i]>a[2*i+1])and(f) then begin
+   z:=a[2*i+1];
+   a[2*i+1]:=a[i];
+   a[i]:=z;
+   ExtractMin(2*i+1);
+   f:=false;
+  end;
+  
+  if(2*i<=r)and(2*i+1>r)and(a[i]>a[2*i])and(f) then begin
+   z:=a[2*i];
+   a[2*i]:=a[i];
+   a[i]:=z;
+   ExtractMin(2*i);
+   f:=false;
+  end;
+ end;
+end; 
+ 
+BEGIN
+ randomize;
+ read(j);
+ N:=1;
+ B[N]:=j;
+ read(j); 
+ while(j<>0) do begin 
+  inc(N);
+  B[N]:=j;
+  read(j);
+ end;    
+ 
+ for i:=1 to N+1 do begin 
+  D[i]:=0;
+  Adr[i]:=nil;
+ end;
+  
+ for i:=1 to N+1 do 
+  inc(D[b[i]]);
+ 
+ i:=1;
+ while(i<=N)and(D[i]>0) do inc(i);
+ 
+ r:=1;
+ A[r]:=i;
+ for j:=i+1 to N do begin 
+  if(D[j]=0) then begin
+   inc(r);
+   A[r]:=j;
+   Insert(r);
+  end;
+ end;
+ 
+ for i:=1 to N do begin
+  if(Adr[a[1]]=nil) then begin
+   new(y);
+   y^.info:=b[i];
+   y^.next:=nil;
+   Adr[a[1]]:=y;
+   Koh[a[1]]:=y;
+  end
+  else begin
+   new(y);
+   y^.info:=b[i];
+   y^.next:=nil;
+   Koh[a[1]]^.next:=y;
+   Koh[a[1]]:=y;
+  end;   
+  if(Adr[b[i]]=nil) then begin
+   new(y);
+   y^.info:=a[1];
+   y^.next:=nil;
+   Adr[b[i]]:=y;
+   Koh[b[i]]:=y;
+  end
+  else begin
+   new(y);
+   y^.info:=a[1];
+   y^.next:=nil;
+   Koh[b[i]]^.next:=y;
+   Koh[b[i]]:=y;
+  end;   
+   
+   a[1]:=a[r];
+   dec(r);
+   ExtractMin(1);
+   dec(D[b[i]]);
+   if(D[b[i]]=0) then begin
+    inc(r);
+    A[r]:=b[i];
+    Insert(r);
+   end;
+ end;    
+ 
+ for i:=1 to N+1 do begin
+  y:=Adr[i];
+  write(i,': ');
+  r:=0;
+  while(y<>nil) do begin
+   inc(r);
+   A[r]:=y^.info;
+   y:=y^.next;
+  end;
+  Qsort(1,r);
+  for j:=1 to r do write(A[j],' ');
+  writeln;
+ end; 
+END. 

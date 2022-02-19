@@ -1,0 +1,75 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+using namespace std;
+
+const long long inf=12345678901234567;
+const int nmax = 10005;
+
+long long dp[nmax];
+long long x[nmax];
+int n, s, f;
+long long L1, L2, L3, C1, C2, C3;
+
+void swap(int& x, int &y);
+long long min(long long x, long long y);
+int BinarySearch(int L, int R, long long a, long long b); 
+
+int main()
+{
+     scanf("%lld%lld%lld%lld%lld%lld",&L1,&L2,&L3,&C1,&C2,&C3);
+     scanf("%d",&n);
+     scanf("%d%d",&s,&f);
+     if(s>f) swap(s, f);
+     x[1]=0;
+     for(int i=1;i<=n-1;i++) scanf("%lld",&x[i+1]);
+     
+     dp[f]=0;
+     for(int i=f-1;i>=s;i--)
+     {
+          dp[i]=inf;
+          int j;
+          j=BinarySearch(i+1,f,0,x[i]+L1);
+          if(j!=-1) dp[i]=min(dp[i], C1 + dp[j]);
+          j=BinarySearch(i+1,f,x[i]+L1,x[i]+L2);
+          if(j!=-1) dp[i]=min(dp[i], C2 + dp[j]);
+          j=BinarySearch(i+1,f,x[i]+L2,x[i]+L3);
+          if(j!=-1) dp[i]=min(dp[i], C3 + dp[j]);
+     }
+     
+     printf("%lld",dp[s]);
+     
+	return 0;
+}
+
+void swap(int& x, int& y)
+{
+     int z=x;
+     x=y;
+     y=z;
+}
+
+long long min(long long x, long long y)
+{
+     return x<y?x:y;
+}
+
+int BinarySearch(int L, int R, long long a, long long b)
+{
+     while(R-L>1)
+     {
+          int m=(L+R)/2;
+          if(x[m]>b) R=m-1;
+          else L=m;
+     }
+     if(x[L]>b) return -1;
+     if(x[R]>b)
+     {
+          if(x[L]<=a) return -1;
+          return L;
+     }
+     else
+     {
+          if(x[R]<=a) return -1;
+          return R;
+     }
+}

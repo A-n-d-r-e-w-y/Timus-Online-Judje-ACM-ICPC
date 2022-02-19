@@ -1,0 +1,23 @@
+const eps=0.0000001;
+var
+ n,i:longint;
+ a,c,l,r,hi:real;
+ 
+begin
+ read(n,a);
+ l:=0;
+ r:=a;
+ while(r-l>eps) do begin
+  c:=(l+r)/2;
+  i:=2;
+  while(i<=n) do begin
+   hi:=(i-2)*(c-a+i-1)+c;
+   if(hi<0) then i:=n+1;
+   inc(i);
+  end;
+  if(i=n+1) then r:=c
+  else l:=c;
+ end;
+ 
+ write(c*(n-1)+(n-2)*(n-1-a):0:2);
+end.

@@ -1,0 +1,25 @@
+var
+a,N,i,k,S:longint;
+j:integer;
+f:array[1..10000] of integer;
+BEGIN
+for j:=1 to 10000 do begin
+f[j]:=0;
+end;
+S:=1;
+for j:=1 to 10 do begin
+readln(a);
+k:=2;
+i:=2;
+while(k<=a) do begin
+if (a mod i=0) then begin f[i]:=f[i]+1;a:=a div i;end
+else begin i:=i+1;k:=k+1;end;
+end;
+end;
+
+for i:=1 to 10000 do begin
+S:=S*(f[i]+1) mod 10;
+end;
+writeln(S);
+
+END.

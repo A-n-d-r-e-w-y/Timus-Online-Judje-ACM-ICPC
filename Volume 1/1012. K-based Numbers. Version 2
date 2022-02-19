@@ -1,0 +1,34 @@
+import java.math.*;
+import java.util.*;
+
+public class BigNumbers 
+{
+public static void main(String args[])
+{
+ Scanner sc=new Scanner(System.in); 
+ int N,K,i;
+ BigInteger f0,f1,e,pred0,pred1,c;
+ 
+ N=sc.nextInt();
+ K=sc.nextInt();
+ 
+ f0=BigInteger.valueOf(K-1);
+ f1=f0.multiply(f0);
+ pred0=f0;
+ pred1=f1;
+ c=f0;
+ 
+ for(i=3;i<=N;i++)
+ {
+  f0=pred1;
+  e=pred0.add(pred1);
+  f1=e.multiply(c);
+  pred0=f0;
+  pred1=f1;
+ }
+ 
+ e=f0.add(f1);
+ System.out.print(e.toString());
+
+}
+}

@@ -1,0 +1,12 @@
+var
+ n:longint;
+begin
+ read(n);
+ if(n>0) then write((1+n)*n div 2);
+ if(n=0) then write('1');
+ IF(N<0) then begin
+  n:=-n;
+  write( -(((1+n)*n div 2)-1));
+ end;
+
+end.

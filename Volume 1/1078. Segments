@@ -1,0 +1,78 @@
+const Nmax=500;
+var
+ A:array[1..Nmax,1..Nmax] of 0..1;
+ L,R,Delta,Dp,Color:array[1..Nmax] of longint;
+ N,i,j,col,ans,v:longint;
+ 
+function max(x,y:longint):longint;
+begin
+ if(x<y) then x:=y;
+ max:=x;
+end; 
+ 
+procedure TSort(var col:longint);
+ var i,j,k:longint;
+begin
+  for k:=1 to N do begin
+   for i:=1 to N do begin
+    if(Delta[i]=0) then begin
+     Delta[i]:=-1;
+     inc(col);
+     Color[i]:=col;
+     for j:=1 to N do if(A[j,i]=1) then dec(Delta[j]);
+    end;
+   end;
+  end;
+end;     
+ 
+procedure Solve(col:longint;var ans:longint);
+ var i,j,k:longint;
+begin
+ for k:=1 to N do begin
+  for i:=1 to N do begin
+   if(Color[i]=col) then begin
+    inc(col);
+    for j:=1 to N do if(A[i,j]=1) then Dp[i]:=max(Dp[i],Dp[j]+1);
+   end;
+   ans:=max(ans,Dp[i]);
+  end;
+ end;
+end;     
+ 
+procedure Answer(v,ans:longint);
+ var i,u:longint;
+begin
+ if(ans>0)and(v>0) then begin
+  write(v,' ');
+  dec(ans);
+  u:=0;
+  for i:=1 to N do 
+   if(A[v,i]=1)and(Dp[i]=ans) then u:=i;
+  Answer(u,ans);
+ end;  
+end;    
+     
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+  readln(L[i],R[i]);
+  Delta[i]:=0; {СЃС‚РµРїРµРЅСЊ РёСЃС…РѕРґСЏС‰РёС… РґСѓРі}
+  Dp[i]:=1;
+ end;
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(L[i]>L[j])and(R[i]<R[j]) then begin A[i,j]:=1;inc(Delta[i]);end
+  else begin A[i,j]:=0;end;
+ end;
+ end;
+ 
+ col:=0;
+ TSort(col);
+ col:=1;
+ ans:=0;
+ Solve(col,ans);
+ writeln(ans);
+ for i:=1 to N do if(dp[i]=ans) then v:=i;
+ Answer(v,ans);
+END. 

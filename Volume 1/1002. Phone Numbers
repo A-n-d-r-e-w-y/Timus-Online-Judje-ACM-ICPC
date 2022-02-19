@@ -1,0 +1,126 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <cstring>
+
+const int lmax=100;
+const int Nmax=50000;
+const int lenmax=50;
+const char* in="-1";
+
+char str[lmax+5]; //РІС…. СЃС‚СЂРѕРєР°
+int L;
+char word[Nmax+5][lenmax+5];//РјР°СЃСЃРёРІ СЃР»РѕРІ
+int zf[Nmax+5][lenmax+lmax+5]; //РёС… z-С„СѓРЅРєС†РёРё Рє str
+int len[Nmax+5]; //РёС… РґР»РёРЅС‹
+int dp[lmax+5],ind[lmax+5]; //Р”Рџ, РёРЅРґРµРєСЃ СЃРѕРѕС‚РІ. СЃР»РѕРІР° РІ Р”Рџ
+int N;
+
+int min(int x,int y)
+{
+       if(x<y) return x;
+       return y;
+}
+
+void Change(char s[])
+{
+       for(unsigned int i=0;i<strlen(s);i++)
+       {
+              if(s[i]=='i' || s[i]=='j')  {s[i]='1'; continue;}
+              if(s[i]=='a' || s[i]=='b' || s[i]=='c')  {s[i]='2'; continue;}
+              if(s[i]=='d' || s[i]=='e' || s[i]=='f')  {s[i]='3'; continue;}
+              if(s[i]=='g' || s[i]=='h')  {s[i]='4'; continue;}   
+              if(s[i]=='k' || s[i]=='l')  {s[i]='5'; continue;} 
+              if(s[i]=='m' || s[i]=='n')  {s[i]='6'; continue;}     
+              if(s[i]=='p' || s[i]=='r' || s[i]=='s')  {s[i]='7'; continue;} 
+              if(s[i]=='t' || s[i]=='u' || s[i]=='v')  {s[i]='8'; continue;}   
+              if(s[i]=='w' || s[i]=='x' || s[i]=='y')  {s[i]='9'; continue;}
+              if(s[i]=='o' || s[i]=='q' || s[i]=='z')  {s[i]='0'; continue;}    
+       }
+}
+
+void Zfunction(char _p[],char text[],int z[])
+{
+       char s[lmax+lenmax+10];
+       char p[lenmax+5];
+       strcpy(p,_p);
+       Change(p);
+       strcpy(s,p);
+       strcat(s,"#");
+       strcat(s,text);
+       int n=strlen(s),l=0,r=-1;
+       z[0]=n;
+
+       for(int i=1;i<n;i++)
+       {
+         if(r>i)
+         {
+              z[i]=min(z[i-l]-1,n-i); 
+              while((i+z[i]<n) && (s[i+z[i]]==s[z[i]])) z[i]++;
+              if(i+z[i]-1>r)
+              {
+                     r=i+z[i]-1;
+                     l=i;
+              }
+         }
+         else
+         {
+              z[i]=0;
+              while((i+z[i]<n) && (s[i+z[i]]==s[z[i]])) z[i]++;
+              if(z[i]>0)
+              {
+                   r=i+z[i]-1;
+                   l=i; 
+              }
+         }
+       }
+}
+
+int Input()
+{
+       gets(str);
+       if(strcmp(str,in)==0) return 0;
+       L=strlen(str);
+       scanf("%d\n",&N);
+       for(int i=1;i<=N;i++)
+       {
+              gets(word[i]);
+              len[i]=strlen(word[i]);
+              Zfunction(word[i],str,zf[i]);
+       }
+       return 1;
+}
+
+int main()
+{
+    while(Input())
+    {
+       dp[L]=0;
+       ind[L]=-1;
+       for(int i=L-1;i>=0;i--)
+       {
+              dp[i]=L+1, ind[i]=-1;
+              for(int j=1;j<=N;j++)
+              {
+                     if(zf[j][len[j]+i+1]==len[j] && dp[i]>(dp[i+len[j]]+1))
+                     {
+                            dp[i]=dp[i+len[j]]+1;
+                            ind[i]=j;
+                     }
+              }
+       }
+       
+       if(dp[0]==L+1) puts("No solution.");
+       else
+       {
+              int i=0;
+              while(i<L)
+              {
+                     for(int j=0;j<len[ind[i]];j++) printf("%c",word[ind[i]][j]);
+                     printf(" ");
+                     i=i+len[ind[i]];
+              }
+              puts("");
+       }
+    }  
+    return 0;
+}

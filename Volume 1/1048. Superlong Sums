@@ -1,0 +1,33 @@
+var
+N,i,S,q,k:longint;
+a:array[0..1000000] of integer;
+b:array[0..1000000] of integer;
+c:array[0..1000000] of integer;
+BEGIN
+readln(N);
+for i:=1 to N do begin
+readln(a[i],b[i]);
+end;
+
+a[0]:=0;
+b[0]:=0;
+S:=0;
+q:=0;
+
+for i:=N downto 0 do begin
+c[i]:=((a[i]+b[i]+q) mod 10);
+q:=((a[i]+b[i]+q) div 10);
+end;
+
+if(c[0]=0) then begin
+for i:=1 to N do begin
+write(c[i]);
+end;
+end
+else begin
+for i:=0 to N-1 do begin
+write(c[i]);
+end;
+end;
+
+END.

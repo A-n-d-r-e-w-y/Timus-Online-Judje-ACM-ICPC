@@ -1,0 +1,143 @@
+const Nmax=100;
+      inf=1000000;
+var
+ A:array[1..Nmax,1..Nmax] of longint;
+ Used:array[1..Nmax,1..Nmax] of boolean;
+ Nnew:array[1..Nmax] of boolean;
+ Dist,Predok:array[1..Nmax] of longint;
+ N,M,i,j,t,x,y,z,R,root:longint;
+ 
+procedure CreateTree(v:longint);
+ var j,min,numb:longint;
+begin
+ min:=inf;
+ numb:=0;
+ for j:=1 to N do begin
+  if(Dist[j]>Dist[v]+A[v,j]) then begin 
+   Dist[j]:=Dist[v]+A[v,j];
+   Predok[j]:=v;
+  end; 
+  if(Nnew[j])and(Dist[j]<=min) then begin
+   min:=Dist[j];
+   numb:=j;
+  end; 
+ end;
+ 
+ if(numb<>0) then begin
+  Nnew[numb]:=false;
+  Used[predok[numb],numb]:=true;
+  Used[numb,predok[numb]]:=true;
+  CreateTree(numb);
+ end;
+end; 
+ 
+procedure Init;
+ var i,j:longint;
+begin
+ for i:=1 to N do begin 
+  Dist[i]:=inf;
+  Nnew[i]:=true;
+ end; 
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  Used[i,j]:=false;
+ end;
+ end;
+end; 
+ 
+procedure Search(var R:longint;var root:longint);
+ var i,j,min:longint;
+begin
+ min:=inf;
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(not Used[i,j])and(Dist[i]+Dist[j]+A[i,j]<min) then min:=Dist[i]+Dist[j]+A[i,j];
+ end;
+ end;
+
+ if(min<R) then begin 
+  R:=min;
+  root:=t;
+ end; 
+end; 
+ 
+procedure SearchCycle;
+ var i,j,i1,j1,n1:longint;
+     Ans:array[1..Nmax] of longint;
+begin
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(not Used[i,j])and(Dist[i]+Dist[j]+A[i,j]=R) then begin
+   i1:=i;
+   j1:=j;
+  end;
+ end;
+ end;  
+
+ n1:=0;
+ i:=j1;
+ while(i<>0) do begin
+  inc(n1);
+  Ans[n1]:=i;
+  i:=Predok[i];
+ end;
+ for i:=1 to n1 do write(Ans[i],' ');
+ 
+ n1:=0;
+ i:=i1;
+ while(i<>root) do begin
+  inc(n1);
+  Ans[n1]:=i;
+  i:=predok[i];
+ end;  
+ for i:=n1 downto 1 do write(Ans[i],' ');
+ 
+ writeln;
+end; 
+ 
+BEGIN
+ read(N);
+ while(N<>-1) do begin
+  readln(M);
+  for i:=1 to N do begin
+  for j:=1 to N do begin
+   A[i,j]:=inf;
+  end;
+  end;
+ 
+  for i:=1 to M do begin
+   readln(x,y,z);
+   if(z<A[x,y]) then begin
+    A[x,y]:=z;
+    A[y,x]:=z;
+   end; 
+  end;   
+  
+  R:=inf;
+  root:=0;
+  
+  for t:=1 to N do begin
+   Init;
+   Dist[t]:=0;
+   Nnew[t]:=false;
+   Predok[t]:=0;
+   CreateTree(t);
+   Search(R,root);
+  end;
+ 
+ if(R>=inf) then begin
+  writeln('No solution.');
+ end
+ else begin
+  Init;
+  Dist[root]:=0;
+  Nnew[root]:=false;
+  Predok[root]:=0;
+  CreateTree(root);
+  SearchCycle;
+ end;
+ 
+ read(N);
+ end;
+END. 
