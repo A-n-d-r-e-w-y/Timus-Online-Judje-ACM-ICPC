@@ -1,0 +1,22 @@
+const Nmax=500;
+var
+ F:array[1..Nmax,0..Nmax] of int64;
+ i,j,N:longint;
+ ans:int64;
+ 
+BEGIN
+ read(N);
+ for i:=1 to N do F[i,0]:=0;
+ for j:=1 to N do F[1,j]:=1;
+ 
+ for i:=2 to N do begin
+ for j:=1 to N do begin
+  if(j-i>=0) then F[i,j]:=F[i-1,j-i]+F[i,j-i]
+  else F[i,j]:=0;
+ end;
+ end;
+ 
+ ans:=0;
+ for i:=1 to N do ans:=ans+F[i,N];
+ write(ans-1);
+END.

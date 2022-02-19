@@ -1,0 +1,19 @@
+var 
+ ans,n,k:int64;
+ p:longint;
+ s:ansistring;
+ 
+begin
+ read(s);
+ p:=pos(' ',s);
+ k:=length(s)-p;
+ delete(s,p,length(s)-p+1);
+ val(s,n);
+ ans:=n;
+ dec(n,k);
+ while(n>0) do begin
+  ans:=ans*n;
+  dec(n,k);
+ end;
+ write(ans);
+end.

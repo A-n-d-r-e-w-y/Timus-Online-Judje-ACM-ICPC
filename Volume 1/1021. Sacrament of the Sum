@@ -1,0 +1,32 @@
+const Nmax=33000;
+var
+ Plus,Neg:array[0..Nmax] of boolean;
+ i,N,a:longint;
+ can:boolean;
+ 
+BEGIN
+ for i:=0 to Nmax do begin
+  Plus[i]:=false;
+  Neg[i]:=false;
+ end;
+  
+ readln(N);
+ can:=false;
+ for i:=1 to N do begin
+  readln(a);
+  if(a>=0) then Plus[a]:=true
+  else Neg[-a]:=true;
+ end;
+ 
+ readln(N);
+ for i:=1 to N do begin
+  readln(a);
+  if(10000-a>=0)and(Plus[10000-a]) then can:=true; 
+  if(10000-a<0)and(Neg[a-10000]) then can:=true; 
+ end;
+ 
+ case can of
+  true:write('YES');
+  false:write('NO');
+ end; 
+END. 

@@ -1,0 +1,26 @@
+const Summax=2000000;
+var
+ F:array[1..25,0..Summax] of boolean;
+ w:array[1..25] of longint;
+ i,j,N:longint;
+BEGIN
+ readln(N);
+ for i:=1 to N do read(w[i]);
+  
+ for j:=0 to Summax do F[1,j]:=false;
+ F[1,w[1]]:=true;
+ 
+ for i:=2 to N do begin
+ for j:=0 to Summax do begin
+  F[i,j]:=false;
+  if(j-w[i]>=0) then F[i,j]:=F[i,j] or F[i-1,j-w[i]];
+  if(j-w[i]<0) then F[i,j]:=F[i,j] or F[i-1,w[i]-j];
+  if(j+w[i]<=Summax) then F[i,j]:=F[i,j] or F[i-1,j+w[i]];
+ end;
+ end;
+ 
+ 
+ j:=0;
+ while(not F[N,j]) do inc(j);
+ write(j);
+END.  

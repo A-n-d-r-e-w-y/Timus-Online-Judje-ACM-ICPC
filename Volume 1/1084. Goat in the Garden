@@ -1,0 +1,28 @@
+var
+ xa,ya,xb,yb,S,S1,R,a,co:real;
+
+function arccos(x:real) : real;
+ begin
+ arccos := Arctan(Sqrt(1-sqr(x))/x);
+end;
+
+
+BEGIN
+ read(a,R);
+ if(2*R<=a) then begin
+  write(Pi*R*R:0:3);
+ end
+ else begin
+  if(2*R*R>=a*a) then write(a*a:0:3)
+  else begin
+   xa:=-sqrt(R*R-a*a*0.25);
+   ya:=-a*0.5;
+   xb:=-0.5*a;
+   yb:=xa;
+   co:=(abs(xa*xb+ya*yb))/(R*R);
+   S:=arccos(co)*R*R/2;
+   S1:=0.5*a*abs(xa);
+   write((4*(S+S1)):0:3);
+  end;
+ end;
+END.

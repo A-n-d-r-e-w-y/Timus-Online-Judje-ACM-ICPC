@@ -1,0 +1,44 @@
+var
+n,i,k,j:integer;
+S:array[1..9,0..81] of longint;
+M:longint;
+
+BEGIN
+for i:=1 to 9 do begin
+for j:=0 to 81 do begin
+S[i,j]:=0;
+end;
+end;
+
+readln(n);
+n:=n div 2;
+for i:=0 to 9 do begin S[1,i]:=1;end;
+
+for i:=2 to 9 do begin
+for j:=0 to 81 do begin
+
+if(j<=9) then begin 
+for k:=0 to j do begin
+S[i,j]:=S[i,j]+S[i-1,j-k];
+end;
+end
+
+else begin
+for k:=0 to 9 do begin
+S[i,j]:=S[i,j]+S[i-1,j-k];
+end;
+
+
+end;
+end;
+end;
+
+M:=0;
+for j:=0 to 81 do begin 
+M:=M+S[n,j]*S[n,j];
+end;
+
+writeln(M);
+
+
+END.
