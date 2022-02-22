@@ -1,0 +1,19 @@
+var
+ N,K,x:int64;
+ i:byte;
+ 
+BEGIN
+ read(N,K);
+ x:=1;
+ i:=0;
+ while(x<N)and(x<=k) do begin
+  inc(i);
+  x:=x*2;
+ end; 
+ 
+ if(x>=N) then write(i)
+ else begin
+  if((N-x) mod K=0) then write(((N-x) div K)+i)
+  else write(((N-x) div K)+i+1);
+ end; 
+END.

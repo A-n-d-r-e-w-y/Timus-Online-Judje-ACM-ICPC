@@ -1,0 +1,119 @@
+#include <string>
+#include <set>
+#include <iostream>
+using namespace std;
+
+#define ll long long
+ 
+const int lenmax=10;
+const int nmax=(1<<10);
+ 
+ll N, len_N, cnt;
+ll b[lenmax+1], now[lenmax+1];
+ll step[lenmax+1];
+set<pair<string,string>> ans;
+pair<string, string> A[nmax];
+ 
+int Length(ll x);
+void Search(ll b[], ll S, ll now[], int i, int len);
+void QSort(int L, int R);
+ 
+int main()
+{	
+	cin>>N;
+	len_N=Length(N);
+ 
+	step[0]=1;
+	for(int i=1;i<len_N;i++) step[i]=step[i-1]*10;
+ 
+	for(int l=2;l<=len_N;l++)
+	{
+	   for(int i=1;i<=l;i++)
+	   {
+	      b[0]=l;
+	      for(int k=1;k<=i-1;k++) b[k]=11*step[l-k-1];
+	      b[i]=step[l-i];
+	      for(int k=i+1;k<=l;k++) b[k]=2*step[l-k];
+	      now[0]=0;
+	      Search(b, N, now, i, l);
+	   }
+	}
+ 
+   cout<<ans.size();
+   cnt=0;
+   for(set<pair<string,string>>::iterator it=ans.begin();it!=ans.end();it++)
+   {
+      cnt++;
+      A[cnt].first=it->first, A[cnt].second=it->second;
+   }
+   QSort(1, cnt);
+   for(int i=1;i<=cnt;i++)
+      cout<<endl<<A[i].first<<" + "<<A[i].second<<" = "<<N;
+ 
+	return 0;
+}
+ 
+ 
+int Length(ll x)
+{
+   int res=0;
+   while(x>0) res++, x/=10;
+   return res;
+}
+ 
+void Search(ll b[], ll S, ll now[], int i, int len)
+{
+   if(b[0]==0)
+   {
+      if(now[0]==len && now[1]>0 && S==0)
+      {
+         pair<string, string> p;
+         for(int j=1;j<=now[0];j++) p.first=p.first+char(now[j]+'0');
+         for(int j=1;j<=now[0];j++) if(j!=i) p.second=p.second+char(now[j]+'0');
+         ans.insert(p);
+      }
+   }
+   else
+   {
+      ll z=0;
+      for(int j=2;j<=b[0];j++) z+=b[j];
+      for(int a=0;a<=9;a++)
+      {
+         ll lost=S-b[1]*a;
+         if(lost>=0 && lost<=z*9)
+         {
+            ll new_b[lenmax];
+            new_b[0]=b[0]-1;
+            for(int j=1;j<=new_b[0];j++) new_b[j]=b[j+1];
+            now[++now[0]]=a;
+            Search(new_b, lost, now, i, len);
+            now[0]--;
+         }
+      }
+   }
+}
+
+
+void QSort(int L, int R)
+{
+   int i=L, j=R;
+   pair<string,string> X=A[(L+R)/2];
+   while(i<=j)
+   {
+      while(A[i].first.length()<X.first.length() || 
+      (A[i].first.length()==X.first.length() && 
+       (A[i].first<X.first || A[i].first==X.first && A[i].second<X.second))) i++;
+      while(A[j].first.length()>X.first.length() ||
+      (A[j].first.length()==X.first.length() &&
+       (A[j].first>X.first || A[j].first==X.first && A[j].second>X.second))) j--;
+      if(i<=j)
+      {
+         pair<string,string> Y=A[i];
+         A[i]=A[j];
+         A[j]=Y;
+         i++, j--;
+      }
+   }
+   if(L<j) QSort(L, j); 
+   if(i<R) QSort(i, R); 
+}

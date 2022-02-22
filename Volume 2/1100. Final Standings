@@ -1,0 +1,22 @@
+const Nmax=150000;
+      Mmax=100; 
+var
+ a:array[0..Mmax,1..Nmax] of int64;
+ count:array[0..Mmax] of longint;
+ N,i,j,x:longint;
+ ID:int64;
+ 
+BEGIN
+ readln(N);
+ for i:=0 to Mmax do count[i]:=0;
+ 
+ for i:=1 to N do begin
+  readln(ID,x);
+  inc(count[x]);
+  a[x,count[x]]:=ID;
+ end;
+ 
+ for i:=Mmax downto 0 do begin
+  for j:=1 to count[i] do writeln(a[i,j],' ',i);
+ end;
+END.    

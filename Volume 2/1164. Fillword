@@ -1,0 +1,32 @@
+const nmax=255;
+var 
+ a:array[0..nmax] of longint;
+ n,m,p,i,j:longint;
+ c:char;
+ s:ansistring;
+ 
+begin
+ for i:=0 to nmax do a[i]:=0;
+ 
+ readln(n,m,p);
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  read(c);
+  inc(a[ord(c)]);
+  if(j=m) then readln;
+ end;
+ end;
+
+ for i:=1 to p do begin
+  readln(s);
+  for j:=1 to length(s) do dec(a[ord(s[j])]);
+ end;
+ 
+ for i:=0 to nmax do begin
+  while(a[i]>0) do begin
+   write(chr(i));
+   dec(a[i]);
+  end; 
+ end;
+end.

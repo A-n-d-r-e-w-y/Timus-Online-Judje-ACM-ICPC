@@ -1,0 +1,34 @@
+var 
+ c,b:array[1..2001] of char;
+ ch:char;
+ N,i,j,l,r:integer;
+ 
+BEGIN
+ ch:='1';
+ N:=0;
+ while(ch='0')or(ch='1')or(ch='2')or(ch='3')or(ch='4')or(ch='5')or(ch='6')or(ch='7')or(ch='8')or(ch='9') do begin
+  read(ch);
+  if(ch='0')or(ch='1')or(ch='2')or(ch='3')or(ch='4')or(ch='5')or(ch='6')or(ch='7')or(ch='8')or(ch='9') then begin
+   inc(N);
+   c[N]:=ch;
+   b[N]:=c[N];
+  end;
+ end;
+ 
+ for i:=1 to (N div 2) do b[N+1-i]:=b[i]; 
+ 
+ i:=1;
+ while(i<=N)and(c[i]=b[i]) do inc(i);
+  
+ if(i<=N)and(c[i]>b[i]) then 
+ begin 
+  if(N mod 2=0) then begin l:=N div 2;r:=(N div 2)+1;end
+  else begin l:=(N+1) div 2;r:=l;end;
+ 
+  while(b[l]='9') do begin dec(l);inc(r);b[l+1]:='0';b[r-1]:='0';end;
+  b[l]:=chr(ord(b[l])+1);
+  b[r]:=b[l];
+ end; 
+  
+ for i:=1 to n do write(b[i]);
+END.            

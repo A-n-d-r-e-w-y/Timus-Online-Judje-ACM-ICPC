@@ -1,0 +1,53 @@
+const nmax=50;
+var
+ a:array[1..nmax,1..nmax] of int64;
+ z:array[1..nmax,1..nmax] of char;
+ m,n,i,j,k,t,d:longint;
+ c:int64;
+
+function rev(z:char):char;
+begin
+ if(z='W') then rev:='B'
+ else rev:='W';
+end;
+ 
+begin
+ readln(m,n);
+ k:=n;
+ n:=m;
+ m:=k;
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  read(z[i,j]);
+  if(j=m) then readln;
+ end;
+ end;
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  read(a[i,j]);
+  if(j=m) then readln;
+ end;
+ end;
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  if(a[i,j] mod 2=1) then begin
+   for k:=1 to n do begin
+   for t:=1 to m do begin
+    d:=trunc(sqrt((k-i)*(k-i)+(t-j)*(t-j)));
+    if(d*d=(k-i)*(k-i)+(t-j)*(t-j)) then z[k,t]:=rev(z[k,t]);
+   end;
+   end;
+  end; 
+ end;
+ end;
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  write(z[i,j]);
+  if(j=m) then writeln;
+ end;
+ end;
+end.

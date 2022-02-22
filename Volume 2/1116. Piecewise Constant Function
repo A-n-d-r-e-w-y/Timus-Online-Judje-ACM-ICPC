@@ -1,0 +1,114 @@
+const Nmax=50001;
+var
+ A1,B1,Y1,A2,B2,Y2,A3,B3,Y3:array[1..Nmax] of longint;
+ N1,N2,i1,i2,i,k,L,R,E:longint;
+ f:boolean;
+ 
+BEGIN
+ read(N1);
+ for i:=1 to N1 do read(A1[i],B1[i],Y1[i]);
+ readln;
+ read(N2);
+ for i:=1 to N2 do read(A2[i],B2[i],Y2[i]);
+ 
+ i1:=1;
+ i2:=1;
+ 
+ L:=A1[i1];
+ R:=B1[i1];
+ E:=Y1[i1];
+ 
+ A1[N1+1]:=0;
+ A2[N2+1]:=0;
+ B1[N1+1]:=0;
+ B2[N2+1]:=0;
+ Y1[N1+1]:=0;
+ 
+ k:=0; 
+ 
+ while(i1<=N1) do begin
+  if(i2>N2) then begin
+   inc(k);
+   A3[k]:=L;
+   B3[k]:=R;
+   Y3[k]:=E;
+   inc(i1);
+   L:=A1[i1];
+   R:=B1[i1];
+   E:=Y1[i1];
+  end
+  else begin
+   f:=true;
+   if(f)and(A2[i2]<L)and(B2[i2]<=L) then begin
+    f:=false;
+    inc(i2); 
+   end;
+  
+   if(f)and(A2[i2]<L)and(B2[i2]>L)and(B2[i2]<R) then begin
+    f:=false;
+    L:=B2[i2];
+    inc(i2);
+   end; 
+  
+   if(f)and(A2[i2]<L)and(B2[i2]>=R) then begin
+    f:=false;
+    inc(i1);
+    L:=A1[i1];
+    R:=B1[i1];
+    E:=Y1[i1];
+   end; 
+  
+   if(f)and(A2[i2]=L)and(B2[i2]<R) then begin
+    f:=false;
+    L:=B2[i2];
+    inc(i2);
+   end;
+   
+   if(f)and(A2[i2]=L)and(B2[i2]>=R) then begin
+    f:=false;
+    inc(i1);
+    L:=A1[i1];
+    R:=B1[i1];
+    E:=Y1[i1];
+   end;  
+  
+   if(f)and(A2[i2]>L)and(A2[i2]<R)and(B2[i2]<R) then begin
+    f:=false;
+    inc(k);
+    A3[k]:=L;
+    B3[k]:=A2[i2];
+    Y3[k]:=E;
+    L:=B2[i2];
+    inc(i2);
+   end;
+   
+   if(f)and(A2[i2]>L)and(A2[i2]<R)and(B2[i2]>=R) then begin
+    f:=false;
+    inc(k);
+    A3[k]:=L;
+    B3[k]:=A2[i2];
+    Y3[k]:=E;
+    inc(i1);
+    L:=A1[i1];
+    R:=B1[i1];
+    E:=Y1[i1];
+   end;
+   
+   if(f)and(A2[i2]>=R) then begin
+    f:=false;
+    inc(k);
+    A3[k]:=L;
+    B3[k]:=R;
+    Y3[k]:=E;
+    inc(i1);
+    L:=A1[i1];
+    R:=B1[i1];
+    E:=Y1[i1];
+   end;  
+  end;
+ end;
+ 
+ 
+ write(k,' ');
+  for i:=1 to k do write(A3[i],' ',B3[i],' ',Y3[i],' ');
+END. 

@@ -1,0 +1,110 @@
+type t=-1..1;
+type matrix=array[1..3,1..3] of char;
+var
+ A:matrix;
+ i,j:byte;
+ res1:t;
+
+function min(x,y:t):t;
+begin
+ if(x>y) then x:=y;
+ min:=x;
+end;
+ 
+function max(x,y:t):t;
+begin
+ if(x<y) then x:=y;
+ max:=x;
+end;
+
+function Proverka(var A:matrix):t;
+ var res:t;
+     i,j:byte;
+begin
+  res:=0;
+  for i:=1 to 3 do begin
+   if(A[i,1]='X')and(A[i,2]='X')and(A[i,3]='X') then res:=1;
+   if(A[i,1]='O')and(A[i,2]='O')and(A[i,3]='O') then res:=-1;
+  end;
+      
+  for j:=1 to 3 do begin
+   if(A[1,j]='X')and(A[2,j]='X')and(A[3,j]='X') then res:=1;
+   if(A[1,j]='O')and(A[2,j]='O')and(A[3,j]='O') then res:=-1;
+  end; 
+ 
+  if(A[1,1]=A[2,2])and(A[2,2]=A[3,3])and(A[3,3]='X') then res:=1;
+  if(A[1,1]=A[2,2])and(A[2,2]=A[3,3])and(A[3,3]='O') then res:=-1;
+  if(A[3,1]=A[2,2])and(A[2,2]=A[1,3])and(A[1,3]='X') then res:=1;
+  if(A[3,1]=A[2,2])and(A[2,2]=A[1,3])and(A[1,3]='O') then res:=-1;
+  
+  Proverka:=res;
+end;
+
+function Analys(var A:matrix):t;
+ var res:t;
+     k,n:byte;
+     ready:boolean;
+     i,j:byte;
+begin
+  k:=0;
+  n:=0;
+  for i:=1 to 3 do begin
+  for j:=1 to 3 do begin
+   if(A[i,j]='X') then inc(k);
+   if(A[i,j]='O') then inc(n);
+  end;
+  end;
+  
+  ready:=false;
+  res:=Proverka(A);
+  if(res<>0) then ready:=true;
+  if(k+n=9) then ready:=true;
+  
+  if(ready) then begin
+   Analys:=res;
+  end;
+  
+  if(not ready) then begin
+   if(k=n) then 
+   begin
+    res:=-1;
+    for i:=1 to 3 do begin
+    for j:=1 to 3 do begin
+     if(A[i,j]='#') then begin
+       A[i,j]:='X';
+       res:=max(res,Analys(A));
+       A[i,j]:='#';
+     end; 
+    end;
+    end;  
+   end
+   else begin
+    res:=1;
+    for i:=1 to 3 do begin
+    for j:=1 to 3 do begin
+     if(A[i,j]='#') then begin
+       A[i,j]:='O';
+       res:=min(res,Analys(A));
+       A[i,j]:='#';
+     end; 
+    end;
+    end;
+   end; 
+   
+   Analys:=res;
+  end;
+end;
+           
+BEGIN
+ for i:=1 to 3 do begin
+ for j:=1 to 3 do begin
+  read(A[i,j]);
+  if(j=3) then readln;
+ end;
+ end;
+ 
+ res1:=Analys(A);
+ if(res1=-1) then write('Ouths win');
+ if(res1=0) then write('Draw');
+ if(res1=1) then write('Crosses win');
+END.   

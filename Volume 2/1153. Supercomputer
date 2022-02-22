@@ -1,0 +1,33 @@
+import java.math.*;
+import java.util.*;
+import static java.lang.Math.*;
+
+public class BigNumbers
+{
+public static void main(String args[])
+{
+ Scanner sc=new Scanner(System.in);
+ BigInteger x,l,r,n,z;
+ int res;
+ 
+ String s = sc.nextLine();
+ x=new BigInteger(s);
+ 
+ l=BigInteger.ONE;
+ r=x;
+ n=BigInteger.ONE;
+ 
+ res=r.compareTo(l);
+ 
+ while(res!=0)
+ {
+        n=(l.add(r)).divide(BigInteger.valueOf(2));
+        z=(n.multiply(n.add(BigInteger.ONE))).divide(BigInteger.valueOf(2));
+        res=z.compareTo(x);
+        if(res==1) r=n.subtract(BigInteger.ONE);
+        if(res==-1) l=n.add(BigInteger.ONE);
+ }
+ System.out.println(n.toString());
+ 
+}
+}

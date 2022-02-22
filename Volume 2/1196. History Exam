@@ -1,0 +1,42 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+const int NMAX = 20000;
+long long a[NMAX];
+long N, M, ans;
+long long x;
+
+bool Search(long L,long R,long long x)
+{
+    if (L > R) return false;
+    if (R - L <= 1)
+    {
+        if (a[L] == x || (L + 1 <= N) && (a[L + 1] == x)) return true;
+        else return false;
+    }
+    else
+    {
+        long m = (L + R) / 2;
+        if (a[m] < x) return Search(m + 1, R, x);
+        else return Search(L, m, x);
+    }
+}
+
+
+void main()
+{
+    scanf("%d", &N);
+    for (long i = 1; i <= N; i++)
+        scanf("%ld", &a[i]);
+
+    scanf("%d", &M);
+    ans = 0;
+    for (long i = 1; i <= M; i++)
+    {
+        scanf("%ld",&x);
+        if (Search(1, N, x)) ans++;
+    }
+
+    printf("%ld", ans);
+
+}

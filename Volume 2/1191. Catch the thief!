@@ -1,0 +1,37 @@
+#include <iostream>
+using namespace std;
+
+const int kmax=105;
+
+int K[kmax];
+int L,n;
+
+int main()
+{
+   cin>>L>>n;
+   for(int i=1;i<=n;i++) cin>>K[i];
+   
+   if(n==1)
+   {
+      if(L<K[1]) cout<<"YES";
+      else cout<<"NO";
+      return 0;
+   }
+   
+   int t1=(L/K[1]+1)*K[1], t2=K[1];
+   
+   for(int i=2;i<=n;i++)
+   {
+      t2+=K[i];
+      if(t1<t2)
+      {
+         cout<<"YES";
+         return 0;
+      }
+      t1=t2+(1+(t1-t2)/K[i])*K[i];
+   }
+      
+   cout<<"NO";
+
+   return 0;
+}

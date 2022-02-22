@@ -1,0 +1,14 @@
+var
+N,M,m1,n1:longint;
+BEGIN
+read(N,M);
+n1:=N-1;
+m1:=M-1;
+N:=N-1;
+M:=M-1;
+while(N<>M) do begin
+if (N>M) then begin N:=N-M;end
+else begin M:=M-N;end;
+end;
+writeln(m1+n1-N);
+END.

@@ -1,0 +1,66 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+using namespace std;
+
+const int nmax = 44;
+
+struct elem
+{
+	int t1, t2, t3;
+};
+
+void Swap(elem &x, elem &y)
+{
+	elem z = x;
+	x = y;
+	y = z;
+}
+
+void QSort(int L, int R, elem a[])
+{
+	int i, j, X;
+	X = a[(L + R) / 2].t1;
+	i = L, j = R;
+	while (a[i].t1 < X) i++;
+	while (a[j].t1 > X) j--;
+	if (i <= j)
+	{
+		Swap(a[i], a[j]);
+		i++;
+		j--;
+	}
+	if (L < j) QSort(L, j, a);
+	if (i < R) QSort(i, R, a);
+}
+
+
+elem Student[nmax];
+int n, delta, t, dx;
+
+int main()
+{
+	scanf("%d\n", &n);
+	for (int i = 1; i <= n; i++)
+		scanf("%d%d%d\n", &Student[i].t1, &Student[i].t2, &Student[i].t3);
+	QSort(1, n, Student);
+
+	delta = 0;
+	t = 0;
+	dx = 0;
+	
+	for(int i=1;i<=n;i++)
+	{
+	       if(Student[i].t1>t) t=Student[i].t1;
+	       if(t+Student[i].t2>Student[i].t3+dx)
+	       {
+	              delta+=(t+Student[i].t2-(Student[i].t3+dx));
+	              dx+=delta;
+	              t=Student[i].t3+dx;
+	       }
+	       else t+=Student[i].t2;
+	}
+	
+	printf("%d",delta);
+
+	return 0;
+}

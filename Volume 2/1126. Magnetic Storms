@@ -1,0 +1,65 @@
+const Nmax=120000; 
+var
+ tmax:array[1..4*Nmax] of int64;
+ M,i,x,T:longint;
+ 
+function max(a,b:int64):int64;
+begin
+ if(a>b) then max:=a
+ else max:=b;
+end; 
+ 
+procedure Create_Tree(v,tl,tr:longint);
+ var m:longint;
+begin
+ if(tl=tr) then begin
+  tmax[v]:=-1;
+ end
+ else begin 
+  m:=(tl+tr) div 2;
+  Create_Tree(2*v,tl,m);
+  Create_Tree(2*v+1,m+1,tr);
+  tmax[v]:=max(tmax[2*v],tmax[2*v+1]);
+ end; 
+end;
+ 
+procedure Change(v,tl,tr,i:longint;x:int64);
+ var m:longint;
+begin
+ if(tl=tr) then begin 
+  tmax[v]:=x;
+ end
+ else begin
+  m:=(tl+tr) div 2;
+  if(i<=m) then Change(2*v,tl,m,i,x)
+  else Change(2*v+1,m+1,tr,i,x); 
+  tmax[v]:=max(tmax[2*v],tmax[2*v+1]);
+ end;
+end;  
+ 
+function Search_Max(v,tl,tr,l,r:longint):int64;
+ var m:longint;
+begin
+ if(tl=l)and(tr=r) then Search_Max:=tmax[v]
+ else begin
+  m:=(tl+tr) div 2;
+  if(r<=m) then Search_Max:=Search_Max(2*v,tl,m,l,r);
+  if(l>m) then Search_Max:=Search_Max(2*v+1,m+1,tr,l,r);
+  if(l<=m)and(r>m) then Search_Max:=max(Search_Max(2*v,tl,m,l,m),Search_Max(2*v+1,m+1,tr,m+1,r));
+ end;
+end; 
+ 
+ 
+BEGIN
+ readln(M); 
+ Create_Tree(1,1,M);
+ readln(x);
+ T:=1;
+ while(x<>-1) do begin
+  if(T mod M<>0) then Change(1,1,M,T mod M,x)
+  else Change(1,1,M,M,x);
+  if(T>=M) then writeln(Search_Max(1,1,M,1,M));
+  inc(T);
+  readln(x);
+ end;   
+END. 

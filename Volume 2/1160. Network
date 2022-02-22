@@ -1,0 +1,81 @@
+const Nmax=1000;
+      inf=999999999999999; 
+var 
+ A,C:array[1..Nmax,1..Nmax] of int64;
+ Count,A1,B1:array[1..Nmax] of longint;
+ Nnew:array[1..Nmax] of boolean;
+ N,M,i,j,t,x,y:longint;
+ S,s1,z:int64;
+ k:longint;
+ f:boolean;
+ 
+function Max(x,y:int64):int64;
+begin
+ if(x<y) then x:=y;
+ Max:=x;
+end;  
+ 
+function Min(x,y:int64):int64;
+begin
+ if(x>y) then x:=y;
+ Min:=x;
+end;  
+ 
+BEGIN
+ readln(N,M);
+ for i:=1 to N do begin
+  Nnew[i]:=true;
+  Count[i]:=0;
+ end;
+ 
+ 
+ for i:=1 to M do begin
+  readln(x,y,z);
+  inc(count[x]);
+  inc(count[y]);
+  A[x,count[x]]:=y;
+  A[y,count[y]]:=x;
+  C[x,y]:=z;
+  C[y,x]:=z;
+ end;
+ 
+ k:=0;
+ S:=0;
+ Nnew[1]:=false;
+ f:=true;
+ 
+ while(f) do begin
+  f:=false;
+  for i:=1 to N do begin
+   if(Nnew[i]) then begin f:=true;s1:=inf;end;
+  end; 
+  
+  if(f) then begin
+   s1:=inf;
+   for i:=1 to N do begin
+    if(not Nnew[i]) then begin
+     for j:=1 to count[i] do 
+      if(Nnew[A[i,j]]) then s1:=min(s1,C[i,A[i,j]]);
+    end;  
+   end;   
+   
+   for i:=1 to N do begin
+    if(not Nnew[i]) then begin
+     for j:=1 to count[i] do begin
+      if(Nnew[A[i,j]])and(C[i,A[i,j]]<=s1) then begin
+       Nnew[A[i,j]]:=false;
+       inc(k);
+       A1[k]:=i;
+       B1[k]:=A[i,j];   
+      end;
+     end;
+    end;   
+   end; 
+  end;
+  S:=max(S,s1);
+ end;    
+ 
+ writeln(S);
+ writeln(k);
+ for i:=1 to K do writeln(A1[i],' ',B1[i]);
+END.   

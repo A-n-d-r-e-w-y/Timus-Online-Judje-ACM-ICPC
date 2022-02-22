@@ -1,0 +1,21 @@
+var
+n,s,i,p:longint;
+f:array[1..20000] of longint;
+
+BEGIN
+ readln(n,s);
+ for i:=1 to n do begin f[i]:=0;end;
+ f[s]:=1;
+
+ for i:=s to n do begin
+ for p:=1 to 100 do begin
+  if(i*p mod 100=0)and(i+(i*p div 100)<=n)and(f[i]>0)and(f[i+(i*p div 100)]<f[i]+1) then
+  f[i+(i*p div 100)]:=f[i]+1;
+ end; 
+ end; 
+ 
+ p:=0;
+ for i:=s to n do if(f[i]>p) then p:=f[i];
+ writeln(p);
+END. 
+ 

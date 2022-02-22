@@ -1,0 +1,74 @@
+const NMAX=11111;
+var
+ x,y:array[1..NMAX] of int64;
+ numb:array[1..NMAX] of longint;
+ N,i,j:longint;
+
+procedure QSortx(L,R:longint); 
+ var i,j:longint;
+     X1,Y1:int64;
+begin 
+ X1:=x[random(r+1-l)+l]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while x[i]<X1 do i:=i+1; 
+   while x[j]>X1 do j:=j-1; 
+     if i<=j then 
+       begin 
+         y1:=x[i]; x[i]:=x[j]; x[j]:=y1; 
+         y1:=y[i]; y[i]:=y[j]; y[j]:=y1;
+         y1:=numb[i]; numb[i]:=numb[j]; numb[j]:=y1;
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSortx(L,j); 
+  if i<R then QSortx(i,R); 
+end; 
+
+
+procedure QSorty(L,R:longint); 
+ var i,j:longint;
+     X1,Y1:int64;
+begin 
+ X1:=y[random(r+1-l)+l]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while y[i]<X1 do i:=i+1; 
+   while y[j]>X1 do j:=j-1; 
+     if i<=j then 
+       begin 
+         y1:=x[i]; x[i]:=x[j]; x[j]:=y1; 
+         y1:=y[i]; y[i]:=y[j]; y[j]:=y1;
+         y1:=numb[i]; numb[i]:=numb[j]; numb[j]:=y1;
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSorty(L,j); 
+  if i<R then QSorty(i,R); 
+end; 
+
+ 
+begin
+ randomize;
+ readln(N);
+ for i:=1 to N do begin
+  readln(x[i],y[i]);
+  numb[i]:=i;
+ end;
+ 
+ Qsortx(1,N);
+ 
+ for i:=1 to N do begin
+  j:=i;
+  while(j<=N)and(y[j]=y[i]) do inc(j);
+  Qsorty(i,j-1);
+ end; 
+ 
+ i:=1;
+ for j:=1 to N div 2 do begin 
+  writeln(numb[i],' ',numb[i+1]);
+  inc(i,2);
+ end; 
+end.

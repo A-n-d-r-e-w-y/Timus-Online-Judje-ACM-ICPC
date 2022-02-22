@@ -1,0 +1,69 @@
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+const double pi = std::acos(-1.0);
+const double eps = 1e-7;
+
+struct point
+{
+	double x, y;
+	point(double x = 0, double y = 0) : x(x), y(y) {}
+	point operator-(point p) { return point(x - p.x, y - p.y); }
+	double dist() { return std::sqrt(x*x + y*y); }
+};
+
+
+pair<double, double> calc(vector<double>& v, double r)
+{
+	double area = 0, sum = 0, r2 = r*r;
+	vector<point> ps = { { r, 0 } };
+	for (int i = 0; i < v.size() - 1; i++)
+	{
+		sum += acos((2.0 * r2 - v[i]*v[i]) / (2 * r*r));
+		if (sum >= 2.0 * pi)
+			return{ -1, 0 };
+		ps.push_back({ r*cos(sum), r*sin(sum) });
+	}
+	for (int i = 0; i < ps.size(); i++)
+		area += ps[i].x*ps[(i + 1) % ps.size()].y - ps[(i + 1) % ps.size()].x*ps[i].y;
+	return{ (point(r, 0) - ps.back()).dist() - v.back(), area / 2.0 };
+}
+
+int N;
+double l = 0, r = 1e6, sum = 0.0, area;
+vector<double> v;
+
+int main()
+{
+	cin >> N;
+	v.resize(N);
+	while (N)
+	{
+		cin >> v[N - 1];
+		sum += v[N - 1];
+		if (l <  v[N - 1] / 2.0)
+			l = v[N - 1] / 2.0 + eps;
+		N--;
+	}
+	sort(v.begin(), v.end());
+	if (2.0 * v.back() >= sum) 
+		cout << "0.00";
+	else
+	{
+		while (r - l > eps)
+		{
+			double rad = (r + l) / 2.0;
+			auto p = calc(v, rad);
+			sum = p.first, area = p.second;
+			if (sum < 0)
+				l = rad;
+			else
+				r = rad;
+		}
+		cout << fixed << setprecision(2) << area;
+	}
+}

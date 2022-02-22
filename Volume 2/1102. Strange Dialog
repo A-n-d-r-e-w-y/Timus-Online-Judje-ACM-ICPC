@@ -1,0 +1,33 @@
+const Nmax=10000001;
+var 
+ N,M,i,j:longint;
+ a:array[1..Nmax] of char;
+ dp:array[0..Nmax] of boolean;
+ ch:char;
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+  read(ch);
+  M:=0;
+  dp[0]:=true;
+  while(ord(ch)>=ord('a'))and(ord(ch)<=ord('z')) do begin
+   inc(M);
+   a[M]:=ch;
+   dp[M]:=false;
+   if(M>=2)and(a[M-1]='i')and(a[M]='n') then dp[M]:=dp[M-2];
+   if(M>=3)and(a[M-2]='o')and(a[M-1]='n')and(a[M]='e') then dp[M]:=dp[M] or dp[M-3];
+   if(M>=3)and(a[M-2]='o')and(a[M-1]='u')and(a[M]='t') then dp[M]:=dp[M] or dp[M-3];
+   if(M>=5)and(a[M-4]='p')and(a[M-3]='u')and(a[M-2]='t')and(a[M-1]='o')and(a[M]='n') 
+   then dp[M]:=dp[M] or dp[M-5];
+   if(M>=5)and(a[M-4]='i')and(a[M-3]='n')and(a[M-2]='p')and(a[M-1]='u')and(a[M]='t') 
+   then dp[M]:=dp[M] or dp[M-5];
+   if(M>=6)and(a[M-5]='o')and(a[M-4]='u')and(a[M-3]='t')and(a[M-2]='p')and(a[M-1]='u')
+   and(a[M]='t') then dp[M]:=dp[M] or dp[M-6];
+   read(ch);
+  end;
+  readln;
+  if(dp[M]) then writeln('YES')
+  else writeln('NO'); 
+ end; 
+END. 

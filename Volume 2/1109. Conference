@@ -1,0 +1,57 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <vector>
+#include <algorithm>
+#include <iostream>
+using namespace std;
+
+const int nmax=2005;
+
+vector<int> g[nmax];
+int matching[nmax];
+bool used[nmax];
+int M,N,K;
+
+bool dfs(int v);
+
+int main()
+{
+     scanf("%d%d%d\n",&M,&N,&K);
+     for(int i=1;i<=K;i++)
+     {
+          int v,u;
+          scanf("%d%d\n",&v,&u);
+          u+=M;
+          g[v].push_back(u);
+          g[u].push_back(v);
+     }
+     
+     memset(matching,-1,(M+N+1)*sizeof(int));
+
+     for(int i=1;i<=M+N;i++)
+     {
+          memset(used,false,(M+N+1)*sizeof(bool));
+          dfs(i);
+     }
+     
+     int cnt=0;
+     for(int i=1;i<=M+N;i++)
+          if(matching[i]!=-1) cnt++;
+     cnt/=2;
+     printf("%d",cnt+(N+M-2*cnt));
+     
+     return 0;
+}
+
+
+bool dfs(int v)
+{
+     if(used[v]) return false;
+     used[v]=true;
+     for(vector<int>::iterator it=g[v].begin();it!=g[v].end();it++)
+          if(matching[*it]==-1 || dfs(matching[*it]))
+          {
+               matching[*it]=v;
+               return true;
+          }
+     return false;
+}

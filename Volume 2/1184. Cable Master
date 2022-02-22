@@ -1,0 +1,39 @@
+const nmax=10000;
+      eps=0.000000001;       
+var
+ a:array[1..nmax] of int64;
+ m,l,r,lenmax:real;
+ n,k,i:longint;
+
+function Solve(m:int64):boolean;
+ var i,c:longint;
+     x:real;
+begin
+ c:=0;
+ for i:=1 to n do inc(c,a[i] div m);
+ Solve:=c>=k;
+end;
+ 
+begin
+ readln(n,k);
+ lenmax:=0;
+ for i:=1 to n do begin
+  readln(r);
+  a[i]:=round(r*1000) div 10;
+  if(lenmax<a[i]) then lenmax:=a[i];
+ end; 
+ 
+ l:=0.5;
+ r:=lenmax;
+ while(r-l>eps) do begin
+  m:=(l+r)/2;
+  if(Solve(round(m))) then l:=m
+  else r:=m;
+ end;
+ 
+ i:=round(m);
+ while(i>0)and(not Solve(i)) do dec(i);
+ 
+ if(i<1) then write('0.00')
+ else write(i/100:0:2);
+end.

@@ -1,0 +1,53 @@
+#include <string>
+#include <iostream>
+using namespace std;
+
+int n;
+
+void Print_S(int n);
+void Print_A(int n);
+string IntToStr(int n);
+
+int main()
+{
+     cin>>n;
+     Print_S(n);
+     
+     return 0;
+}
+
+string IntToStr(int n)
+{
+     string res;
+     while(n>0)
+     {
+          res=char(n%10+'0')+res;
+          n/=10;
+     }
+     return res;
+}
+
+void Print_A(int n)
+{
+     for(int i=1;i<=n;i++)
+     {
+          if(i>1)
+          {
+               if(i%2==0) cout<<"-";
+               else cout<<"+";
+          }
+          cout<<"sin("+IntToStr(i);
+     }
+     for(int i=1;i<=n;i++) cout<<")";
+}
+
+void Print_S(int n)
+{
+     for(int i=1;i<=n-1;i++) cout<<"(";
+     for(int i=1;i<=n;i++)
+     {
+          Print_A(i);
+          cout<<"+"+IntToStr(n-i+1);
+          if(i<n) cout<<")";
+     }
+}

@@ -1,0 +1,126 @@
+const Nmax=200;
+type ind=-Nmax..Nmax;
+     h=-50000..50000;
+
+var
+ Sum:array[0..Nmax,h] of boolean;
+ Nnew:array[1..Nmax] of boolean;
+ Colour:array[1..Nmax] of ind;
+ A:array[1..Nmax,1..Nmax] of 0..1;
+ List:array[1..Nmax] of ind;
+ K,D:array[1..Nmax] of ind;
+ N,M,i,j,up,down,col:ind;
+ S:longint;
+ f:boolean;
+ 
+ 
+procedure Pw(up,down:ind;var f:boolean);
+ var j,V:ind;
+begin
+ inc(down);
+ V:=List[down];
+ Nnew[v]:=False;
+ 
+ if(down<=up) then
+ begin
+  for j:=1 to 2*N do begin
+   if(A[v,j]=1) then begin 
+    if(Colour[v]=Colour[j]) then f:=false;
+   
+    if(Nnew[j]) then begin
+     inc(up);
+     List[up]:=j;
+     Colour[j]:=(2*col+1)-Colour[v];
+    end; 
+   end;
+  end;
+  
+  Pw(up,down,f);   
+ end;
+end;  
+   
+ 
+BEGIN
+ readln(N,M);
+ for i:=1 to 2*N do begin
+ for j:=1 to 2*N do begin
+  A[i,j]:=0;
+ end;
+ end;
+ 
+ for i:=1 to Nmax do begin 
+  Nnew[i]:=True;
+  K[i]:=0;
+ end; 
+ 
+ for i:=1 to M do 
+ begin
+  readln(up,down);
+  A[up,down]:=1;
+  A[down,up]:=1;
+ end;
+ 
+ col:=-1;
+ f:=true;
+ for i:=1 to 2*N do 
+ begin
+  if(Nnew[i]) then begin
+   col:=col+2;
+   up:=1;
+   down:=0;
+   List[up]:=i;
+   Colour[i]:=col; 
+   Pw(up,down,f);
+  end;
+ end;
+
+ for i:=1 to 2*N do inc(K[Colour[i]]);
+ S:=0;
+ j:=1;
+ for i:=1 to 2*N do begin
+  D[i]:=K[j]-K[j+1];
+  S:=S+abs(D[i]);
+  j:=j+2;
+ end;
+ 
+ for j:=-S to S do begin 
+  Sum[1,j]:=False;
+  Sum[0,j]:=False;
+ end;
+ Sum[0,0]:=True; 
+ Sum[1,d[1]]:=True;
+ 
+ for i:=2 to 2*N do begin
+ for j:=-S to S do begin
+  Sum[i,j]:=False;
+  if(j-d[i]>=-S)and(Sum[i-1,j-d[i]]) then Sum[i,j]:=True;
+  if(j+d[i]<=S)and(Sum[i-1,j+d[i]]) then Sum[i,j]:=True;
+ end;
+ end; 
+ 
+ if(f)and(Sum[2*N,0]) then 
+ begin  
+  i:=2*N;
+  j:=0;
+  while(i>=1) do begin
+   if(j-d[i]>=-S)and(Sum[i-1,j-d[i]]) then begin j:=j-d[i];d[i]:=2;end
+   else begin j:=j+d[i];d[i]:=1;end;
+   dec(i);
+  end;
+  
+  for i:=1 to 2*N do begin
+   if(colour[i] mod 2=1)and(D[(colour[i]+1) div 2]=1) then write(i,' ');
+   if(colour[i] mod 2=0)and(D[(colour[i]+1) div 2]=2) then write(i,' ');
+  end; 
+   writeln;
+  for i:=1 to 2*N do begin
+   if(colour[i] mod 2=1)and(D[(colour[i]+1) div 2]=2) then write(i,' ');
+   if(colour[i] mod 2=0)and(D[(colour[i]+1) div 2]=1) then write(i,' ');
+  end; 
+ end
+ else begin
+  write('IMPOSSIBLE');
+ end;       
+END.   
+    
+     

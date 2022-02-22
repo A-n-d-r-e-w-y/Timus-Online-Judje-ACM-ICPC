@@ -1,0 +1,66 @@
+import java.math.*;
+import java.util.*;
+
+public class BigNumbers 
+{
+ public static void main(String args[])
+ {
+    Scanner sc=new Scanner(System.in); 
+    final int nmax=33;
+    int n;
+    BigInteger fact[];
+    BigInteger f[][][];
+    BigInteger ans;
+ 
+    fact = new BigInteger[nmax];
+    f = new BigInteger[nmax][nmax][nmax];
+ 
+    n=sc.nextInt();
+
+    fact[0]=BigInteger.valueOf(1);
+    for(int i=1;i<=n;i++) fact[i]=fact[i-1].multiply(BigInteger.valueOf(i));
+    
+    for(int a=0;a<=n;a++)
+    {
+        for(int b=0;b<=n;b++)
+        {
+            for(int c=0;c<=n;c++)
+            {
+                f[a][b][c]=BigInteger.ZERO;
+            }
+        }
+    }
+ 
+    for(int a=1;a<=n;a++)
+    {
+        f[a][a][0]=BigInteger.ONE;
+        f[a][0][a]=BigInteger.ONE;
+    }
+    
+    for(int b=1;b<=n;b++)
+    {
+        f[1][b][b]=BigInteger.valueOf(2);
+        f[1][b][b-1]=BigInteger.ONE;
+        f[1][b-1][b]=BigInteger.ONE;
+    }
+    
+    for(int a=2;a<=n;a++)
+    {
+        for(int b=1;b<=n;b++)
+        {
+            for(int c=1;c<=n;c++)
+            {
+                for(int k=1;b-k>=0 && c-k>=0;k++) f[a][b][c]=f[a][b][c].add(f[a-1][b-k][c-k].multiply(BigInteger.valueOf(2)));
+                for(int k=0;b-k-1>=0 && c-k>=0;k++) f[a][b][c]=f[a][b][c].add(f[a-1][b-k-1][c-k]);
+                for(int k=0;b-k>=0 && c-k-1>=0;k++) f[a][b][c]=f[a][b][c].add(f[a-1][b-k][c-k-1]);
+            }
+        }
+    }
+    
+    ans=fact[n-1].multiply(fact[n].multiply(fact[n]));
+    ans=ans.multiply(f[n][n][n]);
+    ans=ans.divide(BigInteger.valueOf(2));
+    
+     System.out.println(ans.toString());
+ }
+}

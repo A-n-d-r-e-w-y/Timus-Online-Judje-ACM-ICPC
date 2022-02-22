@@ -1,0 +1,46 @@
+const nmax=150;
+type point=record
+      a,b:longint;
+      RAB,CAB,RBA,CBA:real;
+     end;
+var
+ vec,fix:array[1..nmax] of real;
+ pnt:array[1..nmax] of point;
+ n,m,s,i:longint;
+ v:real;
+ 
+procedure Iter;
+ var i,j:longint;
+     snew:real;
+begin
+ for i:=1 to n do begin
+  for j:=1 to m do begin
+   if(pnt[j].a=i) then begin
+    snew:=(vec[i]-pnt[j].CAB)*pnt[j].RAB;
+    if(snew>vec[pnt[j].b]) then vec[pnt[j].b]:=snew;
+   end;
+   if(pnt[j].b=i) then begin
+    snew:=(vec[i]-pnt[j].CBA)*pnt[j].RBA;
+    if(snew>vec[pnt[j].a]) then vec[pnt[j].a]:=snew;
+   end;
+  end;
+ end; 
+end; 
+ 
+begin
+ readln(n,m,s,v);
+ 
+ for i:=1 to n do vec[i]:=0;
+ vec[s]:=v;
+ 
+ for i:=1 to m do
+  readln(pnt[i].a,pnt[i].b,pnt[i].rab,pnt[i].cab,pnt[i].rba,pnt[i].cba);
+ 
+ for i:=1 to m do Iter;
+ for i:=1 to n do fix[i]:=vec[i];
+ Iter;
+ i:=1;
+ while(i<=n)and(fix[i]-vec[i]=0) do inc(i);
+ if(i<=n) then write('YES')
+ else write('NO');
+end. 

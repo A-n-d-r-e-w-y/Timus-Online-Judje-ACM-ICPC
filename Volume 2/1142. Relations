@@ -1,0 +1,40 @@
+const Nmax=15;
+var
+ C,dp:array[0..Nmax,0..Nmax] of int64;
+ Fact:array[0..Nmax] of int64;
+ N,k,i,j:integer;
+ ans:int64;
+ 
+BEGIN 
+ for j:=1 to Nmax do C[0,j]:=0;
+ C[0,0]:=1;
+ for i:=1 to Nmax do C[i,0]:=1;
+ 
+ for i:=1 to Nmax do begin
+ for j:=1 to Nmax do begin
+  C[i,j]:=C[i-1,j]+C[i-1,j-1];
+ end;
+ end;
+ 
+ Fact[0]:=1;
+ for i:=1 to Nmax do Fact[i]:=Fact[i-1]*i;
+ 
+ dp[1,1]:=1;
+ for j:=2 to Nmax do dp[1,j]:=0;
+ for i:=2 to Nmax do dp[i,1]:=1;
+ 
+ for i:=2 to Nmax do begin
+ for j:=2 to Nmax do begin
+  dp[i,j]:=dp[i-1,j-1];
+  for k:=1 to i-2 do inc(dp[i,j],C[i-1,k]*dp[i-k-1,j-1]);
+ end;
+ end; 
+ 
+ readln(N);
+ while(N<>-1) do begin
+  ans:=0;
+  for j:=1 to N do inc(ans,dp[N,j]*Fact[j]);
+  writeln(ans);
+  readln(N);
+ end; 
+END.  

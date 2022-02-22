@@ -1,0 +1,121 @@
+const Nmax=100;
+var
+ x1,y1,x2,y2,x3,y3,x4,y4,xp,yp:real;
+ R:array[1..Nmax] of real;
+ Numb:array[1..Nmax] of integer;
+ xa,ya,xb,yb:array[1..Nmax] of real;
+ N,i,j,t,i1,j1:integer;
+ S1,S2,S3,S0,rmin,r1,r2,r3,r4:real;
+ f:boolean;
+
+function Rasst(x0,y0,x1,y1,x2,y2:real):real;
+var
+ A,B,C:real;
+ r,r1,r2,xh,yh:real;
+begin
+ A:=y2-y1;
+ B:=x1-x2;
+ C:=-x1*y2+x2*y1;
+ 
+ r:=abs(A*x0+B*y0+C)/sqrt(A*A+B*B);
+ r1:=sqrt((x0-x1)*(x0-x1)+(y0-y1)*(y0-y1));
+ r2:=sqrt((x0-x2)*(x0-x2)+(y0-y2)*(y0-y2));
+ yh:=(A*A*y0-A*B*x0-B*C)/(A*A+B*B);
+ xh:=(B*B*x0-A*B*y0-A*C)/(A*A+B*B);
+ 
+ if((x1-xh)*(x2-xh)+(y1-yh)*(y2-yh)<=0) then Rasst:=r
+ else begin
+  if(r1<r2) then Rasst:=r1
+  else Rasst:=r2;
+ end;
+end;
+ 
+function S(x1,y1,x2,y2,x3,y3:real):real;
+begin
+ S:=abs((x2-x1)*(y3-y2)-(x3-x2)*(y2-y1));
+end;  
+
+ 
+BEGIN 
+ readln(N);
+ for i:=1 to N do begin
+  readln(xa[i],ya[i],xb[i],yb[i]);
+  Numb[i]:=i;
+ end;
+ read(xp,yp);
+  
+ for i:=1 to N do begin
+  x1:=xa[i];
+  y1:=ya[i];
+  x3:=xb[i];
+  y3:=yb[i];
+  x2:=(x1+x3+y3-y1)/2;
+  y2:=(y1+y3+x1-x3)/2;
+  x4:=(x1+x3-y3+y1)/2;
+  y4:=(y1+y3-x1+x3)/2;
+
+  f:=false;
+  S0:=S(x1,y1,x2,y2,x3,y3);
+  S1:=S(x1,y1,x2,y2,xp,yp);
+  S2:=S(x1,y1,x3,y3,xp,yp);
+  S3:=S(x2,y2,x3,y3,xp,yp);
+  if(S0=S1+S2+S3)and(S0>0) then f:=true;
+  
+  x2:=(x1+x3-y3+y1)/2;
+  y2:=(y1+y3-x1+x3)/2;
+  x4:=(x1+x3+y3-y1)/2;
+  y4:=(y1+y3+x1-x3)/2;
+  S0:=S(x1,y1,x2,y2,x3,y3);
+  S1:=S(x1,y1,x2,y2,xp,yp);
+  S2:=S(x1,y1,x3,y3,xp,yp);
+  S3:=S(x2,y2,x3,y3,xp,yp);
+  if(S0=S1+S2+S3)and(S0>0) then f:=true;
+  
+  if(f)or(S0=0) then begin
+   if(f) then R[i]:=0
+   else R[i]:=sqrt((xp-x1)*(xp-x1)+(yp-y1)*(yp-y1));
+  end 
+  else begin
+   r1:=Rasst(xp,yp,x1,y1,x2,y2);
+   r2:=Rasst(xp,yp,x2,y2,x3,y3);
+   r3:=Rasst(xp,yp,x3,y3,x4,y4);
+   r4:=Rasst(xp,yp,x4,y4,x1,y1);
+   rmin:=r1;
+   if(r2<rmin) then rmin:=r2;
+   if(r3<rmin) then rmin:=r3;
+   if(r4<rmin) then rmin:=r4;
+   R[i]:=rmin;
+  end; 
+ end;
+
+ for i:=1 to N-1 do begin
+ for j:=N downto i do begin
+  if(R[i]>R[j]) then begin
+   r1:=R[i];
+   R[i]:=R[j];
+   R[j]:=r1;
+   t:=Numb[i];
+   Numb[i]:=Numb[j];
+   Numb[j]:=t;
+  end;
+ end;
+ end;
+ 
+ i:=1;
+ while(i<=N) do begin
+  j:=i;
+  while(j<=N)and(R[j]=R[i]) do inc(j);
+  for i1:=i to j-2 do begin
+  for j1:=j-1 downto i1 do begin
+   if(Numb[i1]>Numb[j1]) then begin
+    t:=Numb[i1];
+    Numb[i1]:=Numb[j1];
+    Numb[j1]:=t;
+   end;
+  end;
+  end;
+  i:=j;
+ end;    
+ 
+ for i:=1 to N do write(Numb[i],' ');  
+END.

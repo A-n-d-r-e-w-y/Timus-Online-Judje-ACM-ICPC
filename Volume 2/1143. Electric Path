@@ -1,0 +1,68 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct pnt { double x, y; };
+
+const int nmax = 205;
+
+int n;
+pnt vert[nmax];
+double dp[nmax][nmax][2], ans;
+
+
+double dist(pnt A, pnt B) { return sqrt((A.x - B.x)*(A.x - B.x) + (A.y - B.y)*(A.y - B.y)); }
+double min(double x, double y) { return x < y ? x : y; }
+
+void search(int k, int i, int j)
+{
+	if (dp[i][j][0] < 0)
+	{
+		if (i == j) dp[i][j][0] = 0;
+		else
+		{
+			search(k, i + 1, j);
+			search(k, i, j - 1);
+			double v1 = dist(vert[(i + k) % n], vert[(i + 1 + k) % n]) + dp[i + 1][j][0];
+			double v2 = dist(vert[(i + k) % n], vert[(j + k) % n]) + dp[i + 1][j][1];
+			dp[i][j][0] = min(v1, v2);
+		}
+	}
+	if (dp[i][j][1] < 0)
+	{
+		if (i == j) dp[i][j][1] = 0;
+		else
+		{
+			search(k, i + 1, j);
+			search(k, i, j - 1);
+			double v1 = dist(vert[(j + k) % n], vert[(i + k) % n]) + dp[i][j -  1][0];
+			double v2 = dist(vert[(j + k) % n], vert[(j - 1 + k) % n]) + dp[i][j - 1][1];
+			dp[i][j][1] = min(v1, v2);
+		}
+	}
+}
+
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+		cin >> vert[i].x >> vert[i].y;
+	
+	ans = -1;
+
+	for (int k = 0; k < n; k++)
+	{
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < n; j++)
+				dp[i][j][0] = dp[i][j][1] = -1;
+		dp[0][0][0] = dp[0][0][1] = 0;
+		search(k, 0, n - 1);
+		if (dp[0][n - 1][0] >= 0 && (ans < 0 || ans>dp[0][n - 1][0])) ans = dp[0][n - 1][0];
+		if (dp[0][n - 1][1] >= 0 && (ans < 0 || ans>dp[0][n - 1][1])) ans = dp[0][n - 1][1];
+	}
+
+	printf("%.3lf", ans);
+
+	return 0;
+}

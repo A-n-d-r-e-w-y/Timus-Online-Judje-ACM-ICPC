@@ -1,0 +1,27 @@
+import java.math.*;
+import java.util.*;
+
+public class BigNumbers 
+{
+public static void main(String args[])
+{
+ Scanner sc=new Scanner(System.in); 
+ final int nmax=20;
+ int n,i;
+ BigInteger a[];
+ a=new BigInteger[nmax];
+ 
+ n=sc.nextInt();
+ 
+ a[1]=BigInteger.valueOf(2);
+ for(i=1;i<=n;i++) 
+ {
+        if(i>1)
+        {
+         a[i]=(a[i-1].multiply(a[i-1].subtract(BigInteger.ONE))).add(BigInteger.ONE);
+        }
+        System.out.println(a[i].toString());
+ }
+  
+}
+}
