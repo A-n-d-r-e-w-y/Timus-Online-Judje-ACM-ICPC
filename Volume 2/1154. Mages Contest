@@ -1,0 +1,98 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+string s1, s2;
+double t1[5], t2[5], e1[5], e2[5];
+int c1[5], c2[5];
+
+double Get(double t1, double t2, double y1, double y2, double t);
+
+int main()
+{
+   for(int i=1;i<=4;i++)
+   {
+      char c;
+      cin>>c;
+      int j;
+      if(c=='A') j=1;
+      if(c=='E') j=2;
+      if(c=='F') j=3;
+      if(c=='W') j=4;
+      double h1,m1,s1,h2,m2,s2;
+      scanf("%02lf:%02lf:%02lf%lf%02lf:%02lf:%02lf%lf",&h1,&m1,&s1,&e1[j],&h2,&m2,&s2,&e2[j]);
+      t1[j]=h1*3600+m1*60+s1;
+      t2[j]=h2*3600+m2*60+s2;
+   }
+  
+   for(int i=1;i<=4;i++) c1[i]=c2[i]=0;
+   cin>>s1>>s2;
+   for(int i=0;i<=s1.length()-1;i++)
+   {
+      if(s1[i]=='A') c1[1]++;
+      if(s1[i]=='E') c1[2]++;
+      if(s1[i]=='F') c1[3]++;
+      if(s1[i]=='W') c1[4]++;
+   }
+   for(int i=0;i<=s2.length()-1;i++)
+   {
+      if(s2[i]=='A') c2[1]++;
+      if(s2[i]=='E') c2[2]++;
+      if(s2[i]=='F') c2[3]++;
+      if(s2[i]=='W') c2[4]++;
+   }
+
+   
+   double adv;
+   int T=-1;
+   
+   for(int t=0;t<=24*3600-1;t++)
+   {
+      double power1=0, power2=0;
+      for(int j=1;j<=4;j++)
+      {
+         double y=Get(t1[j], t2[j], e1[j], e2[j], t);
+         power1+=c1[j]*y;
+         power2+=c2[j]*y;
+      }
+      if(power1>power2+1e-9)
+      {
+      
+         if(T==-1) adv=power1-power2, T=t;
+         else
+            if(power1-power2>adv+1e-9) adv=power1-power2, T=t;
+      }
+   }
+   
+   if(T==-1) printf("We can't win!");
+   else
+   {
+      printf("%02d:%02d:%02d\n",T/3600,(T%3600)/60,T%60);
+      printf("%.02lf",adv);
+   }
+  
+   return 0;
+}
+
+
+double Get(double t1, double t2, double y1, double y2, double t)
+{
+   if(t1<t2)
+   {
+      if(t1<=t && t<=t2) return y1+(y2-y1)*((t-t1)/(t2-t1));
+      else 
+      {
+         if(0<=t && t<=t1) t+=24*3600;
+         return y2+(y1-y2)*((t-t2)/(24*3600+t1-t2));
+      }
+   }
+   else
+   {
+      if(t2<=t && t<=t1) return y2+(y1-y2)*((t-t2)/(t1-t2));
+      else
+      {
+         if(0<=t && t<=t2) t+=24*3600;
+         return y1+(y2-y1)*((t-t1)/(24*3600+t2-t1));
+      }
+   }
+}

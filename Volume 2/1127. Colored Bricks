@@ -1,0 +1,95 @@
+const nmax=1000;
+      clmax=11*11*11*11;
+type cube=record
+      g1,g2,g3,g4,g5,g6:char;
+     end; 
+var
+ cl,v:array[1..clmax] of longint;
+ c:array[1..nmax] of cube;
+ n,i,j,k:longint;
+ 
+function NumbCl(c:cube):longint;
+begin
+ NumbCl:=(ord(c.g1)-ord('A')+1)+
+         (ord(c.g2)-ord('A')+1)*11+
+         (ord(c.g3)-ord('A')+1)*121+
+         (ord(c.g4)-ord('A')+1)*1331;
+end;
+ 
+procedure Rotate1(var c:cube);
+ var ch:char;
+begin
+ ch:=c.g1;
+ c.g1:=c.g5;
+ c.g5:=c.g4;
+ c.g4:=c.g6;
+ c.g6:=ch;
+end;
+ 
+procedure Rotate2(var c:cube);
+ var ch:char;
+begin
+ ch:=c.g2;
+ c.g2:=c.g5;
+ c.g5:=c.g3;
+ c.g3:=c.g6;
+ c.g6:=ch;
+end; 
+ 
+procedure DFS(c:cube);
+ var i,x:longint;
+begin
+ x:=NumbCl(c);
+ i:=1;
+ while(i<=k)and(x<>v[i]) do inc(i);
+ if(i>k) then begin
+  inc(k);
+  v[k]:=x;
+  inc(cl[x]);
+  Rotate1(c);
+  DFS(c);
+  Rotate1(c);
+  Rotate1(c);
+  Rotate1(c);
+  Rotate2(c);
+  DFS(c);
+  Rotate2(c);
+  Rotate2(c);
+  Rotate2(c);
+ end;
+end;
+ 
+procedure Create(var c:char);
+begin
+ if(c='G') then c:='D';
+ if(c='O') then c:='E';
+ if(c='R') then c:='F';
+ if(c='S') then c:='G';
+ if(c='V') then c:='H';
+ if(c='W') then c:='I';
+ if(c='Y') then c:='J';
+end;
+ 
+begin
+ readln(n);
+ for i:=1 to n do begin
+  readln(c[i].g1,c[i].g2,c[i].g3,c[i].g4,c[i].g5,c[i].g6);
+  Create(c[i].g1);
+  Create(c[i].g2);
+  Create(c[i].g3);
+  Create(c[i].g4);
+  Create(c[i].g5);
+  Create(c[i].g6);
+ end;
+ 
+ for i:=1 to clmax do cl[i]:=0;
+ 
+ for i:=1 to n do begin
+  k:=0;
+  DFS(c[i]);
+ end;
+ 
+ k:=0;
+ for i:=1 to clmax do if(k<cl[i]) then k:=cl[i];
+ write(k);
+end.

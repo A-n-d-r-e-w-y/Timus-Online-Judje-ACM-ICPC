@@ -1,0 +1,71 @@
+const nmax=1005;
+      inf=2000000000;
+var
+ f:array[-nmax..nmax] of int64;
+ i,j,n,k:longint;
+ fi,fj,c,l,r:int64;
+
+function Can:longint;
+ var k,t:longint;
+begin
+ f[i]:=fi;
+ f[i+1]:=c;
+ k:=i+2;
+ t:=0;
+ 
+ while(k<=j) do begin
+  f[k]:=f[k-1]+f[k-2];
+  if(f[k]>inf) then begin 
+   k:=nmax;
+   t:=1;
+  end;
+  if(f[k]<-inf) then begin 
+   k:=nmax;
+   t:=-1;
+  end;
+  inc(k);
+ end;
+ 
+ if(t=0) then begin
+  if(f[j]>fj) then t:=1;
+  if(f[j]<fj) then t:=-1;
+ end;
+ 
+ Can:=t;
+end;
+ 
+begin
+ read(i,fi,j,fj,n);
+ 
+ if(j<i) then begin
+  k:=j;
+  j:=i;
+  i:=k;
+  c:=fj;
+  fj:=fi;
+  fi:=c;
+ end;
+ 
+ if(j=i+1) then c:=fj
+ else begin
+       l:=-inf;
+       r:=+inf;
+       while(r-l>1) do begin
+              c:=(l+r) div 2;
+              k:=Can;
+              if(k=1) then r:=c-1
+              else l:=c;
+       end;
+       c:=l;
+       k:=Can;
+       if(k<>0) then inc(c);
+ end;
+ 
+ f[i]:=fi;
+ f[i+1]:=c;
+ 
+ for k:=i+2 to nmax do f[k]:=f[k-1]+f[k-2];
+ for k:=i-1 downto -nmax do f[k]:=f[k+2]-f[k+1];
+ 
+ write(f[n]);
+end.

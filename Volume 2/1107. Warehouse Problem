@@ -1,0 +1,19 @@
+var
+ n, m, k, i, j, t, x, sum:integer;
+
+begin
+ readln(n,k,m);
+ m:=n+1;
+ 
+ writeln('YES');
+ 
+ for i:=1 to k do begin
+  read(t);
+  sum:=0;
+  for j:=1 to t do begin
+   read(x);
+   inc(sum,x);
+  end;
+  writeln((sum mod m)+1);
+ end;
+end.	

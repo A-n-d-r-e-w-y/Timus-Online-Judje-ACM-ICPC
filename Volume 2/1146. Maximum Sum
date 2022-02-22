@@ -1,0 +1,45 @@
+var
+ S:array[1..100,1..100,1..100] of int64;
+ v,A:array[0..100,1..100] of int64;
+ i,j,k,t,N:longint;
+ M:int64;
+ 
+function Max(c,d:int64):int64;
+begin
+ if(c<d) then c:=d;
+ max:=c;
+end;  
+ 
+BEGIN
+ readln(N);
+ M:=-1000000;
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  read(A[i,j]);
+  M:=max(M,a[i,j]);
+  v[i,j]:=a[i,j];
+  if(i>1) then v[i,j]:=v[i,j]+v[i-1,j];
+  if(j=N) then readln;
+ end;
+ end;
+ 
+ for j:=1 to N do v[0,j]:=0; 
+ 
+ for i:=1 to N do begin
+ for t:=1 to i do begin
+  S[i,1,t]:=v[i,1]-v[i-t,1];
+ end;
+ end;
+  
+ 
+ for j:=2 to N do begin 
+ for i:=1 to N do begin
+ for t:=1 to i do begin
+  S[i,j,t]:=max(S[i,j-1,t]+v[i,j]-v[i-t,j],v[i,j]-v[i-t,j]);
+  M:=max(M,S[i,j,t]);
+ end;
+ end;
+ end;
+ 
+ writeln(M);
+END.  

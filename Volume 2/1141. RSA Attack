@@ -1,0 +1,58 @@
+var 
+ i,j,k:longint;
+ e,n,c,p,q,x,y,d:int64;
+
+function GCD(a,b:int64; var x,y:int64):int64;
+ var d,x1,y1:int64;
+begin
+ if(a=0) then begin
+  x:=0;
+  y:=1;
+  GCD:=b;
+ end
+ else begin
+  d:=GCD(b mod a,a,x1,y1);
+  x:=y1-(b div a)*x1;
+  y:=x1;
+  GCD:=d;
+ end;
+end;
+
+function BIN_POW(x,n,m:int64):int64;
+ var y:int64;
+begin
+ if(n=0) then BIN_POW:=1
+ else begin
+  if(n mod 2=0) then begin
+   y:=BIN_POW(x,n div 2,m);
+   x:=y*y mod m;
+   if(x<0) then inc(x,m);
+   BIN_POW:=x;
+  end
+  else begin
+   y:=BIN_POW(x,n-1,m);
+   x:=x*y mod m;
+   if(x<0) then inc(x,m);
+   BIN_POW:=x;
+  end;
+ end;
+end;
+
+begin
+ readln(k);
+ for i:=1 to k do begin
+  readln(e,n,c);
+  c:=c mod n;
+  if(c<0) then inc(c,n);
+  j:=3;
+  while(n mod j<>0) do inc(j,2);
+  p:=j;
+  q:=n div p;
+  d:=GCD(e,(p-1)*(q-1),x,y);
+  if(x<0) then begin
+   y:=trunc((-x)/((p-1)*(q-1)))+1;
+   x:=(x+(p-1)*(q-1)*y) mod n;
+  end;
+  writeln(BIN_POW(c,x,n));
+ end;
+end.

@@ -1,0 +1,64 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+using namespace std;
+
+const int nmax=105;
+const int mmax=nmax*(nmax-1)/2;
+
+bool dp[nmax][mmax];
+pair<int,int> p[nmax][mmax];
+int n, k;
+
+int main()
+{
+     scanf("%d%d",&n,&k);
+     
+     dp[0][0]=true;
+     for(int i=1;i<=n;i++)
+     {
+          if(i==2) dp[i][0]=false;
+          else
+          {
+               dp[i][0]=true;
+               p[i][0].first=0, p[i][0].second=0;
+          }
+          for(int j=1;j<=i*(i-1)/2;j++)
+          {
+               dp[i][j]=false;
+               if(j-(i-1)>=0 && dp[i-1][j-(i-1)]) 
+               {
+                    dp[i][j]=true; 
+                    p[i][j].first=i-1, p[i][j].second=j-(i-1);
+                    continue;
+               }
+               for(int t=3;t<=i && (j-(i-t)*t>=0);t++)
+                    if(dp[i-t][j-(i-t)*t])
+                    {
+                         dp[i][j]=true;
+                         p[i][j].first=i-t, p[i][j].second=j-(i-t)*t;
+                         break;
+                    }
+          }
+     }
+     
+     if(!dp[n][k]) printf("-1");
+     else
+     {
+          int last=0;
+          while(n>0)
+          {
+               int i=p[n][k].first, j=p[n][k].second;
+               if(last>0) printf("%d %d\n",last,last+1);
+               if(n-i==1) last++;
+               else
+               {
+                    for(int l=1;l<=(n-i)-1;l++) printf("%d %d\n",last+l,last+l+1);
+                    printf("%d %d\n",last+1,last+n-i);
+                    last+=n-i;
+               }
+               n=i, k=j;
+          }
+     }
+     
+     return 0;
+}

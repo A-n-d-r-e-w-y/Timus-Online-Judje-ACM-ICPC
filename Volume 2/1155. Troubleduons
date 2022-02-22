@@ -1,0 +1,128 @@
+const nmax=1000;
+var
+ a,b,c,d,e,f,g,h:longint;
+ n,i:longint;
+ ans:array[1..nmax] of string[3];
+ 
+begin
+ read(a,b,c,d,e,f,g,h);
+ 
+ if(a+c+f+h<>b+d+e+g) then write('IMPOSSIBLE')
+ else begin
+  n:=0;
+  while(h>0) do begin
+   if(d>0) then begin
+    inc(n);
+    ans[n]:='DH-';
+    dec(d);
+    dec(h);
+   end
+   else begin
+    inc(n);
+    ans[n]:='DC+';
+    inc(n);
+    ans[n]:='DH-';
+    dec(h);
+    inc(c);
+   end;
+  end;
+  
+  while(g>0) do begin
+   if(c>0) then begin
+    inc(n);
+    ans[n]:='CG-';
+    dec(g);
+    dec(c);
+   end
+   else begin
+    inc(n);
+    ans[n]:='BC+';
+    inc(n);
+    ans[n]:='CG-';
+    dec(g);
+    inc(b);
+   end;
+  end;
+  
+  while(f>0) do begin
+   if(b>0) then begin
+    inc(n);
+    ans[n]:='BF-';
+    dec(b);
+    dec(f);
+   end
+   else begin
+    inc(n);
+    ans[n]:='AB+';
+    inc(n);
+    ans[n]:='BF-';
+    dec(f);
+    inc(a);
+   end;
+  end;
+  
+  while(e>0) do begin
+   if(a>0) then begin
+    inc(n);
+    ans[n]:='AE-';
+    dec(a);
+    dec(e);
+   end
+   else begin
+    inc(n);
+    ans[n]:='AD+';
+    inc(n);
+    ans[n]:='AE-';
+    dec(e);
+    inc(d);
+   end;
+  end;
+  
+  while(d>0) do begin
+   if(a>0) then begin
+    inc(n);
+    ans[n]:='DA-';
+    dec(a);
+    dec(d);
+   end
+   else begin
+    inc(n);
+    ans[n]:='CB+';
+    inc(n);
+    ans[n]:='CD-';
+    dec(d);
+    inc(b);
+   end;
+  end; 
+   
+  while(c>0) do begin
+   if(b>0) then begin
+    inc(n);
+    ans[n]:='BC-';
+    dec(b);
+    dec(c);
+   end
+   else begin
+    inc(n);
+    ans[n]:='AB+';
+    inc(n);
+    ans[n]:='BC-';
+    dec(c);
+    inc(a);
+   end;
+  end;  
+  
+  while(a>0)and(b>0) do begin
+    inc(n);
+    ans[n]:='AB-';
+    dec(a);
+    dec(b);
+  end;  
+  
+  if(a>0)or(b>0) then write('IMPOSSIBLE')
+  else begin
+   for i:=1 to n-1 do writeln(ans[i]);
+   write(ans[n]);
+  end;
+ end;
+end.

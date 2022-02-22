@@ -1,0 +1,13 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <math.h>
+
+void main()
+{
+	const double Pi = 3.1415926535;
+	const double g = 10;
+	double v, a, k;
+
+	scanf("%lf%lf%lf", &v, &a, &k);
+	printf("%.2lf", (k*v*v*sin(a*Pi / 90)) / ((k - 1)*g));
+}

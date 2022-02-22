@@ -1,0 +1,28 @@
+const NMAX=25;
+var
+ dp:array[0..NMAX,0..NMAX,0..NMAX] of qword;
+ N,i,A0,B0,a,b,k1,k2:integer;
+ 
+begin
+ read(N,A0,B0);
+ for a:=0 to NMAX do begin
+ for b:=0 to NMAX do begin
+  dp[0,a,b]:=1;
+ end;
+ end;
+ 
+ for i:=1 to NMAX do begin
+ for a:=0 to NMAX do begin
+ for b:=0 to NMAX do begin
+  dp[i,a,b]:=0;
+  for k1:=0 to a do begin
+  for k2:=0 to b do begin
+   inc(dp[i,a,b],dp[i-1,a-k1,b-k2]);
+  end;
+  end;
+ end;
+ end;
+ end;
+
+ write(dp[N,A0,B0]);
+end.

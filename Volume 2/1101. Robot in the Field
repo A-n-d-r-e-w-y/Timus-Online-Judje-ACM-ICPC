@@ -1,0 +1,215 @@
+#include <string>
+#include <iostream>
+using namespace std;
+
+const int nmax=205;
+
+int n, m, k;
+string line;
+bool reg[26];
+char field[nmax*2][nmax*2];
+
+
+void Input();
+bool Reg(int i);
+bool Expression(int i, int j);
+
+int main()
+{
+   Input();
+   
+   int x=n+1, y=n;
+   char c='R';
+   cout<<"0 0";
+   
+   while(x>=0 && x<=2*n && y>=0 && y<=2*n)
+   {
+      cout<<endl<<x-n<<" "<<y-n;
+      if(field[x][y]=='?')
+      {
+         switch(c)
+         {
+            case 'R': {x++; break;}
+            case 'L': {x--; break;}
+            case 'U': {y++; break;}
+            case 'D': {y--; break;}
+         }
+         continue;
+      }
+      if(field[x][y]=='@')
+      {
+         bool res=Expression(0, line.length()-1);
+         switch(c)
+         {
+            case 'R': 
+            {
+               if(res) y--, c='D';
+               else y++, c='U';
+               break;
+            }
+            case 'L': 
+            {
+               if(res) y++, c='U';
+               else y--, c='D';
+               break;
+            }
+            case 'U': 
+            {
+               if(res) x++, c='R';
+               else x--, c='L';
+               break;
+            }
+            case 'D': 
+            {
+               if(res) x--, c='L';
+               else x++, c='R';
+               break;
+            }
+         }
+         continue;
+      }
+      reg[field[x][y]-'A']=!reg[field[x][y]-'A'];
+      switch(c)
+      {
+         case 'R': {x++; break;}
+         case 'L': {x--; break;}
+         case 'U': {y++; break;}
+         case 'D': {y--; break;}
+      }
+      
+   }
+   
+   return 0;
+}
+
+
+void Input()
+{
+   getline(cin, line);
+   cin>>n>>m>>k;
+   for(int i=0;i<26;i++) reg[i]=false;
+   for(int i=0;i<=2*n;i++)
+      for(int j=0;j<=2*n;j++)
+         field[i][j]='?';
+   for(int i=1;i<=m;i++)
+   {
+      int x,y;
+      cin>>x>>y;
+      field[x+n][y+n]='@';
+   }
+   for(int i=1;i<=k;i++)
+   {
+      int x,y;
+      char c;
+      cin>>x>>y>>c;
+      field[x+n][y+n]=c;
+   }
+}
+
+bool Reg(int i)
+{
+   return line[i]>='A' && line[i]<='Z' && 
+   (i+1==line.size() || line[i+1]<'A' || line[i+1]>'Z');
+}
+
+bool Expression(int i, int j)
+{
+   bool res;
+   
+   while(line[i]==' ') i++;
+   
+   if(Reg(i))
+   {
+      res=reg[line[i]-'A'];
+      i++;
+      while(i<=j && line[i]==' ') i++;
+      if(i==j+1) return res;
+      if(line[i]=='O') return res || Expression(i+2,j);
+      else return res && Expression(i+3,j);
+   }
+   
+   if(line[i]=='T' && line[i+1]=='R')
+   {
+      i+=4;
+      while(i<=j && line[i]==' ') i++;
+      if(i==j+1) return true;
+      if(line[i]=='A') return Expression(i+3,j);
+   }
+   
+   if(line[i]=='F' && line[i+1]=='A')
+   {
+      i+=5;
+      while(i<=j && line[i]==' ') i++;
+      if(i==j+1) return false;
+      if(line[i]=='O') return Expression(i+2,j);
+   }
+   
+   if(line[i]=='N')
+   {
+      int k=0;
+      while(true)
+      {
+         k++;
+         i+=3;
+         while(line[i]==' ') i++;
+         if(Reg(i))
+         {
+            if(k % 2==0) res=reg[line[i]-'A'];
+            else res=!reg[line[i]-'A'];
+            i++;
+            while(line[i]==' ') i++;
+            if(i==j+1) return res;
+            if(line[i]=='O') return res || Expression(i+2,j);
+            else return res && Expression(i+3,j);
+         }
+         if(line[i]=='T' && line[i+1]=='R')
+         {
+            if(k % 2==0) res=true;
+            else res=false;
+            i+=4;
+            while(line[i]==' ') i++;
+            if(i==j+1) return res;
+            if(line[i]=='O') return res || Expression(i+2,j);
+            else return res && Expression(i+3,j);
+         }
+         if(line[i]=='F' && line[i+1]=='A')
+         {
+            i+=5;
+            while(i<=j && line[i]==' ') i++;
+            if(i==j+1) return false;
+            if(line[i]=='O') return Expression(i+2,j);
+         }
+         if(line[i]=='(')
+         {
+            int cnt=-1, t=i;
+            while(cnt!=0)
+            {
+               t++;
+               if(line[t]=='(') cnt--;
+               if(line[t]==')') cnt++;
+            }
+            int k=t+1;
+            while(k<=j && line[k]==' ') k++;
+            if(k==j+1) return !Expression(i+1,t-1);
+            if(line[k]=='O') return !Expression(i+1,t-1) || Expression(k+2,j);
+            if(line[k]=='A') return !Expression(i+1,t-1) && Expression(k+3,j);
+         }
+      }
+   }
+   
+   if(line[i]=='(')
+   {
+      int cnt=-1, t=i;
+      while(cnt!=0)
+      {
+         t++;
+         if(line[t]=='(') cnt--;
+         if(line[t]==')') cnt++;
+      }
+      int k=t+1;
+      while(k<=j && line[k]==' ') k++;
+      if(k==j+1) return Expression(i+1,t-1);
+      if(line[k]=='O') return Expression(i+1,t-1) || Expression(k+2,j);
+      if(line[k]=='A') return Expression(i+1,t-1) && Expression(k+3,j);
+   }
+}

@@ -1,0 +1,161 @@
+const Nmax=100;
+var
+ List,B:array[1..Nmax,1..Nmax] of integer;
+ Color:array[1..Nmax,1..Nmax] of char;
+ A:array[1..Nmax,1..Nmax] of 0..1;
+ Nnew:array[1..Nmax] of boolean;
+ Delta,Next,Cy,Cg:array[1..Nmax] of integer;
+ N,i,j,k,v,i1,j1,r:integer;
+ f:boolean;
+ 
+procedure Create_Tree(v:integer);
+ var j:integer;
+begin
+ for j:=1 to N do begin
+  if(A[v,j]=1)and(Nnew[j]) then begin
+   Nnew[j]:=false;
+   A[v,j]:=0;
+   A[j,v]:=0;
+   inc(Delta[v]);
+   inc(Delta[j]);
+   List[v,delta[v]]:=j;
+   List[j,delta[j]]:=v;
+   Create_Tree(j);
+  end;
+ end;
+end;   
+
+procedure Find_Path(v:integer);
+ var t:integer;
+begin
+ for t:=1 to Delta[v] do begin
+  if(List[v,t]=j)and(f) then begin
+   Nnew[j]:=false;
+   Next[v]:=j;
+   f:=false;
+  end; 
+   
+  if(Nnew[List[v,t]])and(f) then begin
+   Next[v]:=List[v,t];
+   Nnew[List[v,t]]:=false;
+   Find_Path(List[v,t]);
+  end;
+ end; 
+end; 
+  
+procedure Raskr(v:integer);
+ var j:integer;
+begin
+ for j:=1 to Delta[v] do begin
+  if(Nnew[List[v,j]]) then begin
+   if(Cy[v]>Cg[v]) then begin
+    inc(Cg[v]);
+    Color[v,List[v,j]]:='G';
+    Color[List[v,j],v]:='Y';
+    inc(Cy[List[v,j]]);
+   end
+   else begin
+    inc(Cy[v]);
+    Color[v,List[v,j]]:='Y';
+    Color[List[v,j],v]:='G';
+    inc(Cg[List[v,j]]);
+   end;
+   Nnew[List[v,j]]:=false;
+   Raskr(List[v,j]);
+  end;
+ end;
+end;    
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  A[i,j]:=0;
+  Color[i,j]:='A';
+ end;
+ end;
+ 
+ for i:=1 to N do begin
+  read(k);
+  for j:=1 to k do begin 
+   read(v);
+   A[i,v]:=1;
+  end;
+  readln;
+ end;
+ 
+ for i:=1 to N do begin
+  Nnew[i]:=true;
+  Delta[i]:=0;
+ end;
+ 
+ for i:=1 to N do begin
+  if(Nnew[i]) then begin
+   Nnew[i]:=false;
+   Create_Tree(i);
+  end;
+ end;   
+ 
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(A[i,j]=1) then begin
+   A[i,j]:=0;
+   A[j,i]:=0;
+   for k:=1 to N do Nnew[k]:=true;
+   Nnew[i]:=false;
+   f:=true;
+   Find_Path(i);
+   if(not Nnew[j]) then begin
+    v:=i;
+    while(v<>j) do begin
+     Color[v,next[v]]:='Y';
+     Color[next[v],v]:='G';
+     v:=next[v];
+    end;
+    Color[j,i]:='Y';
+    Color[i,j]:='G';
+    
+    for i1:=1 to N do begin
+     r:=0;
+     for j1:=1 to Delta[i1] do begin
+      if(Color[i1,List[i1,j1]]='A') then begin
+       inc(r);
+       B[i1,r]:=List[i1,j1];
+      end;
+     end;
+     Delta[i1]:=r;
+     for j1:=1 to r do List[i1,j1]:=B[i1,j1];
+    end;
+   end; 
+   if(Nnew[j]) then begin
+    inc(Delta[i]);
+    inc(Delta[j]);
+    List[i,Delta[i]]:=j;
+    List[j,Delta[j]]:=i;
+   end; 
+  end;
+ end;
+ end;    
+ 
+ for i:=1 to N do begin
+  Cy[i]:=0;
+  Cg[i]:=0;
+ end;
+ 
+ for i:=1 to N do Nnew[i]:=true;
+ 
+ for i:=1 to N do begin
+  if(Nnew[i]) then begin
+   Nnew[i]:=false;
+   Raskr(i);
+  end;
+ end;   
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  if(Color[i,j]<>'A') then write(Color[i,j],' ');
+  if(j=N) then writeln;
+ end;
+ end; 
+END.     

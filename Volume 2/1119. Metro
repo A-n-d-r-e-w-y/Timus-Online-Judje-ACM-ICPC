@@ -1,0 +1,47 @@
+const sq=1.4142135623730950488016887242096980785696; 
+const inf=123456789013;
+const nmax=1005;
+
+var
+ a:array[0..nmax,0..nmax] of boolean;
+ dist:array[0..nmax,0..nmax] of extended; 
+ n,m,k:longint;
+ i,j,x,y:longint;
+
+function Less(i1,j1,i2,j2:longint):boolean;
+begin
+ if((i1<0)or(j1<0)) then Less:=false
+ else begin
+  if((i1=i2-1)and(j1=j2-1)) then 
+   Less:=(a[i2,j2])and(dist[i1,j1]+100*sq<dist[i2,j2])
+  else Less:=dist[i1,j1]+100<dist[i2,j2];
+ end;
+end;
+
+BEGIN 
+ readln(n,m);
+ readln(k);
+ for i:=0 to n do begin
+ for j:=0 to m do begin
+  dist[i,j]:=inf;
+  dist[i,j]:=inf;
+  a[i,j]:=false;
+ end;
+ end;
+ for i:=1 to k do begin
+  readln(x,y);
+  a[x,y]:=true;
+ end;
+ 
+ for j:=0 to m do dist[0,j]:=100*j;
+ 
+ for i:=1 to n do begin
+ for j:=0 to m do begin
+  if(Less(i-1,j,i,j)) then dist[i,j]:=dist[i-1,j]+100;
+  if(Less(i,j-1,i,j)) then dist[i,j]:=dist[i,j-1]+100;
+  if(Less(i-1,j-1,i,j)) then dist[i,j]:=dist[i-1,j-1]+100*sq;
+ end;
+ end;
+ 
+ write(round(dist[n,m]));
+END.

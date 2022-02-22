@@ -1,0 +1,148 @@
+const NMAX=11111;
+type pnt=^elem;
+     elem=record
+      sgn1,sgn2:integer;
+      x,y,numb:longint;
+      left,right:pnt;
+     end;
+
+var
+ sgn:array[1..NMAX] of integer;
+ a:array[1..NMAX] of pnt;
+ N,m,i,x,y,L:longint;
+ k:pnt;
+
+procedure P;
+ var k:pnt;
+     f:boolean;
+begin
+ f:=true;
+  if(f)and(sqr(a[N-1].x+a[N].x)+sqr(a[N-1].y+a[N].y)<=L*L) then begin
+   f:=false;
+   new(k);
+   k^.x:=a[N-1].x+a[N].x;
+   k^.y:=a[N-1].y+a[N].y;
+   k^.left:=a[N-1];
+   k^.right:=a[N];
+   k^.sgn1:=1;
+   k^.sgn2:=1;
+   a[N-1]:=k;
+   dec(N);
+  end;
+  
+  if(f)and(sqr(a[N-1].x-a[N].x)+sqr(a[N-1].y-a[N].y)<=L*L) then begin
+   f:=false;
+   new(k);
+   k^.x:=a[N-1].x-a[N].x;
+   k^.y:=a[N-1].y-a[N].y;
+   k^.left:=a[N-1];
+   k^.right:=a[N];
+   k^.sgn1:=1;
+   k^.sgn2:=-1;
+   a[N-1]:=k;
+   dec(N);
+  end;
+  
+  if(f) then begin
+   k:=a[N-2];
+   a[N-2]:=a[N-1];
+   a[N-1]:=k;
+  end;
+  
+  if(f)and(sqr(a[N-1].x+a[N].x)+sqr(a[N-1].y+a[N].y)<=L*L) then begin
+   f:=false;
+   new(k);
+   k^.x:=a[N-1].x+a[N].x;
+   k^.y:=a[N-1].y+a[N].y;
+   k^.left:=a[N-1];
+   k^.right:=a[N];
+   k^.sgn1:=1;
+   k^.sgn2:=1;
+   a[N-1]:=k;
+   dec(N);
+  end;
+  
+  if(f)and(sqr(a[N-1].x-a[N].x)+sqr(a[N-1].y-a[N].y)<=L*L) then begin
+   f:=false;
+   new(k);
+   k^.x:=a[N-1].x-a[N].x;
+   k^.y:=a[N-1].y-a[N].y;
+   k^.left:=a[N-1];
+   k^.right:=a[N];
+   k^.sgn1:=1;
+   k^.sgn2:=-1;
+   a[N-1]:=k;
+   dec(N);
+  end;
+  
+  if(f) then begin
+   k:=a[N];
+   a[N]:=a[N-2];
+   a[N-2]:=k;
+  end;
+  
+  if(f)and(sqr(a[N-1].x+a[N].x)+sqr(a[N-1].y+a[N].y)<=L*L) then begin
+   f:=false;
+   new(k);
+   k^.x:=a[N-1].x+a[N].x;
+   k^.y:=a[N-1].y+a[N].y;
+   k^.left:=a[N-1];
+   k^.right:=a[N];
+   k^.sgn1:=1;
+   k^.sgn2:=1;
+   a[N-1]:=k;
+   dec(N);
+  end;
+  
+  if(f)and(sqr(a[N-1].x-a[N].x)+sqr(a[N-1].y-a[N].y)<=L*L) then begin
+   f:=false;
+   new(k);
+   k^.x:=a[N-1].x-a[N].x;
+   k^.y:=a[N-1].y-a[N].y;
+   k^.left:=a[N-1];
+   k^.right:=a[N];
+   k^.sgn1:=1;
+   k^.sgn2:=-1;
+   a[N-1]:=k;
+   dec(N);
+  end;
+end;
+ 
+procedure G(k:pnt;z:integer);
+begin
+ if(k^.left=nil) then sgn[k^.numb]:=z
+ else begin
+  G(k^.left,z*k^.sgn1);
+  G(k^.right,z*k^.sgn2);
+ end;
+end; 
+ 
+begin
+ readln(N);
+ m:=N;
+ readln(L);
+ for i:=1 to N do begin
+  new(k);
+  readln(k^.x,k^.y);
+  k^.left:=nil;
+  k^.right:=nil;
+  k^.numb:=i;
+  a[i]:=k;
+ end;
+ 
+ while(N>2) do begin
+  P;
+ end;
+ 
+ if(N=1) then G(a[1],1)
+ else begin
+  x:=0;
+  if(x=0)and(sqr(a[1]^.x+a[2]^.x)+sqr(a[1]^.y+a[2]^.y)<=2*L*L) then begin x:=1;G(a[1],1);G(a[2],1);end;
+  if(x=0)and(sqr(a[1]^.x-a[2]^.x)+sqr(a[1]^.y-a[2]^.y)<=2*L*L) then begin x:=1;G(a[1],1);G(a[2],-1);end;
+ end;
+ 
+ writeln('YES');
+ for i:=1 to m do 
+  if(sgn[i]=1) then write('+')
+  else write('-');
+end.

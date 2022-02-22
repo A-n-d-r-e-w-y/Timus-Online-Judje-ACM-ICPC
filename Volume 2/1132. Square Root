@@ -1,0 +1,66 @@
+#include <stdio.h>
+
+const int nmax=35000;
+const int kmax=100500;
+
+unsigned int k,i,j;
+bool f[nmax];
+unsigned int ans[nmax];
+unsigned int z1[kmax],z2[kmax],a[kmax],n[kmax],numb[kmax];
+
+void Qsort(unsigned int l,unsigned int r)
+{
+       unsigned int i,j,x,y;
+       x=n[(l+r)/2];
+       i=l,j=r;
+       while(i<=j)
+       {
+           while(n[i]<x) i++;
+           while(n[j]>x) j--;
+           if(i<=j)
+           {
+              y=n[i]; n[i]=n[j]; n[j]=y;
+              y=a[i]; a[i]=a[j]; a[j]=y;
+              y=numb[i]; numb[i]=numb[j]; numb[j]=y;
+              i++; j--;   
+           }
+       }
+       if (l<j)  Qsort(l,j); 
+       if (i<r)  Qsort(i,r); 
+}
+
+int main()
+{
+       scanf("%d\n",&k);
+       for(i=1;i<=k;i++)
+       {
+              scanf("%d %d\n",&a[i],&n[i]);
+              a[i]=a[i] % n[i];
+              numb[i]=i;
+       }
+       Qsort(1,k);
+       for(i=1;i<nmax;i++) f[i]=false;
+       
+       for(i=1;i<=k;i++)
+       {
+              if(!f[n[i]])
+              {
+                     f[n[i]]=true;
+                     for(j=1;j<=n[i]-1;j++) ans[j]=0;
+                     for(j=1;j<=n[i]-1;j++) ans[j*j % n[i]]=j;
+              }
+              z2[numb[i]]=ans[a[i]];
+              z1[numb[i]]=n[i]-ans[a[i]];
+       }
+       
+       for(i=1;i<=k;i++)
+       {
+              if(z2[i]==0) printf("No root\n");
+              else
+              {
+                     if(z1[i]==z2[i]) printf("%d\n",z1[i]);
+                     else printf("%d %d\n",z1[i],z2[i]);
+              }
+       }
+       return 0;
+}

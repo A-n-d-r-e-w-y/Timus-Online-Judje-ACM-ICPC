@@ -1,0 +1,102 @@
+#include <string>
+#include <set>
+#include <iostream>
+using namespace std;
+
+struct light
+{
+   set<pair<int,int>> pret;
+   int id;
+};
+
+const int nmax=11;
+
+light li[nmax];
+int n, m, M;
+
+int Find_li(int x);
+int Get_numb(string s);
+int max(int x, int y){return x>y?x:y;}
+int dist(int x1, int y1, int x2, int y2){return max(abs(x1-x2),abs(y1-y2));}
+bool in_field(int x,int y){return x>=1 && x<=200 && y>=1 && y<=200;}
+
+int main() 
+{
+	cin>>M;
+	n=0;
+	for(int i=1;i<=M;i++)
+	{
+	   int x,y,p;
+	   string s;
+	   cin>>s;
+	   p=s.find(',');
+	   x=Get_numb(s.substr(0,p));
+	   s.erase(0,p+1);
+	   p=s.find(':');
+	   y=Get_numb(s.substr(0,p));
+	   s.erase(0,p+1);
+	   s=s+",";
+	   while(s.length()>0)
+	   {
+	      p=s.find('-');
+	      int id=Get_numb(s.substr(0,p));
+	      s.erase(0,p+1);
+	      p=s.find(',');
+	      int r=Get_numb(s.substr(0,p));
+	      s.erase(0,p+1);
+	      int k=Find_li(id);
+	      if(k==-1)
+	      {
+	         n++;
+	         li[n].id=id;
+	         for(int t1=x-r;t1<=x+r;t1++)
+	            for(int t2=y-r;t2<=y+r;t2++)
+	               if(in_field(t1, t2) && dist(t1,t2,x,y)==r) 
+	                  li[n].pret.insert(make_pair(t1,t2));
+	      }
+	      else
+	      {
+	         set<pair<int,int>> pt, new_p;
+	         for(int t1=x-r;t1<=x+r;t1++)
+	            for(int t2=y-r;t2<=y+r;t2++)
+	               if(in_field(t1, t2) && dist(t1,t2,x,y)==r) 
+	                  pt.insert(make_pair(t1,t2));
+	         for(set<pair<int,int>>::iterator it=li[k].pret.begin();it!=li[k].pret.end();it++)
+	            if(pt.find(*it)!=pt.end()) new_p.insert(*it);
+	         li[k].pret=new_p;
+	      }
+	   }
+	} 
+
+   for(int i=1;i<=n-1;i++)
+      for(int j=i+1;j<=n;j++)
+         if(li[i].id>li[j].id)
+         {
+            light c=li[i];
+            li[i]=li[j];
+            li[j]=c;
+         }
+   for(int i=1;i<=n;i++)
+   {
+      if(li[i].pret.size()>1) cout<<li[i].id<<":UNKNOWN";
+      else cout<<li[i].id<<":"<<li[i].pret.begin()->first<<","<<li[i].pret.begin()->second;
+      if(i<n) cout<<endl;
+   }
+   
+	return 0;
+}   
+
+
+
+int Find_li(int x)
+{
+   for(int i=1;i<=n;i++) if(li[i].id==x) return i;
+   return -1;
+}
+
+int Get_numb(string s)
+{
+   int res=0;
+   for(int i=0;i<s.length();i++) res=(res*10+s[i]-'0');
+   return res;
+}

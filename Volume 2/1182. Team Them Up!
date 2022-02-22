@@ -1,0 +1,148 @@
+const Nmax=150;
+var
+ A:array[1..Nmax,1..Nmax] of integer;
+ Dp:array[1..Nmax,-Nmax..Nmax] of 0..1;
+ M:array[1..Nmax] of char;
+ G:array[1..Nmax] of integer;
+ Xa,Xb,Razn:array[1..Nmax] of integer;
+ N,i,j,r,time,x,y,sum:integer;
+ can:boolean;
+ 
+procedure CreateK(v:integer);
+ var j:integer;
+begin
+ for j:=1 to N do begin
+  if(M[j]='N')and((A[v,j]=0)or(A[j,v]=0)) then begin
+   if(M[v]='A') then M[j]:='B'
+   else M[j]:='A';
+   G[j]:=time;
+   CreateK(j);
+  end;
+ end;    
+end;  
+ 
+procedure Proverka(v:integer);
+ var j:integer;
+begin
+ for j:=1 to N do begin
+  if(M[v]=M[j])and(v<>j)and((A[v,j]=0)or(A[j,v]=0)) then can:=false;
+ end;
+end;  
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do M[i]:='N';
+ 
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  A[i,j]:=0;
+ end;
+ end; 
+ 
+ for i:=1 to N do begin
+  read(j);
+  while(j<>0) do begin
+   A[i,j]:=1;
+   read(j);
+  end;
+  readln;
+ end;
+ 
+ time:=0;
+ 
+ for i:=1 to N do begin
+  if(M[i]='N') then begin
+   M[i]:='A';
+   inc(time);
+   G[i]:=time;
+   CreateK(i);
+  end;
+ end;   
+ 
+ for i:=1 to time do begin
+  Xa[i]:=0;
+  Xb[i]:=0;
+ end;
+ 
+ for i:=1 to N do begin
+  if(M[i]='A') then inc(Xa[g[i]]);
+  if(M[i]='B') then inc(Xb[g[i]]); 
+ end;
+ 
+ for i:=1 to time do Razn[i]:=Xa[i]-Xb[i];
+ 
+ for i:=-N to N do Dp[time,i]:=0;
+ Dp[time,-abs(razn[time])]:=1;
+ Dp[time,abs(razn[time])]:=1; 
+ 
+ for i:=time-1 downto 1 do begin
+  for j:=-N to N do begin
+   Dp[i,j]:=0;
+   r:=abs(razn[i]);
+   if(j-r>=-N)and(j-r<=N)and(Dp[i+1,j-r]=1) then Dp[i,j]:=1;
+   if(j+r>=-N)and(j-r<=N)and(Dp[i+1,j+r]=1) then Dp[i,j]:=1;
+  end;
+ end;  
+ 
+ sum:=N+5;
+ for j:=-N to N do 
+  if(Dp[1,j]=1)and(abs(j)<abs(sum)) then sum:=j;
+ 
+ for i:=1 to time-1 do begin
+  r:=abs(razn[i]);
+  if(sum-r>=-N)and(sum-r<=N)and(Dp[i+1,sum-r]=1) then 
+  begin
+   if(razn[i]<0) then begin
+    for j:=1 to N do begin
+     if(G[j]=i)and(M[j]='A') then begin M[j]:='B';G[j]:=0;end; 
+     if(G[j]=i)and(M[j]='B') then begin M[j]:='A';G[j]:=0;end;
+    end;
+   end;
+   sum:=sum-r;
+  end
+  else begin
+   if(sum+r>=-N)and(sum+r<=N)and(Dp[i+1,sum+r]=1) then 
+   begin
+    if(razn[i]>0) then begin
+     for j:=1 to N do begin
+      if(G[j]=i)and(M[j]='A') then begin M[j]:='B';G[j]:=0;end;
+      if(G[j]=i)and(M[j]='B') then begin M[j]:='A';G[j]:=0;end;
+     end;
+    end; 
+    sum:=sum+r;
+   end;
+  end;
+ end;
+ 
+ if(sum<>razn[time]) then begin
+  for j:=1 to N do begin
+    if(G[j]=time)and(M[j]='A') then begin M[j]:='B';G[j]:=0;end;
+    if(G[j]=time)and(M[j]='B') then begin M[j]:='A';G[j]:=0;end;
+  end;
+ end;
+ 
+ can:=true;
+ for i:=1 to N do begin
+  Proverka(i);
+ end;
+ 
+  x:=0;
+  y:=0;
+  for i:=1 to N do begin 
+   if(M[i]='A') then inc(x);
+   if(M[i]='B') then inc(y);
+  end; 
+ 
+ if(x=0)or(y=0) then can:=false;
+ 
+ if(not can) then begin
+  write('No solution');
+ end
+ else begin
+   write(x,' ');
+   for i:=1 to N do if(M[i]='A') then write(i,' ');
+   writeln;
+   write(y,' ');
+   for i:=1 to N do if(M[i]='B') then write(i,' ');
+ end; 
+END.   

@@ -1,0 +1,68 @@
+const nmax=2000;
+      eps=0.00000001;
+var
+ x,y:array[0..nmax] of real;
+ id:array[0..nmax] of longint;
+ alfa:array[1..nmax] of real;
+ n,i,j:longint;
+ x0,y0:real;
+
+procedure QSort(L,R:longint); 
+ var i,j,k:longint;
+     X,Y:real;
+begin 
+ X:=alfa[(l+r) div 2]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while alfa[i]<X do i:=i+1; 
+   while alfa[j]>X do j:=j-1; 
+     if i<=j then 
+       begin 
+         y:=alfa[i]; alfa[i]:=alfa[j]; alfa[j]:=y; 
+         k:=id[i]; id[i]:=id[j]; id[j]:=k;
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSort(L,j); 
+  if i<R then QSort(i,R); 
+end; 
+
+function Angle(x,y:real):real;
+begin
+ if(x>0)and(y>=0) then Angle:=arctan(y/x);
+ if(x=0)and(y>0) then Angle:=Pi/2;
+ if(x<0)and(y>=0) then Angle:=Pi-arctan(y/(-x));
+ if(x<0)and(y<0) then Angle:=Pi+arctan(y/x);
+ if(x=0)and(y<0) then Angle:=3*Pi/2;
+ if(x>0)and(y<0) then Angle:=2*Pi-arctan((-y)/x);
+end;
+
+begin
+ readln(x0,y0);
+ readln(n);
+ for i:=1 to n do begin
+  readln(x[i],y[i],id[i]);
+  x[i]:=x[i]-x0;
+  y[i]:=y[i]-y0;
+ end;
+
+ for i:=1 to n do alfa[i]:=Angle(x[i],y[i]);
+ Qsort(1,n);
+ 
+ i:=2;
+ while(i<=n)and(alfa[i]-alfa[i-1]<=Pi-eps) do inc(i);
+ 
+ if(i=n+1) then begin
+  writeln('0');
+  for i:=1 to n do writeln(id[i]);
+  write('0');
+ end
+ else begin
+  writeln('0');
+  for j:=i to n do writeln(id[j]);
+  for j:=1 to i-1 do writeln(id[j]);
+  write('0');
+ end;
+end.
+   

@@ -1,0 +1,86 @@
+const Nmax=555;
+var
+ a:array[1..Nmax,1..Nmax] of boolean;
+ Nnew:array[1..Nmax] of boolean;
+ Dvyh,Dvh:array[1..Nmax] of integer;
+ N,M,i,j,t,x,vyh,vh,ans:integer;
+
+procedure G(v:integer);
+ var j:integer;
+begin
+ Nnew[v]:=false;
+ for j:=1 to M do begin
+  if(Nnew[j])and(a[v,j]) then begin
+   inc(ans,Dvyh[j]);
+   if(Dvyh[j]>Dvh[j]) then begin
+    if(vh>=Dvyh[j]-Dvh[j]) then dec(vh,Dvyh[j]-Dvh[j])
+    else begin
+     inc(Dvh[j],vh);
+     vh:=Dvyh[j]-Dvh[j];
+     inc(t,vh);
+    end;
+   end;
+   if(Dvyh[j]<Dvh[j]) then begin
+    if(vyh>=Dvh[j]-Dvyh[j]) then dec(vyh,Dvh[j]-Dvyh[j])
+    else begin
+     inc(Dvyh[j],vyh);
+     vyh:=Dvh[j]-Dvyh[j];
+     inc(t,vyh);
+    end;
+   end;
+   G(j);
+  end;
+ end;
+end;
+ 
+begin
+ readln(M,N);
+ for i:=1 to M do begin
+ for j:=1 to M do begin
+  a[i,j]:=false;
+ end;
+ end;
+ 
+ for i:=1 to M do begin
+  Dvyh[i]:=0;
+  Dvh[i]:=0;
+  Nnew[i]:=true;
+ end;
+ 
+ for i:=1 to M do begin
+  for j:=1 to N do begin
+   read(x);
+   if(x<>i) then begin
+    a[i,x]:=true;
+    inc(Dvyh[i]);
+    inc(Dvh[x]);
+   end;
+  end;
+  readln;
+ end;
+
+ ans:=0;
+ vyh:=0;
+ vh:=0;
+ t:=0;
+ 
+ for i:=1 to M do begin
+  if(Nnew[i])and(Dvyh[i]>0) then begin
+   inc(ans);
+   inc(ans,Dvyh[i]);
+   if(Dvyh[i]>Dvh[i]) then begin
+    inc(t,Dvyh[i]-Dvh[i]);
+    inc(vh,Dvyh[i]-Dvh[i]);
+   end;
+   if(Dvyh[i]<Dvh[i]) then begin
+    inc(t,Dvh[i]-Dvyh[i]);
+    inc(vyh,Dvh[i]-Dvyh[i]);
+   end;
+   G(i);
+  end; 
+ end; 
+
+ inc(ans,t);
+ if(ans=0) then ans:=1;
+ write(ans-1);  
+end.

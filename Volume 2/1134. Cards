@@ -1,0 +1,59 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> a, cnt;
+int n, m;
+
+
+int main(){
+     
+     ios_base::sync_with_stdio(false);
+     cin.tie(NULL);
+     
+     cin >> n >> m;
+     
+     cnt.resize(n + 1);
+     cnt[0] = 1;
+     cnt[n] = 1;
+     for (int i = 1; i < n; ++i)
+          cnt[i] = 2;
+          
+     a.resize(m);
+     for(int i=0; i<m; ++i)
+          cin >> a[i];
+     sort(a.begin(), a.end());
+
+     
+     for(int i=0; i<m; ++i)
+     {
+          if(a[i] == 0){
+                    cnt[0] -= 1;
+                    cnt[1] -= 1;
+          } 
+          if(a[i] == n){
+                    cnt[n] -= 1;
+                    cnt[n-1] -= 1;
+          }
+          if (0 < a[i] && a[i] < n){
+                    if(cnt[a[i]-1]){
+                              cnt[a[i]-1] -= 1;
+                              cnt[a[i]] -= 1;
+                    } else {
+                              cnt[a[i]] -= 1;
+                              cnt[a[i] + 1] -= 1;
+                    }
+                    
+          }
+     }
+     
+     if (*min_element(cnt.begin(), cnt.end()) < 0){
+               cout << "NO";
+     } else {
+               cout << "YES";
+     }
+     
+     
+     return 0;
+}

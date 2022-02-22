@@ -1,0 +1,16 @@
+import math
+from fractions import *
+
+N, M = map(Fraction, (input().split()))
+
+s = 0.0
+n = 1.0
+delta = M / (2 * n - 1)
+
+while s + delta < N:
+    s = s + delta
+    n = n + 1.0
+    delta = M / (2.0 * n - 1.0)
+
+d = N - s
+print(math.ceil((n - 1.0) * M + d * (2.0 * n - 1.0)))

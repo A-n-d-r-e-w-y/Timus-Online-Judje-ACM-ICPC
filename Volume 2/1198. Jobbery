@@ -1,0 +1,81 @@
+const Nmax=2000;
+var
+ Vyh,Vh:array[1..Nmax,1..Nmax] of integer;
+ Cvyh,Cvh,Tout:array[1..Nmax] of integer;
+ Nnew:array[1..Nmax] of boolean;
+ N,i,x,y,time,v:integer;
+ 
+procedure G(v:integer);
+ var j,u:integer;
+begin  
+ for j:=1 to cvyh[v] do begin
+  u:=vyh[v,j];
+  if(Nnew[u]) then begin
+   inc(x);
+   Nnew[u]:=false;
+   G(u);
+  end;
+ end;
+ 
+ inc(time);
+ Tout[v]:=time;
+end;   
+ 
+procedure Gt(v:integer); 
+ var j,u:integer;
+begin
+ for j:=1 to cvh[v] do begin
+  u:=vh[v,j];
+  if(Nnew[u]) then begin
+   Nnew[u]:=false;
+   Gt(u);
+  end;
+ end;
+end;    
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do begin
+  Nnew[i]:=true;
+  Cvyh[i]:=0;
+  Cvh[i]:=0;
+ end;
+ 
+ for i:=1 to N do begin
+  read(x);
+  while(x<>0) do begin
+   inc(cvyh[i]);
+   Vyh[i,cvyh[i]]:=x;
+   inc(cvh[x]);
+   Vh[x,cvh[x]]:=i;
+   read(x);
+  end;
+  readln;
+ end;
+ 
+ time:=0;
+ for i:=1 to N do begin
+  if(Nnew[i]) then G(i);
+ end; 
+ 
+ v:=1;
+ for i:=2 to N do 
+  if(Tout[i]>Tout[v]) then v:=i;
+  
+ for i:=1 to N do Nnew[i]:=true;
+ x:=1;
+ Nnew[v]:=false;
+ G(v);
+ 
+ if(x=N) then begin
+  for i:=1 to N do Nnew[i]:=true;
+  Nnew[v]:=false;
+  Gt(v);
+  for i:=1 to N do 
+   if(not Nnew[i]) then write(i,' ');
+  write('0');
+ end
+ else begin
+  write('0');
+ end;   
+END.   

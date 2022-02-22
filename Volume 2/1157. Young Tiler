@@ -1,0 +1,21 @@
+const NMAX=10000;
+var
+ f:array[1..NMAX] of int64;
+ N,M,K,a,b,i,ans:longint;
+ 
+begin
+ for i:=1 to NMAX do begin
+  f[i]:=0;
+  for a:=1 to trunc(sqrt(i)) do if(i mod a=0) then inc(f[i]);
+ end;
+ 
+ read(M,N,K);
+ ans:=0;
+ i:=1;
+ while(ans=0)and(i<=NMAX) do begin
+  if(f[i]=N)and(i-K>=1)and(f[i-K]=M) then ans:=i;
+  inc(i);
+ end;
+ 
+ write(ans);
+end.

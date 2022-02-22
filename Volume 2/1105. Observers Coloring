@@ -1,0 +1,189 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <vector>
+#include <map>
+#include <iostream>
+using namespace std;
+
+struct segment
+{
+  double a,b;
+  int numb;
+  segment(double x=0, double y=0,int i=0){a=x, b=y, numb=i;}
+};
+
+const double eps=0.000000001;
+const int nmax=10005;
+
+double T0,T1;
+int n;
+segment seg[nmax];
+vector<segment> v1,v2;
+double dp[nmax][2];
+int p[nmax][2];
+
+bool Equal(double x1, double x2);
+void swap(segment& s1, segment& s2);
+void QSort_A(int L,int R);
+void QSort_B(int L,int R);
+
+int main()
+{
+     scanf("%lf%lf",&T0,&T1);
+     scanf("%d",&n);
+     for(int i=1;i<=n;i++)
+     {
+          scanf("%lf%lf",&seg[i].a,&seg[i].b);
+          seg[i].numb=i;
+     }
+     
+     QSort_A(1,n);
+     /*
+     for(int i=1;i<=n;i++) cout<<seg[i].a<<" "<<seg[i].b<<" "<<seg[i].numb<<endl;
+     */     
+     for(int i=1;i<=n;)
+     {
+          int j=i+1;
+          while(j<=n && Equal(seg[j].a,seg[i].a)) j++;
+          QSort_B(i,j-1);
+          segment s(seg[j-1].a,seg[j-1].b,seg[j-1].numb);
+          v1.push_back(s);
+          i=j;
+     }
+     /*
+     for(vector<segment>::iterator it=v1.begin();it!=v1.end();it++) cout<<it->numb<<" ";
+     cout<<endl;
+     */
+     segment s(v1[0]);
+     v2.push_back(s);
+     int len=1;
+     for(int i=1;i<v1.size();i++)
+     {
+          if(v2[len-1].b>=v1[i].b) continue;
+          len++;
+          v2.push_back(v1[i]);
+     }
+     /*
+     for(vector<segment>::iterator it=v2.begin();it!=v2.end();it++)
+          cout<<it->a<<" "<<it->b<<" "<<it->numb<<endl;
+     */
+     
+     vector<segment>::iterator it1=v2.begin();
+     int lost=v2.size()-2;
+     while(lost>0)
+     {
+          vector<segment>::iterator it2, it3;
+          it2=it1;
+          it2++;
+          it3=it2;
+          it3++;
+          if(it3->a<=it1->b) v2.erase(it2);
+          else it1++;
+          lost--;
+     }
+     /*
+     for(vector<segment>::iterator it=v2.begin();it!=v2.end();it++)
+          cout<<it->a<<" "<<it->b<<" "<<it->numb<<endl;
+     */
+     
+     dp[v2.size()-1][0]=0;
+     p[v2.size()-1][0]=-1;
+     dp[v2.size()-1][1]=v2[v2.size()-1].b-v2[v2.size()-1].a;
+     p[v2.size()-1][1]=-1;
+     
+     for(int i=v2.size()-2;i>=0;i--)
+     {
+          if(dp[i+1][0]>dp[i+1][1])
+          {
+               dp[i][0]=dp[i+1][0];
+               p[i][0]=0;
+          }
+          else
+          {
+               dp[i][0]=dp[i+1][1];
+               p[i][0]=1;
+          }
+          double delta=0;
+          if(v2[i].b>v2[i+1].a) delta=v2[i].b-v2[i+1].a;
+          if(dp[i+1][0]>dp[i+1][1]+(v2[i].b-v2[i].a)-2*delta)
+          {
+               dp[i][1]=dp[i+1][0];
+               p[i][1]=0;
+          }
+          else
+          {
+               dp[i][1]=dp[i+1][1]+(v2[i].b-v2[i].a)-2*delta;
+               p[i][1]=1;
+          }
+     }
+     int i=0,j;
+     if(dp[0][0]>dp[0][1]) j=0;
+     else j=1;
+     v1.clear();
+     while(i<v2.size())
+     {
+          if(j==1) v1.push_back(v2[i]);
+          j=p[i][j];
+          i++;
+     }
+     
+     printf("%d",v1.size());
+     for(int i=0;i<v1.size();i++) printf("\n%d",v1[i].numb);
+     
+     return 0;
+}
+
+
+double max(double x1, double x2)
+{
+     return x1>x2?x1:x2;
+}
+
+bool Equal(double x1, double x2)
+{
+     return abs(x1-x2)<eps;
+}
+
+void swap(segment& s1, segment& s2)
+{
+     segment z=s1;
+     s1=s2;
+     s2=z;
+}
+
+void QSort_A(int L,int R)
+{
+     double X=seg[(L+R)/2].a;
+     int i=L, j=R;
+     while(i<=j)
+     {
+          while(seg[i].a<X) i++;
+          while(seg[j].a>X) j--;
+          if(i<=j)
+          {
+               swap(seg[i],seg[j]);
+               i++;
+               j--;
+          }
+     }
+     if(L<j) QSort_A(L,j); 
+     if(i<R) QSort_A(i,R); 
+}
+
+void QSort_B(int L,int R)
+{
+     double X=seg[(L+R)/2].b;
+     int i=L, j=R;
+     while(i<=j)
+     {
+          while(seg[i].b<X) i++;
+          while(seg[j].b>X) j--;
+          if(i<=j)
+          {
+               swap(seg[i],seg[j]);
+               i++;
+               j--;
+          }
+     }
+     if(L<j) QSort_B(L,j); 
+     if(i<R) QSort_B(i,R); 
+}

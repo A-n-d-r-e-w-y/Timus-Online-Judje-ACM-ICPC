@@ -1,0 +1,140 @@
+const Nmax=1000; 
+      Mmax=3;
+      
+type pnt=^elem;
+     elem=record
+      info:integer;
+      next,pred:pnt;
+      z:char;
+     end;
+var
+ C:array[1..Mmax] of integer;
+ A,B:array[1..Nmax] of integer;
+ N,i,M:integer;
+ find,kon:boolean;
+ ch:char;
+ k,kpred,know,knext,start:pnt;
+ 
+BEGIN
+ readln(N);
+ C[1]:=0;
+ C[2]:=0;
+ C[3]:=0;
+ 
+ read(ch);
+ new(start);
+ start^.info:=1;
+ start^.next:=nil;
+ start^.pred:=nil;
+ start^.z:=ch;
+ know:=start;
+ 
+ if(ch='R') then inc(C[1]); 
+ if(ch='G') then inc(C[2]); 
+ if(ch='B') then inc(C[3]); 
+ 
+ for i:=2 to N do begin
+  read(ch);
+  if(ch='R') then inc(C[1]); 
+  if(ch='G') then inc(C[2]); 
+  if(ch='B') then inc(C[3]); 
+  new(k);
+  k^.info:=i;
+  k^.next:=nil;
+  k^.pred:=know;
+  k^.z:=ch;
+  know^.next:=k;
+  know:=k;
+ end;
+ 
+ start^.pred:=know;
+ know^.next:=start; 
+ M:=0;
+ 
+ while(N>=4) do begin
+  know:=start;
+  find:=false;
+  while(not find) do begin
+   kpred:=know^.pred;
+   knext:=know^.next;
+   if(kpred^.z<>knext^.z) then find:=true
+   else know:=know^.next;
+  end;
+  
+  kon:=false;
+  if(know^.z='R')and(C[1]>1)and(not kon) then begin
+   dec(C[1]);
+   inc(M);
+   A[M]:=kpred^.info;
+   B[M]:=knext^.info;
+   kpred^.next:=knext;
+   knext^.pred:=kpred;
+   kon:=true;
+   dec(N);
+   start:=k^.next;
+  end;
+  
+  if(know^.z='G')and(C[2]>1)and(not kon) then begin
+   dec(C[2]);
+   inc(M);
+   A[M]:=kpred^.info;
+   B[M]:=knext^.info;
+   kpred^.next:=knext;
+   knext^.pred:=kpred;
+   kon:=true;
+   dec(N);
+   start:=k^.next;
+  end;
+  
+  if(know^.z='B')and(C[3]>1)and(not kon) then begin
+   dec(C[3]);
+   inc(M);
+   A[M]:=kpred^.info;
+   B[M]:=knext^.info;
+   kpred^.next:=knext;
+   knext^.pred:=kpred;
+   kon:=true;
+   dec(N);
+   start:=k^.next;
+  end;
+  
+  if(know^.z='R')and(C[1]=1)and(not kon) then begin
+   k:=knext^.next;
+   N:=0;
+   while(k<>kpred) do begin
+    inc(M);
+    A[M]:=know^.info;
+    B[M]:=k^.info;
+    k:=k^.next;
+   end;
+   kon:=true;
+  end;
+  
+  if(know^.z='G')and(C[2]=1)and(not kon) then begin
+   k:=knext^.next;
+   N:=0;
+   while(k<>kpred) do begin
+    inc(M);
+    A[M]:=know^.info;
+    B[M]:=k^.info;
+    k:=k^.next;
+   end;
+   kon:=true;
+  end;
+  
+  if(know^.z='B')and(C[3]=1)and(not kon) then begin
+   k:=knext^.next;
+   N:=0;
+   while(k<>kpred) do begin
+    inc(M);
+    A[M]:=know^.info;
+    B[M]:=k^.info;
+    k:=k^.next;
+   end;
+   kon:=true;
+  end;
+ end; 
+  
+ writeln(M);
+ for i:=1 to M do writeln(A[i],' ',B[i]); 
+END.

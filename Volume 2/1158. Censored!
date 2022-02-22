@@ -1,0 +1,173 @@
+import java.math.*;
+import java.util.*;
+
+public class BigNumbers 
+{
+   static String alf;
+   static String s[], state[];
+   static int graph[][],  link[][];
+   static int N,M,P,cnt;
+   static BigInteger dp[][];
+   
+   public static int Numb(char c)
+   {
+         int i=0;
+         while(c!=alf.charAt(i)) i++;
+         return i+1;
+   }
+   
+   public static int FindStr(String str)
+   {
+      int i=1;
+      while(i<=P && str.compareTo(s[i])!=0) i++;
+      if(i==P+1) return -1;
+      else return i;
+   }
+   
+   public static void CreateAuto()
+   {
+         cnt=0;
+         for(int j=1;j<=N;j++) link[cnt][j]=-1;
+         state[0]="";
+         
+         for(int i=1;i<=P;i++)
+         {
+            int now=0;
+            int j=0;
+            while(j<s[i].length()-1)
+            {
+               int next=link[now][Numb(s[i].charAt(j))];
+               if(next==-1)
+               {
+                  while(j<s[i].length()-1)
+                  {
+                     String str=state[now]+s[i].charAt(j);
+                     int find=-1;
+                     int k=0;
+                     while(find==-1 && k<str.length())
+                     {
+                        String t=str.substring(k);
+                        find=FindStr(t);
+                        k++;
+                     }
+                     if(find!=-1)
+                     {
+                        j=s[i].length();
+                        break;
+                     }
+                     cnt++;
+                     for(int t=1;t<=N;t++) link[cnt][t]=-1;
+                     state[cnt]=str;
+                     link[now][Numb(s[i].charAt(j))]=cnt;
+                     now=cnt;
+                     j++;
+                  }
+               }
+               else
+               {
+                  j++;
+                  now=next;
+               }
+            }
+         }
+   }
+   
+   
+   public static int FindState(String s)
+   {
+      int now=0;
+      int j=0;
+      while(j<s.length())
+      {
+          int next=link[now][Numb(s.charAt(j))];
+          if(next==-1) return -1;
+          j++;
+          now=next;
+      }
+      return now;
+   }
+   
+   public static void CreateGraph()
+   {
+      for(int i=0;i<=cnt;i++)
+      {
+         for(int j=0;j<N;j++)
+         {
+            String str=state[i]+alf.charAt(j);
+            int find=-1;
+            int k=0;
+            while(find==-1 && k<str.length())
+            {
+               String t=str.substring(k);
+               find=FindStr(t);
+               k++;
+            }
+            if(find!=-1) graph[i][j+1]=-1;
+            else
+            {
+               int st=-1;
+               k=0;
+               while(st==-1 && k<str.length())
+               {
+                  String t=str.substring(k);
+                  st=FindState(t);
+                  k++;
+               }
+			   if(st==-1) st=0;
+               graph[i][j+1]=st;
+            }
+         }
+      }
+   }
+   
+ public static void main(String args[])
+ {
+  Scanner sc=new Scanner(System.in); 
+ 
+  final int nmax=50, mmax=50, pmax=10, lenmax=10;
+  
+  state=new String[pmax*lenmax+1];
+  graph=new int[pmax*lenmax+1][nmax+1];
+  link=new int[pmax*lenmax+1][nmax+1];
+  s=new String[pmax+1];
+  
+  N=sc.nextInt();
+  M=sc.nextInt();
+  P=sc.nextInt();
+  
+  s[0]=sc.nextLine();
+  alf=sc.nextLine();
+  for(int i=1;i<=P;i++) s[i]=sc.nextLine();
+     
+  CreateAuto();
+  //for(int i=0;i<=cnt;i++) System.out.println(state[i]);
+  
+  CreateGraph();
+  /*
+  for(int i=0;i<=cnt;i++)
+  {
+     System.out.print(i+": ");
+     for(int j=1;j<=N;j++)
+     {
+        System.out.print(graph[i][j]+" ");
+     }
+     System.out.println("");
+  }
+  */
+  dp=new BigInteger[M+1][pmax*lenmax+1];
+  
+  for(int i=0;i<=cnt;i++) dp[0][i]=BigInteger.ONE;
+  
+  for(int len=1;len<=M;len++)
+  {
+     for(int i=0;i<=cnt;i++)
+     {
+        dp[len][i]=BigInteger.ZERO;
+        for(int j=1;j<=N;j++) 
+            if(graph[i][j]!=-1) dp[len][i]=dp[len][i].add(dp[len-1][graph[i][j]]);
+     }
+  }
+
+  System.out.print(dp[M][0]);
+ }
+}

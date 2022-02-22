@@ -1,0 +1,71 @@
+const Nmax=3000;
+type pnt=^elem;
+     elem=record
+      info:longint;
+      right,left:pnt;
+     end; 
+var
+ A:array[1..Nmax] of longint;
+ N,i:longint;
+ root,k:pnt;
+ 
+procedure G(v:pnt;x:longint);
+begin
+ if(v^.left=nil)and(v^.right=nil) then begin
+  if(x>v^.info) then begin
+   new(k);
+   k^.info:=x;
+   k^.left:=nil;
+   k^.right:=nil; 
+   v^.right:=k;
+  end
+  else begin
+   new(k);
+   k^.info:=x;
+   k^.left:=nil;
+   k^.right:=nil; 
+   v^.left:=k;
+  end;  
+ end
+ else begin
+  if(x>v^.info)and(v^.right<>nil) then G(v^.right,x);
+  if(x>v^.info)and(v^.right=nil) then begin 
+   new(k);
+   k^.info:=x;
+   k^.left:=nil;
+   k^.right:=nil; 
+   v^.right:=k;
+  end;
+  if(x<v^.info)and(v^.left<>nil) then G(v^.left,x);
+  if(x<v^.info)and(v^.left=nil) then begin 
+   new(k);
+   k^.info:=x;
+   k^.left:=nil;
+   k^.right:=nil; 
+   v^.left:=k;
+  end;
+ end;
+end; 
+ 
+procedure BAR(v:pnt);
+begin
+ if(v^.right<>nil) then BAR(v^.right); 
+ if(v^.left<>nil) then BAR(v^.left);
+ writeln(v^.info);
+end;
+ 
+BEGIN
+ readln(N);
+ for i:=1 to N do readln(A[i]);
+ 
+ new(root);
+ root^.info:=A[N];
+ root^.left:=nil;
+ root^.right:=nil;
+ 
+ for i:=N-1 downto 1 do begin
+  G(root,A[i]);
+ end;
+ 
+ BAR(root);
+END.  

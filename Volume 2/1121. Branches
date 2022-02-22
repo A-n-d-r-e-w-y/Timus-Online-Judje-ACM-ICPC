@@ -1,0 +1,56 @@
+const nmax=200;
+var
+ a,d:array[1..nmax,1..nmax] of longint;
+ n,m,i,j,i1,j1,t,now:longint;
+
+begin
+ readln(n,m);
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  read(a[i,j]);
+  if(j=m) then readln;
+ end;
+ end;
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  if(a[i,j]<>0) then d[i,j]:=-1
+  else begin
+   now:=0;
+   t:=1;
+   while(now=0)and(t<=5)do begin      
+    j1:=j;
+    for i1:=i downto i-t do begin
+     if(i1>=1)and(j1-t>=1) then now:=now or a[i1,j1-t];
+     inc(j1);
+    end;
+    j1:=j;
+    for i1:=i downto i-t do begin
+     if(i1>=1)and(j1+t<=m) then now:=now or a[i1,j1+t];
+     dec(j1);
+    end;
+    j1:=j;
+    for i1:=i to i+t do begin
+     if(i1<=n)and(j1-t>=1) then now:=now or a[i1,j1-t];
+     inc(j1);
+    end;
+    j1:=j;
+    for i1:=i to i+t do begin 
+     if(i1<=n)and(j1+t<=m) then now:=now or a[i1,j1+t];
+     dec(j1);
+    end;
+    inc(t);
+   end;    
+   if(now>0) then d[i,j]:=now
+   else d[i,j]:=0;
+  end;
+ end;
+ end;
+ 
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  write(d[i,j],' ');
+  if(j=m) then writeln;
+ end;
+ end;
+end.

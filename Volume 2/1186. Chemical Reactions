@@ -1,0 +1,126 @@
+#include <iostream>
+#include <string>
+#include <map>
+using namespace std;
+
+
+map<string, int> start, now;
+string s, t;
+int n;
+
+
+map<string, int> formula(string s);
+int number(string &s);
+map<string, int> sequence(string &s);
+map<string, int> element(string &s);
+map<string, int> chem(string &s);
+
+
+int main() 
+{
+    cin>>s;
+    start=formula(s);
+   /*
+    for(map<string, int>::iterator it=start.begin();it!=start.end();it++) 
+      cout<<(*it).first<<" "<<(*it).second<<endl;
+   */
+    cin>>n;
+    for(int i=1;i<=n;i++)
+    {
+       cin>>t;
+       now=formula(t);
+       if(start==now) cout<<s<<"=="<<t;
+       else cout<<s<<"!="<<t;
+       if(i<n) cout<<endl;
+    }
+   
+    return 0;
+}
+
+
+
+map<string, int> formula(string s)
+{
+   map<string, int> res;
+   map<string, int>::iterator it;
+   int numb=0;
+   while(s.length()>0)
+   {
+      numb=number(s);
+      map<string, int> now=sequence(s);
+      for(it=now.begin();it!=now.end();it++) (*it).second*=numb;
+      while(!now.empty())
+      {
+         string str=(*now.begin()).first;
+         int cnt=(*now.begin()).second;
+         now.erase(now.begin());
+         it=res.find(str);
+         if(it==res.end()) res.insert(make_pair(str, cnt));
+         else (*it).second+=cnt;
+      }
+      if(s[0]=='+') s.erase(0, 1);
+   }
+   return res;
+}
+
+
+int number(string &s)
+{
+   int res=0, i=0;
+   while(s[i]>='0' && s[i]<='9') res=10*res+s[i]-'0', i++;
+   if(res==0) res=1;
+   s.erase(0, i);
+   return res;
+}
+
+map<string, int> sequence(string &s)
+{
+   map<string, int> res;
+   map<string, int>::iterator it;
+   int numb=0;
+   while(s.length()>0)
+   {
+      map<string, int> now=element(s);
+      numb=number(s);
+      for(it=now.begin();it!=now.end();it++) (*it).second*=numb;
+      while(!now.empty())
+      {
+         string str=(*now.begin()).first;
+         int cnt=(*now.begin()).second;
+         now.erase(now.begin());
+         it=res.find(str);
+         if(it==res.end()) res.insert(make_pair(str, cnt));
+         else (*it).second+=cnt;
+      }
+      if(s.length()>0 && (s[0]=='+' || s[0]==')')) break;
+   }
+   return res;
+}
+
+map<string, int> element(string &s)
+{
+   map<string, int> res;
+   if(s[0]=='(')
+   {
+      s.erase(0, 1);
+      res=sequence(s);
+      s.erase(0, 1);
+      return res;
+   }
+   else
+   {
+      if(!(s[0]>='A' && s[0]<='Z')) return res;
+      else return chem(s);
+   }
+}
+
+
+map<string, int> chem(string &s)
+{
+   map<string, int> res;
+   string t;
+   if(s.length()>1 && s[1]>='a' && s[1]<='z') t=s.substr(0,2), s.erase(0, 2);
+   else t=s[0], s.erase(0, 1);
+   res.insert(make_pair(t, 1));
+   return res;
+}

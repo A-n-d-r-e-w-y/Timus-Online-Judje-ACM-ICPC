@@ -1,0 +1,17 @@
+var 
+ A,P,N:int64;
+ 
+begin
+ read(N);
+ P:=10*trunc(sqrt(N));
+ while(N>0) do begin
+  A:=(2*N-p*p+p) div (2*p);
+  if((2*A+p-1)*p=2*N)and(A>0) then begin
+   writeln(A,' ',P);
+   N:=0;
+  end
+  else begin
+   dec(P);
+  end;
+ end;   
+end. 

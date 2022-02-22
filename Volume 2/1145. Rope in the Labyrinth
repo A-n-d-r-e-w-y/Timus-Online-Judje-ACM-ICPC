@@ -1,0 +1,87 @@
+const nmax=850;
+      inf=nmax*nmax;
+var
+ a:array[1..nmax,1..nmax] of char;
+ d:array[1..nmax,1..nmax] of longint;
+ listx,listy:array[1..nmax*nmax] of longint;
+ n,m,i,j,x0,y0,xmax,ymax,dmax:longint;
+
+procedure Init;
+ var i,j:longint;
+begin
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  d[i,j]:=inf;
+ end;
+ end;
+end;
+ 
+procedure BFS(up,down:longint);
+ var x,y:longint;
+begin
+ inc(down);
+ if(down<=up) then begin
+  x:=listx[down];
+  y:=listy[down];
+  if(dmax<=d[x,y]) then begin
+   dmax:=d[x,y];
+   xmax:=x;
+   ymax:=y;
+  end;
+  if(x-1>=1)and(a[x-1,y]='.')and(d[x-1,y]>d[x,y]+1) then begin
+   d[x-1,y]:=d[x,y]+1;
+   inc(up);
+   listx[up]:=x-1;
+   listy[up]:=y;
+  end;
+  if(x+1<=n)and(a[x+1,y]='.')and(d[x+1,y]>d[x,y]+1) then begin
+   d[x+1,y]:=d[x,y]+1;
+   inc(up);
+   listx[up]:=x+1;
+   listy[up]:=y;
+  end;
+  if(y-1>=1)and(a[x,y-1]='.')and(d[x,y-1]>d[x,y]+1) then begin
+   d[x,y-1]:=d[x,y]+1;
+   inc(up);
+   listx[up]:=x;
+   listy[up]:=y-1;
+  end;
+  if(y+1<=m)and(a[x,y+1]='.')and(d[x,y+1]>d[x,y]+1) then begin
+   d[x,y+1]:=d[x,y]+1;
+   inc(up);
+   listx[up]:=x;
+   listy[up]:=y+1;
+  end;
+  BFS(up,down);
+ end;
+end;
+ 
+begin
+ readln(m,n);
+ for i:=1 to n do begin
+ for j:=1 to m do begin
+  read(a[i,j]);
+  if(a[i,j]='.') then begin
+   x0:=i;
+   y0:=j;
+  end; 
+  if(j=m) then readln;
+ end;
+ end;
+ 
+ Init;
+ d[x0,y0]:=0;
+ listx[1]:=x0;
+ listy[1]:=y0;
+ dmax:=0;
+ BFS(1,0);
+ 
+ Init;
+ d[xmax,ymax]:=0;
+ listx[1]:=xmax;
+ listy[1]:=ymax;
+ dmax:=0;
+ BFS(1,0);
+ 
+ write(dmax);
+end.

@@ -1,0 +1,20 @@
+var
+s:string;
+i,L:integer;
+BEGIN
+readln(s);
+L:=0;
+for i:=1 to Length(s) do begin
+if s[i]='1' then begin L:=L+1;L:=L mod 3;end;
+if s[i]='2' then begin L:=L+2;L:=L mod 3;end;
+if s[i]='3' then begin L:=L+3;L:=L mod 3;end;
+if s[i]='4' then begin L:=L+4;L:=L mod 3;end;
+if s[i]='5' then begin L:=L+5;L:=L mod 3;end;
+if s[i]='6' then begin L:=L+6;L:=L mod 3;end;
+if s[i]='7' then begin L:=L+7;L:=L mod 3;end;
+if s[i]='8' then begin L:=L+8;L:=L mod 3;end;
+if s[i]='9' then begin L:=L+9;L:=L mod 3;end;
+end;
+if(L=0)then begin writeln('2');end;
+if(L<>0)then begin writeln('1');writeln(L);end;
+END.

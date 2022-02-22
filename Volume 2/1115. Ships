@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+
+const int lmax=105;
+const int mmax=15;
+
+int n, m;
+int rows[mmax];
+int ships[lmax];
+int cnt[lmax][mmax];
+bool used[mmax];
+bool f;
+
+void Search(int ships[], int n, int rows[], int j, bool used[]);
+
+int main()
+{	
+   cin>>n>>m;
+ 
+   for(int i=1;i<=n;i++) cin>>ships[i];
+   for(int i=1;i<n;i++)
+    for(int j=i+1;j<=n;j++)
+      if(ships[i]>ships[j])
+      {
+      	int c=ships[i];
+      	ships[i]=ships[j];
+      	ships[j]=c;
+      }
+   
+   for(int i=1;i<=m;i++) cin>>rows[i], used[i]=false;
+   /*
+   for(int i=1;i<m;i++)
+    for(int j=i+1;j<=m;j++)
+      if(rows[i]<rows[j])
+      {
+      	int c=rows[i];
+      	rows[i]=rows[j];
+      	rows[j]=c;
+      }
+   */
+   for(int i=1;i<lmax;i++)
+      for(int j=1;j<=m;j++)
+         cnt[i][j]=0;
+
+   f=false;
+   Search(ships, n, rows, 1, used);
+   
+   return 0;
+}
+
+
+void Search(int ships[], int n, int rows[], int j, bool used[])
+{
+   if(f) return;
+   int s1=0, s2=0;
+   for(int i=1;i<=n;i++) s1+=ships[i];
+   for(int i=j;i<=m;i++) s2+=rows[i];
+   if(s1>s2) return;
+   if(s1<=rows[j] && j==m)
+   {
+      f=true;
+      for(int i=1;i<=n;i++) cnt[ships[i]][j]++;
+      for(int k=1;k<=m;k++)
+      {
+         int c=0;
+         for(int i=1;i<lmax;i++) c+=cnt[i][k];
+         cout<<c<<endl;
+         for(int i=1;i<lmax;i++)
+         {
+               while(cnt[i][k]>0) cout<<i<<" ", cnt[i][k]--;
+         }
+         cout<<endl;
+      } 
+   }
+   
+   for(int i=n;i>=1 && !f;i--)
+   {
+      if(rows[j]>=ships[i])
+      {
+         cnt[ships[i]][j]++;
+         rows[j]-=ships[i];
+         bool z=used[j];
+         used[j]=true;
+         int s[lmax];
+         for(int k=1;k<i;k++) s[k]=ships[k];
+         for(int k=i+1;k<=n;k++) s[k-1]=ships[k];
+         Search(s, n-1, rows, j, used);
+         cnt[ships[i]][j]--;
+         rows[j]+=ships[i];
+         used[j]=z;
+      }
+   }
+   if(!f && used[j]) Search(ships, n, rows, j+1, used);
+}

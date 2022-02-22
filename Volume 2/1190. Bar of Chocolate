@@ -1,0 +1,42 @@
+const Nmax=5001;
+var
+ a:array[1..Nmax] of integer;
+ N,i,now:integer;
+ sum,maxsum,max:int64;
+ ch:char;
+ 
+begin
+ readln(N);
+ maxsum:=0;
+ max:=10000;
+ for i:=1 to N do begin
+  a[i]:=0;
+  ch:='!';
+  while(ch<>' ') do read(ch);
+  read(ch);
+  if(ch='1') then read(a[i]);
+  readln;
+  if(a[i]>0) then begin
+   inc(maxsum,a[i]);
+   max:=a[i];
+  end
+  else begin
+   inc(maxsum,max);
+  end;
+ end; 
+
+ if(a[N]=0) then a[N]:=1;
+ sum:=a[N];
+ i:=N-1;
+ while(i>=1) do begin
+  if(a[i]=0) then a[i]:=a[i+1];
+  inc(sum,a[i]);
+  dec(i);
+ end;
+ 
+ if(sum>10000) then write('NO')
+ else begin
+  if(maxsum>=10000) then write('YES')
+  else write('NO');
+ end; 
+end.

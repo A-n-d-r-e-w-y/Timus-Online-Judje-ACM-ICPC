@@ -1,0 +1,76 @@
+const Nmax=200;
+      Xmax=999;
+ var 
+ dp:array[0..Nmax,-Xmax..Xmax] of byte;
+ A,B,ans1,ans2:array[1..Nmax] of integer; 
+ N,i,j,k,ans,xnow: integer;
+ 
+function max(x,y:byte):byte;
+begin
+ if(x>y) then max:=x
+ else max:=y;
+end;  
+ 
+begin 
+ readln(N); 
+ for i:=1 to n do begin 
+  readln(A[i],B[i]);
+  if(A[i]>B[i]) then begin
+   k:=A[i];A[i]:=B[i];B[i]:=k;
+  end;
+ end;   
+
+ for i:=1 to N-1 do begin
+ for j:=N downto i do begin
+  if(B[i]>B[j]) then begin
+   k:=B[i];B[i]:=B[j];B[j]:=k;
+   k:=A[i];A[i]:=A[j];A[j]:=k;
+  end;
+ end;
+ end;  
+
+ for j:=-Xmax to Xmax do begin
+  dp[0,j]:=0;
+  if(j>=B[1]) then dp[1,j]:=1
+  else dp[1,j]:=0;
+ end; 
+ 
+ for i:=2 to N do begin
+ for j:=-Xmax to Xmax do begin
+  if(j>=B[i]) then dp[i,j]:=max(dp[i-1,A[i]]+1,dp[i-1,j])
+  else dp[i,j]:=dp[i-1,j];
+ end;
+ end;
+ 
+ 
+ ans:=dp[N,Xmax];  
+ writeln(ans);
+
+ xnow:=B[N];
+ k:=0;
+ 
+ while(ans>0) do begin
+  if(B[N]<=xnow)and(dp[N-1,B[N]]+1=ans) then begin
+   inc(k);
+   xnow:=A[N];
+   ans1[k]:=A[N];
+   ans2[k]:=B[N];
+   dec(ans);
+   dec(N);
+  end
+  else begin
+   dec(N);
+  end;
+ end;   
+ 
+ for i:=1 to k-1 do begin
+ for j:=k downto i do begin
+  if(ans1[i]>ans1[j]) then begin
+   N:=ans2[i];ans2[i]:=ans2[j];ans2[j]:=N;
+   N:=ans1[i];ans1[i]:=ans1[j];ans1[j]:=N;
+  end;
+ end;
+ end;  
+ 
+ for i:=1 to k do writeln(ans1[i],' ',ans2[i]);
+end. 
