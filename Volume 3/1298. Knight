@@ -1,0 +1,118 @@
+const Nmax=20;
+var
+ A,Nnew:array[1..Nmax,1..Nmax] of integer;
+ List1,List2:array[1..Nmax*Nmax] of integer;
+ N,i,j,t:integer;
+ find:boolean;
+ 
+procedure G(i,j:integer); 
+ var m1,m2:integer;
+begin
+ m1:=0;
+ m2:=0;
+ if(i-1>=1)and(j-2>=1)and(Nnew[i-1,j-2]=0)and((m1=0)or(A[m1,m2]>A[i-1,j-2])) then begin m1:=i-1;m2:=j-2;end;
+ if(i-1>=1)and(j+2<=N)and(Nnew[i-1,j+2]=0)and((m1=0)or(A[m1,m2]>A[i-1,j+2])) then begin m1:=i-1;m2:=j+2;end;
+ if(i-2>=1)and(j-1>=1)and(Nnew[i-2,j-1]=0)and((m1=0)or(A[m1,m2]>A[i-2,j-1])) then begin m1:=i-2;m2:=j-1;end;
+ if(i-2>=1)and(j+1<=N)and(Nnew[i-2,j+1]=0)and((m1=0)or(A[m1,m2]>A[i-2,j+1])) then begin m1:=i-2;m2:=j+1;end;
+ if(i+1<=N)and(j-2>=1)and(Nnew[i+1,j-2]=0)and((m1=0)or(A[m1,m2]>A[i+1,j-2])) then begin m1:=i+1;m2:=j-2;end;
+ if(i+1<=N)and(j+2<=N)and(Nnew[i+1,j+2]=0)and((m1=0)or(A[m1,m2]>A[i+1,j+2])) then begin m1:=i+1;m2:=j+2;end;
+ if(i+2<=N)and(j-1>=1)and(Nnew[i+2,j-1]=0)and((m1=0)or(A[m1,m2]>A[i+2,j-1])) then begin m1:=i+2;m2:=j-1;end;
+ if(i+2<=N)and(j+1<=N)and(Nnew[i+2,j+1]=0)and((m1=0)or(A[m1,m2]>A[i+2,j+1])) then begin m1:=i+2;m2:=j+1;end;
+ 
+ 
+ if(m1<>0) then writeln(chr(m1+96),m2);
+ if(m1<>0) then begin 
+  Nnew[m1,m2]:=1;
+  if(i-1>=1)and(j-2>=1) then dec(A[i-1,j-2]);
+  if(i-1>=1)and(j+2<=N) then dec(A[i-1,j+2]);
+  if(i-2>=1)and(j-1>=1) then dec(A[i-2,j-1]);
+  if(i-2>=1)and(j+1<=N) then dec(A[i-2,j+1]);
+  if(i+1<=N)and(j-2>=1) then dec(A[i+1,j-2]);
+  if(i+1<=N)and(j+2<=N) then dec(A[i+1,j+2]);
+  if(i+2<=N)and(j-1>=1) then dec(A[i+2,j-1]);
+  if(i+2<=N)and(j+1<=N) then dec(A[i+2,j+1]);
+  G(m1,m2);
+ end; 
+end;
+
+procedure G7(i,j,k:integer); 
+ var m1,m2:integer;
+begin
+ Nnew[i,j]:=1;
+ List1[k]:=i;
+ List2[k]:=j;
+ if(k<>N*N)and(not find) then begin
+ m1:=0;
+ m2:=0;
+ if(i-1>=1)and(j-2>=1)and(Nnew[i-1,j-2]=0)and((m1=0)or(A[m1,m2]>A[i-1,j-2])) then begin m1:=i-1;m2:=j-2;end;
+ if(i-1>=1)and(j+2<=N)and(Nnew[i-1,j+2]=0)and((m1=0)or(A[m1,m2]>A[i-1,j+2])) then begin m1:=i-1;m2:=j+2;end;
+ if(i-2>=1)and(j-1>=1)and(Nnew[i-2,j-1]=0)and((m1=0)or(A[m1,m2]>A[i-2,j-1])) then begin m1:=i-2;m2:=j-1;end;
+ if(i-2>=1)and(j+1<=N)and(Nnew[i-2,j+1]=0)and((m1=0)or(A[m1,m2]>A[i-2,j+1])) then begin m1:=i-2;m2:=j+1;end;
+ if(i+1<=N)and(j-2>=1)and(Nnew[i+1,j-2]=0)and((m1=0)or(A[m1,m2]>A[i+1,j-2])) then begin m1:=i+1;m2:=j-2;end;
+ if(i+1<=N)and(j+2<=N)and(Nnew[i+1,j+2]=0)and((m1=0)or(A[m1,m2]>A[i+1,j+2])) then begin m1:=i+1;m2:=j+2;end;
+ if(i+2<=N)and(j-1>=1)and(Nnew[i+2,j-1]=0)and((m1=0)or(A[m1,m2]>A[i+2,j-1])) then begin m1:=i+2;m2:=j-1;end;
+ if(i+2<=N)and(j+1<=N)and(Nnew[i+2,j+1]=0)and((m1=0)or(A[m1,m2]>A[i+2,j+1])) then begin m1:=i+2;m2:=j+1;end;
+ 
+ 
+ if(m1<>0) then begin 
+  if(i-1>=1)and(j-2>=1) then dec(A[i-1,j-2]);
+  if(i-1>=1)and(j+2<=N) then dec(A[i-1,j+2]);
+  if(i-2>=1)and(j-1>=1) then dec(A[i-2,j-1]);
+  if(i-2>=1)and(j+1<=N) then dec(A[i-2,j+1]);
+  if(i+1<=N)and(j-2>=1) then dec(A[i+1,j-2]);
+  if(i+1<=N)and(j+2<=N) then dec(A[i+1,j+2]);
+  if(i+2<=N)and(j-1>=1) then dec(A[i+2,j-1]);
+  if(i+2<=N)and(j+1<=N) then dec(A[i+2,j+1]);
+  G7(m1,m2,k+1);
+ end; 
+ end
+ else begin 
+  find:=true;
+  for t:=1 to N*N do writeln(chr(List1[t]+96),List2[t]);
+ end;
+end;
+
+
+BEGIN 
+ read(N);
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  Nnew[i,j]:=0;
+  A[i,j]:=0;
+  if(i-1>=1)and(j-2>=1) then inc(A[i,j]);
+  if(i-1>=1)and(j+2<=N) then inc(A[i,j]);
+  if(i-2>=1)and(j-1>=1) then inc(A[i,j]);
+  if(i-2>=1)and(j+1<=N) then inc(A[i,j]);
+  if(i+1<=N)and(j-2>=1) then inc(A[i,j]);
+  if(i+1<=N)and(j+2<=N) then inc(A[i,j]);
+  if(i+2<=N)and(j-1>=1) then inc(A[i,j]);
+  if(i+2<=N)and(j+1<=N) then inc(A[i,j]);
+ end;
+ end;
+ 
+ if(N=1) then write('a1');
+ if(N=2)or(N=3)or(N=4) then write('IMPOSSIBLE'); 
+ 
+ if(N>=5)and(N<>7) then begin
+  writeln('a1');
+  Nnew[1,1]:=1;
+  dec(A[2,3]);
+  dec(A[3,2]);
+  G(1,1);
+ end;
+ 
+ if(N=7)then begin
+  find:=false;
+  t:=0;
+  while(not find)and(t<=N*N) do begin
+   inc(t);
+   for i:=1 to N do begin
+   for j:=1 to N do begin
+    Nnew[i,j]:=0;
+   end;
+   end;
+   G7(i,j,1);
+  end; 
+ end;
+
+END.  

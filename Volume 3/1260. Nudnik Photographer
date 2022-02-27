@@ -1,0 +1,16 @@
+var
+N,i:longint;
+f:array[1..55] of int64;
+BEGIN
+readln(N);
+f[1]:=1;
+f[2]:=1;
+f[3]:=2;
+f[4]:=4;
+f[5]:=6;
+f[6]:=9;
+for i:=7 to 55 do begin
+f[i]:=f[i-1]+f[i-3]+1;
+end;
+writeln(f[N]);
+END.

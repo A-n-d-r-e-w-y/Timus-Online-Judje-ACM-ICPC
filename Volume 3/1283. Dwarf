@@ -1,0 +1,13 @@
+var
+ N0,min,k,t0:real;
+ 
+begin
+ t0:=0;
+ read(N0,min,k);
+ while(N0>min) do begin
+  N0:=N0-N0*k/100;
+  t0:=t0+1;
+ end;
+
+ write(t0:0:0);
+end.

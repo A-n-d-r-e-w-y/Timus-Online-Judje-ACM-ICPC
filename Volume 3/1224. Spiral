@@ -1,0 +1,8 @@
+var
+  n,m:int64;
+
+begin
+  readln(n,m);
+  if n<=m then writeln(n shl 1-2)
+  else writeln(m shl 1-1);
+end.

@@ -1,0 +1,11 @@
+const Nmax=1000000;
+var
+ i:longint;
+ k:byte;
+BEGIN 
+ randomize;
+ for i:=1 to Nmax do begin
+  k:=random(26)+1;
+  write(chr(k+96));
+ end;
+END.   

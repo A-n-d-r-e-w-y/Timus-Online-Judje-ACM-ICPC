@@ -1,0 +1,6 @@
+var
+N,A,B:longint;
+BEGIN
+readln(N,A,B);
+writeln(2*N*A*B);
+END.

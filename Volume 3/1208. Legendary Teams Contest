@@ -1,0 +1,54 @@
+const Nmax=20;
+var
+ a:array[1..Nmax,1..Nmax] of boolean;
+ Team:array[1..Nmax,1..3] of string;
+ N,i,j,w,q,ans:byte;
+ mask,max:longint;
+ s:string;
+ 
+BEGIN
+ readln(N);
+ max:=1;
+ for i:=1 to N do max:=max*2;
+ 
+ for i:=1 to N do begin
+  readln(s);
+  j:=pos(' ',s);
+  Team[i,1]:=copy(s,1,j-1);
+  delete(s,1,j);
+  j:=pos(' ',s);
+  Team[i,2]:=copy(s,1,j-1);
+  delete(s,1,j);
+  Team[i,3]:=s;
+ end; 
+
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  a[i,j]:=false;
+   for q:=1 to 3 do begin
+   for w:=1 to 3 do begin
+    if(Team[i,q]=Team[j,w]) then a[i,j]:=true;
+   end;
+   end;
+ end;
+ end;    
+
+ ans:=0;
+ mask:=0;
+ while(mask<=max) do begin
+  w:=0;
+  for i:=0 to N-1 do 
+   if((mask shr i) and 1<>0) then inc(w);
+   
+  for i:=1 to N-1 do begin
+  for j:=i+1 to N do begin
+   if(((mask shr (i-1))and 1)<>0)and(((mask shr (j-1))and 1)<>0)and(a[i,j]) then w:=0; 
+  end;
+  end;
+  
+  if(w>ans) then ans:=w;
+  inc(mask);
+ end;
+ 
+ write(ans);
+END. 

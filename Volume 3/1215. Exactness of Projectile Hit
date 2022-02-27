@@ -1,0 +1,141 @@
+const Nmax=2000;
+var
+ x,y:array[0..Nmax] of int64;
+ N,i,k:longint;
+ Se,Sq,rmin,r,A,B,C,xa,xb,xc,ya,yb,yc:int64;
+ rad,H:real;
+ 
+function S(x1,y1,x2,y2,x3,y3:int64):int64;
+begin
+ S:=abs((x2-x1)*(y3-y2)-(x3-x2)*(y2-y1));
+end;  
+ 
+function D(x1,y1,x2,y2:int64):int64;
+begin
+ D:=((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+end;  
+ 
+BEGIN
+ readln(x[0],y[0],N);
+ for i:=1 to N do readln(x[i],y[i]);
+ 
+ Se:=0;
+ Sq:=0;
+ 
+ for i:=1 to N-1 do begin 
+  Se:=Se+S(x[0],y[0],x[i],y[i],x[i+1],y[i+1]);
+  Sq:=Sq+S(x[1],y[1],x[i],y[i],x[i+1],y[i+1]);
+ end;
+ 
+ Se:=Se+S(x[0],y[0],x[1],y[1],x[N],y[N]);
+ 
+ 
+ if(Se=Sq) then begin
+  write('0');
+ end
+ else begin
+  rmin:=D(x[0],y[0],x[1],y[1]);
+  k:=1;
+  for i:=2 to N do begin 
+   r:=D(x[0],y[0],x[i],y[i]);
+   if(r<rmin) then begin 
+    rmin:=r;
+    k:=i;
+   end;
+  end;  
+  
+  rad:=D(x[0],y[0],x[k],y[k]); 
+  if(k+1>N) then r:=D(x[0],y[0],x[1],y[1])
+  else r:=D(x[0],y[0],x[k+1],y[k+1]);
+  if(r<rad) then rad:=r;
+  
+  if(k-1<1) then r:=D(x[0],y[0],x[N],y[N])
+  else r:=D(x[0],y[0],x[k-1],y[k-1]);
+  if(r<rad) then rad:=r;
+  
+  rad:=sqrt(rad);
+  
+  xb:=x[k];
+  yb:=y[k];
+  xc:=x[0];
+  yc:=y[0];
+  if(k+1>N) then begin
+   xa:=x[1];
+   ya:=y[1];
+  end
+  else begin
+   xa:=x[k+1];
+   ya:=y[k+1];
+  end; 
+   
+  A:=(ya-yb);
+  B:=(xb-xa);
+  C:=xa*yb-xb*ya;
+ 
+  H:=abs(A*xc+B*yc+C)/sqrt(A*A+B*B);
+  
+  if((xa-xc)*(xb-xa)+(ya-yc)*(yb-ya)>0)or((xb-xc)*(xa-xb)+(yb-yc)*(ya-yb)>0) then rad:=rad
+  else begin
+   if(rad>H) then rad:=H;
+  end;
+  
+  xa:=x[k];
+  ya:=y[k];
+  xc:=x[0];
+  yc:=y[0];
+  if(k-1<1) then begin
+   xb:=x[N];
+   yb:=y[N];
+  end
+  else begin
+   xb:=x[k-1];
+   yb:=y[k-1];
+  end;  
+  
+  A:=(ya-yb);
+  B:=(xb-xa);
+  C:=xa*yb-xb*ya;
+ 
+  H:=abs(A*xc+B*yc+C)/sqrt(A*A+B*B);
+  
+  if((xa-xc)*(xb-xa)+(ya-yc)*(yb-ya)>0)or((xb-xc)*(xa-xb)+(yb-yc)*(ya-yb)>0) then rad:=rad
+  else begin
+   if(rad>H) then rad:=H;
+  end;
+  
+  if(k+1>N) then begin
+   xa:=x[1];
+   ya:=y[1];
+  end
+  else begin
+   xa:=x[k+1];
+   ya:=y[k+1];
+  end;
+  
+  xc:=x[0];
+  yc:=y[0];
+  
+  if(k-1<1) then begin
+   xb:=x[N];
+   yb:=y[N];
+  end
+  else begin
+   xb:=x[k-1];
+   yb:=y[k-1];
+  end;    
+  
+   A:=(ya-yb);
+  B:=(xb-xa);
+  C:=xa*yb-xb*ya;
+ 
+  H:=abs(A*xc+B*yc+C)/sqrt(A*A+B*B);
+  
+  if((xa-xc)*(xb-xa)+(ya-yc)*(yb-ya)>0)or((xb-xc)*(xa-xb)+(yb-yc)*(ya-yb)>0) then rad:=rad
+  else begin
+   if(rad>H) then rad:=H;
+  end;
+  
+  write((2*rad):0:3);
+ end; 
+END.  
+ 

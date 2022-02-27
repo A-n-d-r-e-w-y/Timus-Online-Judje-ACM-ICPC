@@ -1,0 +1,14 @@
+var
+ ch:char;
+ r,x:byte;
+ 
+BEGIN
+ r:=0;
+ read(ch);
+ while(ord(ch)>=ord('0'))and(ord(ch)<=ord('9')) do begin
+  x:=ord(ch)-ord('0');
+  r:=(10*r+x) mod 7;
+  read(ch);
+ end; 
+ write(r);
+END.   

@@ -1,0 +1,34 @@
+const Nmax=1500;
+var
+ A:array[1..Nmax,1..Nmax] of longint;
+ Count,Numb:array[1..Nmax] of longint;
+ N,M,i,j,x,y:longint;
+ right:boolean;
+ 
+BEGIN
+ readln(N,M);
+ for i:=1 to N do Count[i]:=0;
+ 
+ for i:=1 to M do begin
+  readln(x,y);
+  inc(count[x]);
+  A[x,count[x]]:=y;
+ end;  
+ 
+ for i:=1 to N do begin
+  read(x);
+  Numb[x]:=i;
+ end;
+ 
+ right:=true;
+ for i:=1 to N do begin
+  for j:=1 to count[i] do 
+   if(numb[i]>numb[A[i,j]]) then right:=false;
+ end;
+ 
+ case right of
+ true:write('YES');
+ false:write('NO');
+ end;
+END.  
+   

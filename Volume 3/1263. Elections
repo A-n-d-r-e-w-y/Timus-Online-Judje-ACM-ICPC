@@ -1,0 +1,23 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+const int NMAX = 20000;
+int a[NMAX];
+int N,M,x;
+
+void main()
+{
+    scanf("%d %d\n", &N,&M);
+    for (int i = 1; i <= N; i++)
+        a[i] = 0;
+
+    for (int i = 1; i <= M; i++)
+    {
+        scanf("%d\n", &x);
+        ++a[x];
+    }
+               
+    for (int i = 1; i <= N; i++)
+       printf("%.2lf%c\n", (100*(double)a[i] / M),'%');
+       
+}

@@ -1,0 +1,4 @@
+#include <iostream> 
+using namespace std;
+const int M=1000,N=100000,q=10,k=11000;int st[k][q];short int top[k],adr[M],link[k];int n,numb,last,cur,value;char c1,c2;
+void main(){scanf("%d\n",&n);for(int i=0;i<=M-1;i++) adr[i]=-1;last=0;for(int i=1;i<=n;i++){scanf("%c%c",&c1,&c2);if(c2=='U'){scanf("%c%c%d%d\n",&c1,&c2,&numb,&value);numb--;if(adr[numb]==-1){adr[numb]=last;link[last]=-1;top[last]=0;st[last][0]=value;last++;}else{cur=adr[numb];if(top[cur]+1<q){top[cur]++;st[cur][top[cur]]=value;}else{link[last]=cur;adr[numb]=last;top[last]=0;st[last][0]=value;last++;}}}else{scanf("%c%d\n",&c1,&numb);numb--;cur=adr[numb];printf("%d\n",st[cur][top[cur]]);top[cur]--;if(top[cur]<0) adr[numb]=link[cur];}}}

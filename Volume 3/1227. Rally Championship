@@ -1,0 +1,80 @@
+const Nmax=100;
+var 
+ A:array[1..Nmax,1..Nmax] of int64;
+ Color:array[1..Nmax] of byte;
+ Dp:array[1..Nmax] of int64;
+ N,M,i,j,P,Q,col:byte;
+ S,R:int64;
+ find:boolean;
+ 
+function max(a,b:int64):int64;
+begin 
+ if(a<b) then a:=b;
+ max:=a;
+end;  
+ 
+procedure Cycle(v:byte;var find:boolean);
+ var j:byte;
+begin
+ for j:=1 to N do 
+  if(A[v,j]>0)and(Color[v]<>j)and(Color[j]>0) then find:=true;
+ 
+ for j:=1 to N do begin
+  if(A[v,j]>0)and(Color[j]=0) then begin 
+   Color[j]:=v;
+   Cycle(j,find);
+  end;
+ end; 
+end;    
+ 
+function LPath(v:byte):int64;
+ var j:byte;
+begin
+ Color[v]:=1;
+ for j:=1 to N do begin
+  if(A[v,j]>0)and(Color[j]=0) then begin Dp[v]:=max(Dp[v],LPath(j)+A[v,j]);end;
+ end;   
+ LPath:=Dp[v];
+end; 
+ 
+BEGIN
+ readln(N,M,S);
+ for i:=1 to N do begin
+ for j:=1 to N do begin
+  A[i,j]:=0;
+ end;
+ end;
+ 
+ find:=false;
+ for i:=1 to M do begin
+  readln(P,Q,R);
+  if(A[p,q]>0)or(A[q,p]>0) then find:=true
+  else begin 
+   A[p,q]:=R;
+   A[q,p]:=R;
+  end; 
+ end;   
+  
+ for i:=1 to N do Color[i]:=0;
+  
+ for i:=1 to N do begin
+  if(Color[i]=0) then begin Color[i]:=N+1;Cycle(i,find);end;
+ end;
+ 
+ if(not find) then begin
+  for i:=1 to N do begin 
+   for j:=1 to N do begin
+    Dp[j]:=0;
+    Color[j]:=0;
+   end;
+   
+   R:=LPath(i);
+   if(R>=S) then find:=true;
+  end;
+  if(find) then write('YES')
+  else write('NO');
+ end
+ else begin
+  write('YES');
+ end;  
+END.   

@@ -1,0 +1,41 @@
+const Nmax=501;
+var
+ a,b:array[1..Nmax] of byte;
+ K:byte;
+ i:longint;
+ 
+procedure Mult;
+ var r:byte;
+     j:longint;
+begin
+ r:=0;
+ for j:=Nmax downto 1 do begin
+  b[j]:=(a[j]*5+r) mod 10;
+  r:=(a[j]*5+r) div 10;
+ end;
+ 
+ for j:=1 to Nmax-1 do a[j]:=0;
+ a[nmax]:=b[nmax];
+ r:=0;
+ 
+ for j:=Nmax-1 downto 1 do begin
+  a[j]:=(b[j]+b[j+1]+r) mod 10;
+  r:=(b[j]+b[j+1]+r) div 10;
+ end;
+end;
+ 
+BEGIN
+ read(k);
+ for i:=1 to Nmax-2 do a[i]:=0;
+ a[Nmax-1]:=3;
+ a[Nmax]:=6;
+ 
+ for i:=2 to k do Mult;
+
+ i:=1;
+ while(a[i]=0) do inc(i);
+ while(i<=Nmax) do begin
+  write(a[i]);
+  inc(i);
+ end; 
+END. 

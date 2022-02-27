@@ -1,0 +1,31 @@
+var
+ F:array[1..100000] of int64;
+ N,i:longint;
+ K:int64;
+ 
+function Bin_Poisk(L,R:longint;K:int64):byte;
+ var H:int64;
+begin
+  if(L<R-1) then begin
+   H:=F[(L+R) div 2];
+   if(K>=H) then L:=(L+R) div 2;
+   if(K<=H) then R:=(L+R) div 2;
+   Bin_Poisk:=Bin_Poisk(L,R,K);
+  end
+  else begin
+   if(K=F[L])or(K=F[L+1])or(K=F[R]) then Bin_Poisk:=1
+   else Bin_Poisk:=0;
+  end;
+end;    
+ 
+BEGIN
+ readln(N);
+ F[1]:=1;
+ for i:=2 to  65536 do F[i]:=F[i-1]+(i-1);
+ 
+ for i:=1 to N do
+ begin
+  readln(K);
+  write(Bin_Poisk(1,65536,K),' ');
+ end;
+END.  

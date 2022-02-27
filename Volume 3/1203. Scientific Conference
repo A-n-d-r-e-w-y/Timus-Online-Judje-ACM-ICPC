@@ -1,0 +1,57 @@
+program Quick_Sort; 
+ var 
+ Ts,Te:array[1..300000] of longint; 
+ F:array[0..50000] of longint;
+ N,i,time : longint; 
+
+function Max(a,b:longint):longint;
+begin
+ if(a<b) then a:=b;
+ max:=a;
+end;  
+
+procedure QSort(L,R:longint); 
+ var X,y,i,j:longint; 
+begin 
+ X:=Te[(L+R) div 2]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while Te[i]<X do i:=i+1; 
+   while Te[j]>X do j:=j-1; 
+     if i<=j then 
+       begin 
+         y:=Te[i]; Te[i]:=Te[j]; Te[j]:=y;
+         y:=Ts[i]; Ts[i]:=Ts[j]; Ts[j]:=y; 
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSort(L,j); 
+  if i<R then QSort(i,R); 
+end; 
+
+begin 
+ readln(N); 
+ for i:=1 to n do readln(Ts[i],Te[i]); 
+ QSort(1,n); 
+ for i:=0 to Te[N] do F[i]:=0;
+ 
+ 
+ time:=0;
+ i:=1;
+ 
+ while(time<=Te[N]) do 
+ begin
+   if(time=Te[i]) then 
+   begin
+     F[time]:=max(F[time],F[Ts[i]-1]+1);
+     inc(i);
+   end
+   else begin
+     inc(time);   
+     F[time]:=F[time-1];
+   end;   
+ end;
+
+ writeln(F[Te[N]]);
+end. 

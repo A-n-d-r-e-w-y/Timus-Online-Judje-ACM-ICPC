@@ -1,0 +1,38 @@
+import java.math.*;
+import java.util.*;
+
+public class BigNumbers 
+{
+public static void main(String args[])
+{
+ Scanner sc=new Scanner(System.in); 
+ final int Nmax=3333;
+ int N,S,i,res;
+ BigInteger two=BigInteger.valueOf(2);
+ BigInteger three=BigInteger.valueOf(3);
+ BigInteger dp[];
+ dp = new BigInteger[Nmax];
+ BigInteger x;
+ BigInteger y;
+ 
+ N=sc.nextInt();
+
+ 
+ dp[1]=BigInteger.valueOf(1);
+ dp[2]=BigInteger.valueOf(2);
+ dp[3]=BigInteger.valueOf(3);
+ 
+ for(i=4;i<=N;i++) 
+ { 
+   x=dp[i-2].multiply(two);
+   y=dp[i-3].multiply(three);
+   res = x.compareTo(y);
+   if(res>0) dp[i]=x;
+   else dp[i]=y;
+ }  
+  
+ 
+ System.out.print(dp[N].toString());
+
+}
+}

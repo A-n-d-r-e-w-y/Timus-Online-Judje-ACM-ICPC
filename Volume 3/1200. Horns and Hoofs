@@ -1,0 +1,50 @@
+var
+ A,B,S,max:real;
+ x,y,K,x1,y1:longint;
+ 
+BEGIN
+ readln(A,B);
+ read(K);
+ x1:=0;
+ y1:=0;
+ max:=0;
+ for x:=0 to K do begin
+  y:=0;
+  S:=A*x+B*y-x*x-y*y;
+  if(y>=0)and(y<=K-x)and(S>max) then begin
+   x1:=x;
+   y1:=y; 
+   max:=S;
+  end; 
+  
+  y:=K-x;
+  S:=A*x+B*y-x*x-y*y;
+  if(S>max) then begin
+   x1:=x;
+   y1:=y; 
+   max:=S;
+  end;
+  if(S=max)and(x=x1)and(y<y1) then y1:=y;
+  
+  y:=trunc(B/2);
+  S:=A*x+B*y-x*x-y*y;
+  if(y>=0)and(y<=K-x)and(S>max) then begin
+   x1:=x;
+   y1:=y; 
+   max:=S;
+  end; 
+  if(S=max)and(x=x1)and(y<y1) then y1:=y;
+  
+  y:=trunc(B/2)+1;
+  S:=A*x+B*y-x*x-y*y;
+  if(y>=0)and(y<=K-x)and(S>max) then begin
+   x1:=x;
+   y1:=y; 
+   max:=S;
+  end; 
+  if(S=max)and(x=x1)and(y<y1) then y1:=y;
+ end;
+ 
+ writeln(max:0:2);
+ write(x1,' ',y1);
+END.  

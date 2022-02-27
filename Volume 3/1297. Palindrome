@@ -1,0 +1,48 @@
+const Nmax=2000;
+var 
+ s:array[1..Nmax] of char;
+ dp:array[1..Nmax,1..Nmax] of boolean;
+ N,i,j,t,maxlen,i1,i2:integer;
+ ch:char;
+ 
+BEGIN
+ N:=0;
+ read(ch);
+ while(ord(ch)>=ord('a'))and(ord(ch)<=ord('z'))or(ord(ch)>=ord('A'))and(ord(ch)<=ord('Z')) do begin
+  inc(N);
+  s[N]:=ch;
+  read(ch);
+ end;
+ if(N mod 2=0) then begin
+  inc(N);
+  s[N]:='?';
+ end; 
+ 
+ i:=N;
+ dp[N,N]:=true;
+ 
+ dec(i);
+ while(i>0) do begin
+  dp[i,i]:=true;
+  if(s[i]=s[i+1]) then dp[i,i+1]:=true
+  else dp[i,i+1]:=false;
+  for j:=i+2 to N do 
+   if(s[i]=s[j]) then dp[i,j]:=dp[i+1,j-1]
+   else dp[i,j]:=false;
+  dec(i); 
+ end;  
+ 
+ maxlen:=0;
+ for i:=1 to N do begin
+ for j:=i to N do begin
+  if(dp[i,j])and(maxlen<j-i+1) then begin
+   maxlen:=j-i+1;
+   i1:=i;
+   i2:=j;
+  end;
+ end;
+ end;
+ 
+ 
+ for i:=i1 to i2 do write(s[i]);  
+END. 

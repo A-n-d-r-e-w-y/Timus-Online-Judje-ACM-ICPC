@@ -1,0 +1,47 @@
+const Nmax=35000;
+var
+ sum:longint;
+ N,i,k,j,S,a,t:longint;
+ ans:string;
+ 
+BEGIN
+ readln(S,N);
+ ans:='YES';
+ k:=0;
+ i:=1;
+ t:=0;
+ 
+ while(t<=S) do begin
+  inc(t);
+  readln(a);
+  if(k=0) then begin
+   if(a>0) then begin
+    sum:=a;
+    k:=1;
+    j:=i;
+    if(sum>j-i+1+N) then ans:='NO';
+   end; 
+  end
+  else begin
+   if(a>0) then begin 
+    inc(sum,a);
+    inc(j);
+    inc(k);
+    if(sum>j-i+1+N) then ans:='NO';
+   end
+   else begin
+    if(sum>j-i+1) then begin
+     inc(j);
+     inc(k);
+    end
+    else begin
+     k:=0;
+     i:=t+1;
+    end;
+   end;
+  end; 
+ end;
+ 
+ write(ans);
+END.  
+  

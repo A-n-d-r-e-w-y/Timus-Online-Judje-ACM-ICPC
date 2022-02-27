@@ -1,0 +1,20 @@
+var
+N,i:integer;
+r3,r2,r1,w3,w2,w1,s1,s2:Int64;
+BEGIN
+readln(N);
+r1:=1;w1:=1;
+r2:=1;w2:=1;
+if(N=1)then begin writeln('2');end;
+if(N=2)then begin writeln('2');end;
+if(N>=3) then begin
+for i:=3 to N do begin
+
+
+r3:=r2+r1;s1:=r3; r1:=r2; r2:=s1;
+w3:=w2+w1;s2:=w3; w1:=w2; w2:=s2;
+
+end;
+writeln(r3+w3);
+end;
+END.

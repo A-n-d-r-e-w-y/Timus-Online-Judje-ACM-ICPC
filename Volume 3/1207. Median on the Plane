@@ -1,0 +1,71 @@
+program Quick_Sort; 
+ var 
+ A,B:array[1..20000] of int64; 
+ Angle:array[1..20000] of real;
+ Numb:array[1..20000] of longint;
+ N,i,ind:longint; 
+ x0,y0:int64;
+ r:real;
+
+procedure QSort(L,R:longint); 
+ var i,j:longint;
+     X,Y:real;
+     Z:longint;
+begin 
+ X:=Angle[random(r+1-l)+l]; 
+ i:=L; j:=R; 
+ while i<=j do 
+  begin 
+   while Angle[i]<X do i:=i+1; 
+   while Angle[j]>X do j:=j-1; 
+     if i<=j then 
+       begin 
+         y:=Angle[i]; Angle[i]:=Angle[j]; Angle[j]:=y; 
+         z:=Numb[i]; Numb[i]:=Numb[j]; Numb[j]:=z; 
+         i:=i+1; j:=j-1; 
+       end; 
+  end; 
+  if L<j then QSort(L,j); 
+  if i<R then QSort(i,R); 
+end; 
+
+begin  
+ randomize;
+ readln(N); 
+ x0:=9999999999999999;
+ y0:=-9999999999999999;
+ for i:=1 to n do begin
+  read(A[i],B[i]); 
+  Numb[i]:=i;
+  if(A[i]<x0) then begin x0:=A[i];y0:=B[i];ind:=i;end;
+  if(A[i]=x0)and(B[i]<y0) then begin x0:=A[i];y0:=B[i];ind:=i;end;
+ end; 
+ 
+ x0:=A[ind];
+ y0:=B[ind];
+ for i:=1 to N do 
+ begin
+  if(i=ind) then Angle[i]:=0
+  else begin
+   if(A[i]=x0)and(B[i]<y0) then Angle[i]:=-Pi/2;
+   if(A[i]=x0)and(B[i]>y0) then Angle[i]:=Pi/2;
+   if(A[i]<>x0)and(B[i]<y0) then Angle[i]:=-arctan(abs(B[i]-y0)/(abs(A[i]-x0)));
+   if(A[i]<>x0)and(B[i]>=y0) then Angle[i]:=arctan(abs(B[i]-y0)/(abs(A[i]-x0)));
+  end; 
+ end;
+ 
+ r:=Angle[1];
+ Angle[1]:=Angle[ind];
+ Angle[ind]:=r;
+ 
+ i:=Numb[1];
+ Numb[1]:=Numb[ind];
+ Numb[ind]:=i;
+ 
+ QSort(2,n); 
+ 
+ i:=2;
+ while(i<=N)and(2*i<>N+2) do inc(i);
+
+ write(Numb[1],' ',Numb[i]);
+END. 

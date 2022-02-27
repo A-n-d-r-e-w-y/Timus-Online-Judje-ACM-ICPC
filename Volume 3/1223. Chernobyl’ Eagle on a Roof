@@ -1,0 +1,48 @@
+const Nmax=1000;
+      inf=99999999999;
+var
+ Dp:array[0..Nmax,0..Nmax] of int64;
+ N,M,i,j,k,T,x:integer;
+ E:int64;
+ 
+function max(a,b:int64):int64;
+begin
+ if(a>b) then max:=a
+ else max:=b;
+end;  
+ 
+BEGIN
+ for i:=1 to Nmax do Dp[i,1]:=i;
+ for j:=1 to Nmax do Dp[1,j]:=1;
+ Dp[1,0]:=inf;
+ 
+ for i:=2 to Nmax do begin
+  for j:=2 to Nmax do begin
+   Dp[i,j]:=inf;
+  
+   x:=1;
+   k:=0;
+   while(x<i) do begin inc(k);x:=x*2;end;
+   
+   if(j>=k) then begin 
+    if(i=x) then Dp[i,j]:=k+1
+    else Dp[i,j]:=k; 
+   end;
+   
+   if(Dp[i,j]=inf) then begin
+    Dp[i,j]:=inf;
+    for k:=1 to i-1 do begin 
+      E:=max(Dp[k-1,j-1],Dp[i-k,j]);
+      if(Dp[i,j]>1+E) then Dp[i,j]:=1+E;
+    end;
+   end;
+  end;  
+ end;
+ 
+ readln(M,N);
+ while(M<>0) do begin
+  writeln(Dp[N,M]);
+  readln(M,N);
+ end;
+ 
+END. 

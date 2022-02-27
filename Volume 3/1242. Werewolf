@@ -1,0 +1,107 @@
+const Nmax=1001;
+var
+ Vh,Vyh:array[1..Nmax,1..Nmax] of integer;
+ Step:array[0..3] of integer;
+ Cvh,Cvyh,Z,List:array[1..Nmax] of integer;
+ Nnew:array[1..Nmax] of boolean;
+ N,i,j,x,y,up,down:integer;
+ s:string;
+ can,f:boolean;
+ 
+procedure Gvyh(up,down:integer);
+ var v,j:integer;
+begin  
+ inc(down);
+ if(down<N+1) then v:=List[down]
+ else v:=0;
+ if(down<=up)and(v<>0) then begin
+  for j:=1 to cvyh[v] do begin
+   if(Nnew[vyh[v,j]]) then begin
+    inc(up);
+    List[up]:=vyh[v,j];
+   end;
+   if(Z[vyh[v,j]]=1) then can:=false;
+  end;
+  Gvyh(up,down);
+ end;
+end;     
+ 
+procedure Gvh(up,down:integer);
+ var v,j:integer;
+begin  
+ inc(down);
+ if(down<N+1) then v:=List[down]
+ else v:=0;
+ if(down<=up)and(v<>0) then begin
+  for j:=1 to cvh[v] do begin
+   if(Nnew[vh[v,j]]) then begin
+    inc(up);
+    List[up]:=vh[v,j];
+   end;
+   if(Z[vh[v,j]]=1) then can:=false;
+  end;
+  Gvh(up,down);
+ end;
+end;     
+ 
+BEGIN
+ step[0]:=1;
+ step[1]:=10;
+ step[2]:=100;
+ step[3]:=1000;
+ readln(n);
+ for i:=1 to N do begin
+  Cvh[i]:=0;
+  Cvyh[i]:=0;
+  Z[i]:=0;
+ end; 
+ 
+ s:='?';
+ readln(s);
+ while(s<>'BLOOD') do begin
+  i:=pos(' ',s);
+  x:=0;
+  for j:=0 to i-2 do x:=x+(ord(s[i-1-j])-48)*step[j];
+  Delete(s,1,i);
+  y:=0;
+  i:=Length(s);
+  for j:=0 to i-1 do y:=y+(ord(s[i-j])-48)*step[j];
+  inc(Cvh[y]);
+  Vh[y,cvh[y]]:=x;
+  inc(Cvyh[x]);
+  Vyh[x,cvyh[x]]:=y;
+  readln(s);
+ end; 
+ 
+ readln(s);
+ while(Length(s)>0) do begin
+  i:=Length(s);
+  y:=0;
+  for j:=0 to i-1 do y:=y+(ord(s[i-j])-48)*step[j];
+  Z[y]:=1;
+  readln(s);
+ end; 
+ 
+ f:=false;
+ for i:=1 to N do begin
+  if(Z[i]=0) then begin
+   can:=true;
+   for j:=1 to N do Nnew[j]:=true;
+   up:=1;
+   down:=0;
+   Nnew[i]:=false;
+   List[up]:=i;
+   Gvyh(up,down);
+   up:=1;
+   down:=0;
+   List[up]:=i;
+   Gvh(up,down);
+   if(can) then begin
+    write(i,' ');
+    f:=true;
+   end;
+  end;
+ end;   
+ 
+ if(not f) then write('0');
+END.   

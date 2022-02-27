@@ -1,0 +1,31 @@
+const nmax=50;
+var
+ name:array[1..nmax] of string;
+ s,s1,s2:string;
+ n,i:longint;
+
+procedure add(s:string);
+ var j:longint;
+begin
+ j:=1;
+ while(j<=n)and(name[j]<>s) do inc(j);
+ if(j>n) then begin
+  inc(n);
+  name[n]:=s;
+ end; 
+end;
+ 
+begin
+ readln(name[1]);
+ n:=1;
+ readln(s);
+ while(s<>'#') do begin
+  s1:=copy(s,1,pos('-',s)-1);
+  delete(s,1,pos('-',s));
+  s2:=s;
+  add(s1);
+  add(s2);
+  readln(s);
+ end;
+ write(n-1);
+end.

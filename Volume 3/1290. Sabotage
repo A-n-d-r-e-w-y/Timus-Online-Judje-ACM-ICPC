@@ -1,0 +1,15 @@
+const nmax=25000;
+var
+ c:array[1..nmax] of integer;
+ n,i,a:integer;
+begin
+ for i:=1 to nmax do c[i]:=0;
+ readln(n);
+ for i:=1 to n do begin
+  readln(a);
+  inc(c[a]);
+ end;
+ for i:=nmax downto 1 do if(c[i]>0) then begin
+  for a:=1 to c[i] do write(i,' ');
+ end;
+end.

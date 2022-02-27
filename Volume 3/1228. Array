@@ -1,0 +1,20 @@
+#include <iostream>
+using namespace std;
+
+int n, s;
+
+int main()
+{
+   cin>>n>>s;
+   s--;
+   for(int i=1;i<=n;i++)
+   {
+      int d, k;
+      cin>>d;
+      k=s/d;
+      cout<<k<<" ";
+      s-=d*k;
+   }
+   
+	return 0;
+}

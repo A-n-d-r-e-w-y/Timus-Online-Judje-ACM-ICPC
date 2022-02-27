@@ -1,0 +1,20 @@
+const eps=0.000000001;
+var
+ AD,AC,BD,BC,X,Y:int64;
+ CD:real;
+
+BEGIN
+ read(AD,AC,BD,BC);
+ 
+ X:=AD*AC-BD*BC;
+ if(X=0) then write('Impossible.')
+ else begin
+  CD:=(AD*AC/X)*(BD*BD+BC*BC)-(BD*BC/X)*(AD*AD+AC*AC);
+  if(abs(CD)<eps) then write('Impossible.')
+  else begin
+   write('Distance is ');
+   CD:=1000*sqrt(CD);
+   write(round(CD),' km.');
+  end; 
+ end;
+END.
